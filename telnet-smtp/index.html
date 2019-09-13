@@ -96,24 +96,30 @@
 
 
 
-  <meta name="description" content="Tiny little thoughts after a tight semester.">
+  <meta name="description" content="敲开了计算机网络的小窗子。">
+<meta name="keywords" content="telnet,smpt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Keep your eyes open">
-<meta property="og:url" content="https://lemniscatex.github.io/tiny-exploration/index.html">
+<meta property="og:title" content="Telnet中使用SMTP发送邮件">
+<meta property="og:url" content="https://lemniscatex.github.io/telnet-smtp/index.html">
 <meta property="og:site_name" content="咱是小羊">
-<meta property="og:description" content="Tiny little thoughts after a tight semester.">
+<meta property="og:description" content="敲开了计算机网络的小窗子。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-01-18T12:59:51.977Z">
+<meta property="og:image" content="https://lemniscatex.github.io/telnet-smtp/preparation.png">
+<meta property="og:image" content="https://lemniscatex.github.io/telnet-smtp/mail.png">
+<meta property="og:image" content="https://lemniscatex.github.io/telnet-smtp/operation.jpg">
+<meta property="og:image" content="https://lemniscatex.github.io/telnet-smtp/result.jpg">
+<meta property="og:updated_time" content="2019-09-13T03:50:54.841Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Keep your eyes open">
-<meta name="twitter:description" content="Tiny little thoughts after a tight semester.">
+<meta name="twitter:title" content="Telnet中使用SMTP发送邮件">
+<meta name="twitter:description" content="敲开了计算机网络的小窗子。">
+<meta name="twitter:image" content="https://lemniscatex.github.io/telnet-smtp/preparation.png">
 
 
 
 
 
 
-  <link rel="canonical" href="https://lemniscatex.github.io/tiny-exploration/">
+  <link rel="canonical" href="https://lemniscatex.github.io/telnet-smtp/">
 
 
 
@@ -123,7 +129,7 @@
   };
 </script>
 
-  <title>Keep your eyes open | 咱是小羊</title>
+  <title>Telnet中使用SMTP发送邮件 | 咱是小羊</title>
   
 
 
@@ -322,7 +328,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/tiny-exploration/">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/telnet-smtp/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -339,7 +345,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Keep your eyes open
+          <h1 class="post-title" itemprop="name headline">Telnet中使用SMTP发送邮件
 
               
             
@@ -365,12 +371,24 @@
                 
               
 
-              <time title="Created: 2019-01-18 13:56:07 / Modified: 20:59:51" itemprop="dateCreated datePublished" datetime="2019-01-18T13:56:07+08:00">2019-01-18</time>
+              <time title="Created: 2019-09-11 16:52:54" itemprop="dateCreated datePublished" datetime="2019-09-11T16:52:54+08:00">2019-09-11</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-09-13 11:50:54" itemprop="dateModified" datetime="2019-09-13T11:50:54+08:00">2019-09-13</time>
               
             
           </span>
@@ -387,7 +405,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Diary/" itemprop="url" rel="index"><span itemprop="name">Diary</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
 
                 
                 
@@ -422,34 +440,45 @@
       
 
       
-        <p>Tiny little thoughts after a tight semester.<br><a id="more"></a></p>
+        <p>敲开了计算机网络的小窗子。<br><a id="more"></a></p>
 <hr>
-<h2 id="关于学业"><a href="#关于学业" class="headerlink" title="关于学业"></a>关于学业</h2><p>年度大事记：</p>
-<ul>
-<li>结识某人</li>
+<p> 这个学期开了计算机网络课程，学校设置的教材为AndrewS Tanenbaum的《计算机网络》，<br> 暑假期间翻阅发现自底向上的讲解看不太懂，因此换成阅读小钟的《计算机网络-自顶向下方法》。<br> 从引言一路看过来感觉体验很好，它能特别清楚和生动地给我讲明白计算机网络到底是怎么一回事儿，是本好书，建议阅读。</p>
+<p> 本文基于该书应用层一章，以163邮箱为例，记录了如何通过Telnet远程登录smtp邮件服务器来发送邮件。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
+<li><p><strong>开启Telnet服务</strong><br>控制面板 -&gt; 程序 -&gt; 程序和功能 -&gt; 启用或关闭Windows功能 -&gt; 勾选Telnet客户端 -&gt; 确定</p>
+<img src="/telnet-smtp/preparation.png" title="preparation">
+</li>
+<li><p><strong>开启邮箱POP3/SMTP/IMAP服务</strong><br>登录邮箱 -&gt; 设置 -&gt; POP3/SMTP/IMAP -&gt; 勾选POP3/SMTP服务和IMAP/SMTP服务 -&gt; 保存</p>
+<img src="/telnet-smtp/mail.png" title="mail">
+</li>
 </ul>
-<p>由此而引发的蝴蝶效应：</p>
+<h2 id="cmd中使用命令"><a href="#cmd中使用命令" class="headerlink" title="cmd中使用命令"></a>cmd中使用命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet smtp.163.com 25</span><br></pre></td></tr></table></figure>
+<p>其中<code>smtp.163.com</code>是163邮箱的SMTP服务器名称，<code>25</code>是邮件服务器进程的默认端口号。<br>此命令在本地主机与邮件服务器之间建立TCP连接，连接成功后将从该服务器收到<code>220</code>回答。</p>
+<h2 id="打招呼"><a href="#打招呼" class="headerlink" title="打招呼"></a>打招呼</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">S: 220 163.com Anti-spam GT for Coremail System (163com[20141201])</span><br><span class="line">C: helo xxx</span><br><span class="line">S: 250 OK</span><br></pre></td></tr></table></figure>
+<p><code>220</code>代表服务器已就绪，客户端发送<code>helo</code>进行打招呼(<code>xxx</code>处可任意填写)，服务器返回<code>250</code>，代表打招呼成功。</p>
+<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">C: auth login</span><br><span class="line">S: 334 dXNlcm5hbWU6</span><br><span class="line">C: **********//由base64加密过的账号</span><br><span class="line">S: 334 UGFzc3dvcmQ6</span><br><span class="line">C: **********//由base64加密过的密码</span><br><span class="line">S: 235 Authentication successful</span><br></pre></td></tr></table></figure>
+<p>客户端发送<code>auth login</code>声明自己将进行邮箱账户的用户名认证和密码认证，服务器返回<code>334</code>，指示输入账号密码。账号密码匹配成功后，服务器返回<code>235</code>，代表用户验证成功。</p>
+<p>此处有几个需要注意的点：</p>
 <ul>
-<li>见识了热爱的具象</li>
-<li>深感自己水平不足</li>
-<li>预备开启新世界大门</li>
+<li><strong>账号和密码皆需进行base64加密</strong><br>提供一个方便的加密网站：<a href="https://1024tools.com/base64" target="_blank" rel="noopener">https://1024tools.com/base64</a></li>
+<li><strong>账号带不带邮箱后缀均可</strong><br>如我的邮箱<code>lemniscatex @163.com</code>，加密后应输入<code>bGVtbmlzY2F0ZXg=</code> 或<code>bGVtbmlzY2F0ZXhAMTYzLmNvbQ==</code></li>
+<li><strong>密码不是登录邮箱时的密码，而是用于登录第三方邮件客户端的授权码</strong><br>授权码可在邮箱 -&gt; 设置 -&gt; 客户端授权密码中找到</li>
 </ul>
-<p>小钟说不要相信学校教的就是计算机的全部，鼓励我去发现自己感兴趣和热爱的东西。<br>一年前自觉可以通过踏上对自己来说全新的领域，来发现自己的潜力，并以此为契机探索新世界。<br>但是过于容易受挫、行动力不强、惰性却很大的我，好像还没有在计算机的海洋里学会游泳。</p>
-<p>远大的理想和强大的惰性大概就是当下存在于我身上的根本矛盾了吧。<br>于是准备从“寒假看书学习”这一行动开始，着手解决这个矛盾。</p>
-<p>古人言生无所息，那种闲云野鹤的日子离自己还比较远，本不该这么懒散的。<br>而学习新东西也确实是一种不错的体验，更何况还有身旁现场指导的小钟hhh</p>
-<p>多学习，多打码吧。</p>
-<h2 id="关于生活"><a href="#关于生活" class="headerlink" title="关于生活"></a>关于生活</h2><p>捉襟见肘的期末时光总算是告一段落了，撒花。</p>
-<p>放假回校的高中同学们说，淘淘召唤我们下周五回去再聚一次，大概有一年多没见面啦，还是很想念的。<br>现在弟弟在我母校念高一，时常打电话给我讲他们的生活，每次都会觉得很美好，无论是那个环境还是那个年龄。</p>
-<p>一放假妈咪就打电话催我回家，大概有四个月没有回家了。<br>我嘱咐妈咪在我回家之前做好吃的虾虾给我，因为我太馋那个味道了，妈咪愉快地答应了，一听语气就是很想我。</p>
-<p>立几面小旗子：</p>
+<h2 id="声明邮箱地址"><a href="#声明邮箱地址" class="headerlink" title="声明邮箱地址"></a>声明邮箱地址</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C: mail from:&lt;lemniscatex@163.com&gt;</span><br><span class="line">S: 250 Mail OK</span><br><span class="line">C: rcpt to:&lt;131****039@qq.com&gt;</span><br><span class="line">S: 250 Mail OK</span><br></pre></td></tr></table></figure>
+<p>客户端发送<code>mail from</code>和<code>rcpt to</code>声明邮件发送方和接收方。</p>
+<h2 id="写邮件"><a href="#写邮件" class="headerlink" title="写邮件"></a>写邮件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">C: data</span><br><span class="line">S: 354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;</span><br><span class="line">C: From: lemniscatex@163.com</span><br><span class="line">C: To: 131****039@qq.com</span><br><span class="line">C: Subject: This is a simple test</span><br><span class="line">C: </span><br><span class="line">C: Hello from the other side.</span><br><span class="line">C: .</span><br><span class="line">S: 250 Mail OK queued as smtp10,DsCowACXsyhk1HRdso65BQ--.46708S2 1567937734</span><br></pre></td></tr></table></figure>
+<p>客户端发送<code>data</code>声明自己将进入邮件编辑状态，服务器会提示当输入<code>&lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;</code>时退出编辑状态。<br>邮件内容有一定格式要求，包括以<code>From:</code>指定邮件发送方邮箱，<code>To:</code>指定邮件接收方邮箱,<code>Subject:</code>指定邮件标题；邮件正文与首部行须以空行分隔开；邮件正文以单行的句点结束。<br>发送成功后服务器将返回<code>250</code>，代表邮件已进入发送队列，此时即可打开邮箱验证邮件是否已发送成功。</p>
+<p>此处分享几点失败经验：</p>
 <ul>
-<li>继续每天听几张感兴趣的专辑</li>
-<li>阅读计算机类和文学类书籍</li>
-<li>多锻炼，管住嘴迈开腿</li>
-<li>开始学习汽车驾驶</li>
-<li>调整作息早点睡觉</li>
+<li>如果不写<code>From:</code>和<code>To:</code>首部行，邮件将无法成功发送</li>
+<li>如果首部行和正文间不加空行，邮件可以成功发送，但是会缺失正文内容</li>
+<li>如果在输入的时候回退过，发出的邮件中会显示被清除的字符以及回退符</li>
 </ul>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>感谢小钟帮助建立此站<br>感谢小钟将我带上正途<br>XD</p>
+<h2 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C: quit</span><br><span class="line">S: Connection closed by foreign host.</span><br></pre></td></tr></table></figure>
+<p>邮件发送结束后，客户端发送<code>quit</code>声明退出Telnet。</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><img src="/telnet-smtp/operation.jpg" title="operation">
+<img src="/telnet-smtp/result.jpg" title="result">
+<p>完成！</p>
 
       
     </div>
@@ -471,6 +500,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/telnet/" rel="tag"># telnet</a>
+          
+            <a href="/tags/smpt/" rel="tag"># smpt</a>
+          
+        </div>
+      
 
       
       
@@ -480,15 +517,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/tiny-exploration/" rel="next" title="Keep your eyes open">
+                <i class="fa fa-chevron-left"></i> Keep your eyes open
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/telnet-smtp/" rel="prev" title="Telnet中使用SMTP发送邮件">
-                Telnet中使用SMTP发送邮件 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -630,7 +667,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于学业"><span class="nav-number">1.</span> <span class="nav-text">关于学业</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于生活"><span class="nav-number">2.</span> <span class="nav-text">关于生活</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">3.</span> <span class="nav-text">最后</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cmd中使用命令"><span class="nav-number">2.</span> <span class="nav-text">cmd中使用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打招呼"><span class="nav-number">3.</span> <span class="nav-text">打招呼</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录"><span class="nav-number">4.</span> <span class="nav-text">登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明邮箱地址"><span class="nav-number">5.</span> <span class="nav-text">声明邮箱地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写邮件"><span class="nav-number">6.</span> <span class="nav-text">写邮件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#退出"><span class="nav-number">7.</span> <span class="nav-text">退出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果"><span class="nav-number">8.</span> <span class="nav-text">结果</span></a></li></ol></div>
             
 
           </div>
