@@ -96,30 +96,24 @@
 
 
 
-  <meta name="description" content="敲开了计算机网络的小窗子。">
-<meta name="keywords" content="telnet,smtp">
+  <meta name="description" content="《JavaScript高级程序设计》第一章，JavaScript简介。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Telnet中使用SMTP发送邮件">
-<meta property="og:url" content="https://lemniscatex.github.io/telnet-smtp/index.html">
+<meta property="og:title" content="JavaScript学习笔记(1)">
+<meta property="og:url" content="https://lemniscatex.github.io/js-note-1/index.html">
 <meta property="og:site_name" content="咱是小羊">
-<meta property="og:description" content="敲开了计算机网络的小窗子。">
+<meta property="og:description" content="《JavaScript高级程序设计》第一章，JavaScript简介。">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://lemniscatex.github.io/telnet-smtp/preparation.png">
-<meta property="og:image" content="https://lemniscatex.github.io/telnet-smtp/mail.png">
-<meta property="og:image" content="https://lemniscatex.github.io/telnet-smtp/operation.jpg">
-<meta property="og:image" content="https://lemniscatex.github.io/telnet-smtp/result.jpg">
-<meta property="og:updated_time" content="2019-09-14T03:50:36.000Z">
+<meta property="og:updated_time" content="2020-03-12T10:22:48.189Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Telnet中使用SMTP发送邮件">
-<meta name="twitter:description" content="敲开了计算机网络的小窗子。">
-<meta name="twitter:image" content="https://lemniscatex.github.io/telnet-smtp/preparation.png">
+<meta name="twitter:title" content="JavaScript学习笔记(1)">
+<meta name="twitter:description" content="《JavaScript高级程序设计》第一章，JavaScript简介。">
 
 
 
 
 
 
-  <link rel="canonical" href="https://lemniscatex.github.io/telnet-smtp/">
+  <link rel="canonical" href="https://lemniscatex.github.io/js-note-1/">
 
 
 
@@ -129,7 +123,7 @@
   };
 </script>
 
-  <title>Telnet中使用SMTP发送邮件 | 咱是小羊</title>
+  <title>JavaScript学习笔记(1) | 咱是小羊</title>
   
 
 
@@ -328,7 +322,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/telnet-smtp/">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/js-note-1/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -345,7 +339,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Telnet中使用SMTP发送邮件
+          <h1 class="post-title" itemprop="name headline">JavaScript学习笔记(1)
 
               
             
@@ -371,7 +365,7 @@
                 
               
 
-              <time title="Created: 2019-09-11 16:52:54" itemprop="dateCreated datePublished" datetime="2019-09-11T16:52:54+08:00">2019-09-11</time>
+              <time title="Created: 2020-03-12 14:29:21" itemprop="dateCreated datePublished" datetime="2020-03-12T14:29:21+08:00">2020-03-12</time>
             
 
             
@@ -389,7 +383,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
 
                 
                 
@@ -424,45 +418,32 @@
       
 
       
-        <p>敲开了计算机网络的小窗子。<br><a id="more"></a></p>
+        <p>《JavaScript高级程序设计》第一章，JavaScript简介。<br><a id="more"></a></p>
 <hr>
-<p> 这个学期开了计算机网络课程，学校设置的教材为AndrewS Tanenbaum的《计算机网络》，<br> 暑假期间翻阅发现自底向上的讲解看不太懂，因此换成阅读小钟的《计算机网络-自顶向下方法》。<br> 从引言一路看过来感觉体验很好，它能特别清楚和生动地给我讲明白计算机网络到底是怎么一回事儿，是本好书，建议阅读。</p>
-<p> 本文基于该书应用层一章，以163邮箱为例，记录了如何通过Telnet远程登录smtp邮件服务器来发送邮件。</p>
-<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
-<li><p><strong>开启Telnet服务</strong><br>控制面板 -&gt; 程序 -&gt; 程序和功能 -&gt; 启用或关闭Windows功能 -&gt; 勾选Telnet客户端 -&gt; 确定</p>
-<img src="/telnet-smtp/preparation.png" title="preparation">
-</li>
-<li><p><strong>开启邮箱POP3/SMTP/IMAP服务</strong><br>登录邮箱 -&gt; 设置 -&gt; POP3/SMTP/IMAP -&gt; 勾选POP3/SMTP服务和IMAP/SMTP服务 -&gt; 保存</p>
-<img src="/telnet-smtp/mail.png" title="mail">
-</li>
-</ul>
-<h2 id="cmd中使用命令"><a href="#cmd中使用命令" class="headerlink" title="cmd中使用命令"></a>cmd中使用命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet smtp.163.com 25</span><br></pre></td></tr></table></figure>
-<p>其中<code>smtp.163.com</code>是163邮箱的SMTP服务器名称，<code>25</code>是邮件服务器进程的默认端口号。<br>此命令在本地主机与邮件服务器之间建立TCP连接，连接成功后将从该服务器收到<code>220</code>回答。</p>
-<h2 id="打招呼"><a href="#打招呼" class="headerlink" title="打招呼"></a>打招呼</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">S: 220 163.com Anti-spam GT for Coremail System (163com[20141201])</span><br><span class="line">C: helo xxx</span><br><span class="line">S: 250 OK</span><br></pre></td></tr></table></figure>
-<p><code>220</code>代表服务器已就绪，客户端发送<code>helo</code>进行打招呼(<code>xxx</code>处可任意填写)，服务器返回<code>250</code>，代表打招呼成功。</p>
-<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">C: auth login</span><br><span class="line">S: 334 dXNlcm5hbWU6</span><br><span class="line">C: **********//由base64加密过的账号</span><br><span class="line">S: 334 UGFzc3dvcmQ6</span><br><span class="line">C: **********//由base64加密过的密码</span><br><span class="line">S: 235 Authentication successful</span><br></pre></td></tr></table></figure>
-<p>客户端发送<code>auth login</code>声明自己将进行邮箱账户的用户名认证和密码认证，服务器返回<code>334</code>，指示输入账号密码。账号密码匹配成功后，服务器返回<code>235</code>，代表用户验证成功。</p>
-<p>此处有几个需要注意的点：</p>
+<p>最近在阅读《JavaScript高级程序设计(第3版)》，以期能对该语言有整体把握和深入理解。<br>好记性不如烂笔头，边读边记录，或许会有不一样的收获。</p>
+<h2 id="诞生背景"><a href="#诞生背景" class="headerlink" title="诞生背景"></a>诞生背景</h2><p>在JavaScript问世前，如果想要对浏览器用户填写的表单信息做出一定的限制(如有必填区域、数值要求等)，必须把该表单发送至服务器端，让服务器端对其进行判断，再将或正确或错误的信息发回给用户。由于当时拨号上网的速度非常慢，一趟下来得花费不少时间，且该操作可能会在一次填写中进行多次，因此人们希望这种基本的验证任务可以直接在客户端完成，以加快验证的速度。在这种需求下，JavaScript应运而生。<br>在随后发展中，JavaScript逐渐从一个简单的输入验证器进化为了更为强大的一门语言，在内容上有了很大的丰富。</p>
+<h2 id="JavaScript和ECMAScript"><a href="#JavaScript和ECMAScript" class="headerlink" title="JavaScript和ECMAScript"></a>JavaScript和ECMAScript</h2><p>为了上述需求，Netscape公司为自家浏览器开发出名为LiveScript的脚本语言，而后将其更名为JavaScript。作为竞争对手，Microsoft公司而后也为自家的IE浏览器开发出了名为JScript的JavaScript实现。多家争鸣使得JavaScript亟需标准化，ECMA(European Computer Manufacturers Association)也因此组织委员会进行商讨开发，完成了一种新脚本语言的标准——ECMAScript。之后浏览器开发商们就开始致力于在ECMAScript基础上实现各自的JavaScript。</p>
+<h2 id="JavaScript实现"><a href="#JavaScript实现" class="headerlink" title="JavaScript实现"></a>JavaScript实现</h2><p>包含三个部分</p>
 <ul>
-<li><strong>账号和密码皆需进行base64加密</strong></li>
-<li><strong>账号带不带邮箱后缀均可</strong><br>如我的邮箱<code>lemniscatex @163.com</code>，加密后应输入<code>bGVtbmlzY2F0ZXg=</code> 或<code>bGVtbmlzY2F0ZXhAMTYzLmNvbQ==</code></li>
-<li><strong>密码不是登录邮箱时的密码，而是用于登录第三方邮件客户端的授权码</strong><br>授权码可在邮箱 -&gt; 设置 -&gt; 客户端授权密码中找到</li>
+<li>核心(ECMAScript)</li>
+<li>文档对象模型(DOM)</li>
+<li>浏览器对象模型(BOM)</li>
 </ul>
-<h2 id="声明邮箱地址"><a href="#声明邮箱地址" class="headerlink" title="声明邮箱地址"></a>声明邮箱地址</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C: mail from:&lt;lemniscatex@163.com&gt;</span><br><span class="line">S: 250 Mail OK</span><br><span class="line">C: rcpt to:&lt;131****039@qq.com&gt;</span><br><span class="line">S: 250 Mail OK</span><br></pre></td></tr></table></figure>
-<p>客户端发送<code>mail from</code>和<code>rcpt to</code>声明邮件发送方和接收方。</p>
-<h2 id="写邮件"><a href="#写邮件" class="headerlink" title="写邮件"></a>写邮件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">C: data</span><br><span class="line">S: 354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;</span><br><span class="line">C: From: lemniscatex@163.com</span><br><span class="line">C: To: 131****039@qq.com</span><br><span class="line">C: Subject: This is a simple test</span><br><span class="line">C: </span><br><span class="line">C: Hello from the other side.</span><br><span class="line">C: .</span><br><span class="line">S: 250 Mail OK queued as smtp10,DsCowACXsyhk1HRdso65BQ--.46708S2 1567937734</span><br></pre></td></tr></table></figure>
-<p>客户端发送<code>data</code>声明自己将进入邮件编辑状态，服务器会提示当输入<code>&lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;</code>时退出编辑状态。<br>邮件内容有一定格式要求，包括以<code>From:</code>指定邮件发送方邮箱，<code>To:</code>指定邮件接收方邮箱,<code>Subject:</code>指定邮件标题；邮件正文与首部行须以空行分隔开；邮件正文以单行的句点结束。<br>发送成功后服务器将返回<code>250</code>，代表邮件已进入发送队列，此时即可打开邮箱验证邮件是否已发送成功。</p>
-<p>此处分享几点失败经验：</p>
+<h2 id="ECMAScript"><a href="#ECMAScript" class="headerlink" title="ECMAScript"></a>ECMAScript</h2><p>ECMAScript与Web浏览器无依赖关系，Web浏览器只是ECMAScript实现可能的<strong>宿主环境</strong>之一(其他的宿主环境包括Node、Adobe Flash)。ECMA-262规定了这门语言的语法、类型、语句、关键词、保留字、操作符、对象，在不断的修改更新中，现在也已经到了第10版。</p>
+<h3 id="什么是ECMAScript兼容"><a href="#什么是ECMAScript兼容" class="headerlink" title="什么是ECMAScript兼容?"></a>什么是ECMAScript兼容?</h3><p>指要成为ECMAScript的实现的要求，包含：</p>
 <ul>
-<li>如果不写<code>From:</code>和<code>To:</code>首部行，邮件将无法成功发送</li>
-<li>如果首部行和正文间不加空行，邮件可以成功发送，但是会缺失正文内容</li>
-<li>如果在输入的时候回退过，发出的邮件中会显示被清除的字符以及回退符</li>
+<li>支持ECMA-262描述的所有“类型、值、对象、属性、函数以及程序句法和语义”</li>
+<li>支持Unicode字符标准</li>
 </ul>
-<h2 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C: quit</span><br><span class="line">S: Connection closed by foreign host.</span><br></pre></td></tr></table></figure>
-<p>邮件发送结束后，客户端发送<code>quit</code>声明退出Telnet。</p>
-<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><img src="/telnet-smtp/operation.jpg" title="operation">
-<img src="/telnet-smtp/result.jpg" title="result">
-<p>完成！</p>
+<h2 id="DOM"><a href="#DOM" class="headerlink" title="DOM"></a>DOM</h2><p>DOM是针对XML和HTML的用于提供访问和操作网页内容的方法和接口。DOM将页面映射为一个多层节点结构，通过DOM提供的API，开发人员可以轻松操纵其中任何一个节点。</p>
+<h3 id="Why-DOM"><a href="#Why-DOM" class="headerlink" title="Why DOM?"></a>Why DOM?</h3><p>当时不同公司开发的浏览器分别支持不同形式的DHTML(Dynamic HTML)，这使得开发人员不得不因为浏览器不兼容的原因写两份代码，这阻碍了Web的跨平台天性，因此负责制定Web通信标准的W3C开始着手规划DOM。</p>
+<h3 id="DOM级别"><a href="#DOM级别" class="headerlink" title="DOM级别"></a>DOM级别</h3><ul>
+<li>DOM1级<br>由DOM核心和DOM HTML组成，目标是映射文档的结构。DOM核心规定如何映射基于XML的文档结构，DOM HTML在DOM核心的基础上拓展了针对HTML的对象和方法。</li>
+<li>DOM2级<br>增加了新类型和新接口的定义，包括DOM视图、DOM事件、DOM样式、DOM遍历和范围等。</li>
+<li>DOM3级<br>增加了以统一方式加载和保存文档的方法、验证文档的方法等。</li>
+</ul>
+<h2 id="BOM"><a href="#BOM" class="headerlink" title="BOM"></a>BOM</h2><p>BOM提供与浏览器交互的方法和接口。通过BOM提供的API，开发人员可以控制浏览器显示的页面以外的部分。BOM没有相关标准，但HTML5致力于把很多BOM功能写入正式规范，问题得到了解决。</p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><p>不同浏览器对JavaScript的三个成分有不同程度的支持，至于开发时具体细节的支持情况，可以在<a href="https://caniuse.com/" target="_blank" rel="noopener">caniuse</a>进行快速查看。</p>
 
       
     </div>
@@ -484,14 +465,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/telnet/" rel="tag"># telnet</a>
-          
-            <a href="/tags/smtp/" rel="tag"># smtp</a>
-          
-        </div>
-      
 
       
       
@@ -501,8 +474,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/tiny-exploration/" rel="next" title="Keep your eyes open">
-                <i class="fa fa-chevron-left"></i> Keep your eyes open
+              <a href="/telnet-smtp/" rel="next" title="Telnet中使用SMTP发送邮件">
+                <i class="fa fa-chevron-left"></i> Telnet中使用SMTP发送邮件
               </a>
             
           </div>
@@ -510,10 +483,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/js-note-1/" rel="prev" title="JavaScript学习笔记(1)">
-                JavaScript学习笔记(1) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -657,7 +626,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cmd中使用命令"><span class="nav-number">2.</span> <span class="nav-text">cmd中使用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打招呼"><span class="nav-number">3.</span> <span class="nav-text">打招呼</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录"><span class="nav-number">4.</span> <span class="nav-text">登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明邮箱地址"><span class="nav-number">5.</span> <span class="nav-text">声明邮箱地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写邮件"><span class="nav-number">6.</span> <span class="nav-text">写邮件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#退出"><span class="nav-number">7.</span> <span class="nav-text">退出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果"><span class="nav-number">8.</span> <span class="nav-text">结果</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#诞生背景"><span class="nav-number">1.</span> <span class="nav-text">诞生背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript和ECMAScript"><span class="nav-number">2.</span> <span class="nav-text">JavaScript和ECMAScript</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript实现"><span class="nav-number">3.</span> <span class="nav-text">JavaScript实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ECMAScript"><span class="nav-number">4.</span> <span class="nav-text">ECMAScript</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是ECMAScript兼容"><span class="nav-number">4.1.</span> <span class="nav-text">什么是ECMAScript兼容?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM"><span class="nav-number">5.</span> <span class="nav-text">DOM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-DOM"><span class="nav-number">5.1.</span> <span class="nav-text">Why DOM?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM级别"><span class="nav-number">5.2.</span> <span class="nav-text">DOM级别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BOM"><span class="nav-number">6.</span> <span class="nav-text">BOM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#兼容性"><span class="nav-number">7.</span> <span class="nav-text">兼容性</span></a></li></ol></div>
             
 
           </div>
