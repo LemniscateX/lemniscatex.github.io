@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="咱是小羊">
 <meta property="og:description" content="《JavaScript高级程序设计》第四章，变量、作用域和内存问题。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-03-17T07:49:29.019Z">
+<meta property="og:updated_time" content="2020-04-08T05:51:56.242Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript学习笔记(4)">
 <meta name="twitter:description" content="《JavaScript高级程序设计》第四章，变量、作用域和内存问题。">
@@ -428,8 +428,8 @@
 <h3 id="检测类型"><a href="#检测类型" class="headerlink" title="检测类型"></a>检测类型</h3><p>对于基本数据类型的检测，可以用之前讲过的<code>typeof</code>操作符；对于引用类型的检测，<code>typeof</code>则用处不大，ECMAScript也因此提供了<code>instanceof</code>操作符。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用法</span></span><br><span class="line">resule = variable <span class="keyword">instanceof</span> <span class="keyword">constructor</span>; // 返回true or false</span><br><span class="line"></span><br><span class="line">// 举例</span><br><span class="line">alert(person instanceof Object);</span><br><span class="line">alert(person instanceof Array);</span><br><span class="line">alert(person instanceof RegExp);</span><br></pre></td></tr></table></figure></p>
 <p>一般有以下规定：</p>
 <ul>
-<li>基本类型 instanceof Object =&gt; true</li>
-<li>引用类型 instanceof Object =&gt; false</li>
+<li>基本类型 instanceof Object =&gt; false</li>
+<li>引用类型 instanceof Object =&gt; true</li>
 </ul>
 <p>* 补充typeof<br>以前typeof用于函数和正则表达式时会返回”function”，后规定任何在内部实现<code>[[call]]</code>方法的对象都应在使用typeof操作符时返回”function”。</p>
 <h2 id="执行环境及作用域"><a href="#执行环境及作用域" class="headerlink" title="执行环境及作用域"></a>执行环境及作用域</h2><h3 id="执行环境"><a href="#执行环境" class="headerlink" title="执行环境"></a>执行环境</h3><p>执行环境(execution context)定义了变量或函数有权访问的其他数据，决定了它们各自的行为。每个执行环境都与一个变量对象(variable object)关联，环境里所有的变量和函数都存在这个对象中。我们无法在代码里访问这个对象，但解析器处理数据的时候会在后台用它。</p>
@@ -639,7 +639,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
