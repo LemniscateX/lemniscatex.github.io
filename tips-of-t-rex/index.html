@@ -96,24 +96,31 @@
 
 
 
-  <meta name="description" content="《JavaScript高级程序设计》第一章，JavaScript简介。">
+  <meta name="description" content="嘿，我带着小恐龙回来了！">
+<meta name="keywords" content="canvas,game,HTML5,ES6">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript学习笔记(1)">
-<meta property="og:url" content="https://lemniscatex.github.io/js-note-1/index.html">
+<meta property="og:title" content="Chrome小恐龙的实现小技巧">
+<meta property="og:url" content="https://lemniscatex.github.io/tips-of-t-rex/index.html">
 <meta property="og:site_name" content="咱是小羊">
-<meta property="og:description" content="《JavaScript高级程序设计》第一章，JavaScript简介。">
+<meta property="og:description" content="嘿，我带着小恐龙回来了！">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-03-12T10:27:38.311Z">
+<meta property="og:image" content="https://lemniscatex.github.io/tips-of-t-rex/jump.jpg">
+<meta property="og:image" content="https://lemniscatex.github.io/tips-of-t-rex/jump-code.png">
+<meta property="og:image" content="https://lemniscatex.github.io/tips-of-t-rex/blink.png">
+<meta property="og:image" content="https://lemniscatex.github.io/tips-of-t-rex/wrong-this.png">
+<meta property="og:image" content="https://lemniscatex.github.io/tips-of-t-rex/right-this.png">
+<meta property="og:updated_time" content="2020-06-13T15:28:51.563Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JavaScript学习笔记(1)">
-<meta name="twitter:description" content="《JavaScript高级程序设计》第一章，JavaScript简介。">
+<meta name="twitter:title" content="Chrome小恐龙的实现小技巧">
+<meta name="twitter:description" content="嘿，我带着小恐龙回来了！">
+<meta name="twitter:image" content="https://lemniscatex.github.io/tips-of-t-rex/jump.jpg">
 
 
 
 
 
 
-  <link rel="canonical" href="https://lemniscatex.github.io/js-note-1/">
+  <link rel="canonical" href="https://lemniscatex.github.io/tips-of-t-rex/">
 
 
 
@@ -123,7 +130,7 @@
   };
 </script>
 
-  <title>JavaScript学习笔记(1) | 咱是小羊</title>
+  <title>Chrome小恐龙的实现小技巧 | 咱是小羊</title>
   
 
 
@@ -339,7 +346,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/js-note-1/">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/tips-of-t-rex/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -356,7 +363,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">JavaScript学习笔记(1)
+          <h1 class="post-title" itemprop="name headline">Chrome小恐龙的实现小技巧
 
               
             
@@ -382,7 +389,7 @@
                 
               
 
-              <time title="Created: 2020-03-12 14:29:21" itemprop="dateCreated datePublished" datetime="2020-03-12T14:29:21+08:00">2020-03-12</time>
+              <time title="Created: 2020-06-13 19:24:00" itemprop="dateCreated datePublished" datetime="2020-06-13T19:24:00+08:00">2020-06-13</time>
             
 
             
@@ -400,7 +407,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Project/" itemprop="url" rel="index"><span itemprop="name">Project</span></a></span>
 
                 
                 
@@ -435,32 +442,39 @@
       
 
       
-        <p>《JavaScript高级程序设计》第一章，JavaScript简介。<br><a id="more"></a></p>
+        <p>嘿，我带着小恐龙回来了！</p>
+<a id="more"></a>
 <hr>
-<p>最近在阅读《JavaScript高级程序设计(第3版)》，以期能对该语言有整体把握和深入理解。<br>好记性不如烂笔头，边读边记录，或许会有不一样的收获。</p>
-<h2 id="诞生背景"><a href="#诞生背景" class="headerlink" title="诞生背景"></a>诞生背景</h2><p>在JavaScript问世前，如果想要对浏览器用户填写的表单信息做出一定的限制(如有必填区域、数值要求等)，必须把该表单发送至服务器端，让服务器端对其进行判断，再将或正确或错误的信息发回给用户。由于当时拨号上网的速度非常慢，一趟下来得花费不少时间，且该操作可能会在一次填写中进行多次，因此人们希望这种基本的验证任务可以直接在客户端完成，以加快验证的速度。在这种需求下，JavaScript应运而生。<br>在随后发展中，JavaScript逐渐从一个简单的输入验证器进化为了更为强大的一门语言，在内容上有了很大的丰富。</p>
-<h2 id="JavaScript和ECMAScript"><a href="#JavaScript和ECMAScript" class="headerlink" title="JavaScript和ECMAScript"></a>JavaScript和ECMAScript</h2><p>为了上述需求，Netscape公司为自家浏览器开发出名为LiveScript的脚本语言，而后将其更名为JavaScript。作为竞争对手，Microsoft公司而后也为自家的IE浏览器开发出了名为JScript的JavaScript实现。多家争鸣使得JavaScript亟需标准化，ECMA(European Computer Manufacturers Association)也因此组织委员会进行商讨开发，完成了一种新脚本语言的标准——ECMAScript。之后浏览器开发商们就开始致力于在ECMAScript基础上实现各自的JavaScript。</p>
-<h2 id="JavaScript实现"><a href="#JavaScript实现" class="headerlink" title="JavaScript实现"></a>JavaScript实现</h2><p>包含三个部分</p>
+<p>在上次对canvas的初探之后，我迅速地整起了Chrome小恐龙。当然，如果只是在上次的基础上做少量修改，那就没意思啦，所以这次用了些不同的方法去实现。最主要的区别是，这次用了ES6的Class语法，将所有组件按类分开进行表示，在一定程度上实现了解耦，这样看起来就舒服多了。除此之外还有一些其他方面的改变，下面就写些值得记录的小点。</p>
+<p>照例，项目地址在<a href="https://github.com/LemniscateX/t-rex" target="_blank" rel="noopener">这里</a>，也可以在<a href="https://chenyang.works/projects/t-rex/" target="_blank" rel="noopener">这里</a>召唤小恐龙陪你玩耍。</p>
+<h2 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">├───index.html</span><br><span class="line">│   </span><br><span class="line">├───images</span><br><span class="line">│  ├────dinosaur.ico</span><br><span class="line">│  └────sprite.png</span><br><span class="line">│</span><br><span class="line">└───js</span><br><span class="line">   ├────base.js</span><br><span class="line">   ├────cactus.js</span><br><span class="line">   ├────cloud.js</span><br><span class="line">   ├────cover.js</span><br><span class="line">   ├────dino.js</span><br><span class="line">   ├────gamearea.js</span><br><span class="line">   ├────main.js</span><br><span class="line">   ├────score.js</span><br><span class="line">   ├────still.js</span><br><span class="line">   └────util.js</span><br></pre></td></tr></table></figure>
+<p>这下每个元素都有自己的类了，按照字母排列顺序依次为：</p>
 <ul>
-<li>核心(ECMAScript)</li>
-<li>文档对象模型(DOM)</li>
-<li>浏览器对象模型(BOM)</li>
+<li>地面</li>
+<li>仙人掌</li>
+<li>云朵</li>
+<li>幕布</li>
+<li>恐龙</li>
+<li>整个画布</li>
+<li>(主函数)</li>
+<li>分数</li>
+<li>无需刷新的内容</li>
+<li>(工具函数)</li>
 </ul>
-<h2 id="ECMAScript"><a href="#ECMAScript" class="headerlink" title="ECMAScript"></a>ECMAScript</h2><p>ECMAScript与Web浏览器无依赖关系，Web浏览器只是ECMAScript实现可能的<strong>宿主环境</strong>之一(其他的宿主环境包括Node、Adobe Flash)。ECMA-262规定了这门语言的语法、类型、语句、关键词、保留字、操作符、对象，在不断的修改更新中，现在也已经到了第10版。</p>
-<h3 id="什么是ECMAScript兼容"><a href="#什么是ECMAScript兼容" class="headerlink" title="什么是ECMAScript兼容?"></a>什么是ECMAScript兼容?</h3><p>指要成为ECMAScript的实现的要求，包含：</p>
-<ul>
-<li>支持ECMA-262描述的所有“类型、值、对象、属性、函数以及程序句法和语义”</li>
-<li>支持Unicode字符标准</li>
-</ul>
-<h2 id="DOM"><a href="#DOM" class="headerlink" title="DOM"></a>DOM</h2><p>DOM是针对XML和HTML的用于提供访问和操作网页内容的方法和接口。DOM将页面映射为一个多层节点结构，通过DOM提供的API，开发人员可以轻松操纵其中任何一个节点。</p>
-<h3 id="Why-DOM"><a href="#Why-DOM" class="headerlink" title="Why DOM?"></a>Why DOM?</h3><p>当时不同公司开发的浏览器分别支持不同形式的DHTML(Dynamic HTML)，这使得开发人员不得不因为浏览器不兼容的原因写两份代码，这阻碍了Web的跨平台天性，因此负责制定Web通信标准的W3C开始着手规划DOM。</p>
-<h3 id="DOM级别"><a href="#DOM级别" class="headerlink" title="DOM级别"></a>DOM级别</h3><ul>
-<li>DOM1级<br>由DOM核心和DOM HTML组成，目标是映射文档的结构。DOM核心规定如何映射基于XML的文档结构，DOM HTML在DOM核心的基础上拓展了针对HTML的对象和方法。</li>
-<li>DOM2级<br>增加了新类型和新接口的定义，包括DOM视图、DOM事件、DOM样式、DOM遍历和范围等。</li>
-<li>DOM3级<br>增加了以统一方式加载和保存文档的方法、验证文档的方法等。</li>
-</ul>
-<h2 id="BOM"><a href="#BOM" class="headerlink" title="BOM"></a>BOM</h2><p>BOM提供与浏览器交互的方法和接口。通过BOM提供的API，开发人员可以控制浏览器显示的页面以外的部分。BOM没有相关标准，但HTML5致力于把很多BOM功能写入正式规范，问题得到了解决。</p>
-<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><p>不同浏览器对JavaScript的三个成分有不同程度的支持，至于开发时具体细节的支持情况，可以在<a href="https://caniuse.com/" target="_blank" rel="noopener">caniuse</a>进行快速查看。</p>
+<h2 id="sprite图"><a href="#sprite图" class="headerlink" title="sprite图"></a>sprite图</h2><p>所有图片资源被放在了一张大图内，因此需要通过截取相应位置来获得相应图片。</p>
+<p>通过这篇<a href="https://spicyyoghurt.com/tutorials/html5-javascript-game-development/images-and-sprite-animations" target="_blank" rel="noopener">DRAW IMAGES AND SPRITE ANIMATIONS</a>发现了如何在画布上显示部分图片：<code>context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height)</code>，其中<code>img</code>为原始sprite图，<code>sx</code>和<code>sy</code>表示所需区域起始点在原始sprite图上的坐标，<code>swidth</code>和<code>sheight</code>表示所需区域在原始sprite图上的大小，后四个参数则为将所需区域放置在canvas上的位置和大小信息(“s” is for “source”)。</p>
+<p>通过这个工具<a href="https://w3samples.com/Sprite-Get-Position" target="_blank" rel="noopener">SVG Sprite Position Finder Tools</a>可以获取sprite图中某部分的<code>sx</code>、<code>sy</code>、<code>swidth</code>、<code>sheight</code>。</p>
+<h2 id="动画实现"><a href="#动画实现" class="headerlink" title="动画实现"></a>动画实现</h2><h3 id="跳跃"><a href="#跳跃" class="headerlink" title="跳跃"></a>跳跃</h3><p>这次的跳跃和上次Flappy Bird跳跃的不同之处在于，这次有地面的支持，因此需要设置“只在空中受重力加速度影响”，触发条件也需要仔细看看。</p>
+<img src="/tips-of-t-rex/jump.jpg" title="jump">
+<p>我差不多是这样得出判断条件的，左下角情况跳变为-20(或其它合适的负数)，右下角情况跳变为0，写成代码的话就是：</p>
+<img src="/tips-of-t-rex/jump-code.png" title="jump-code">
+<h3 id="眨眼"><a href="#眨眼" class="headerlink" title="眨眼"></a>眨眼</h3><p>仔细看的话，会发现在恐龙会在等待页眨眼。我最开始是用<code>everyInterval()</code>来实现的，每隔指定帧数就切换恐龙图片，但发现它的结果是1s闭眼、1s睁眼、1s闭眼、1s睁眼…而不是想要的1s闭眼、5s睁眼、1s闭眼、5s睁眼。于是想到这种方法：<br><img src="/tips-of-t-rex/blink.png" title="blink"></p>
+<h3 id="起始动画"><a href="#起始动画" class="headerlink" title="起始动画"></a>起始动画</h3><p>在等待画面中敲空格键会触发开场动画，小恐龙跳起、地面向右展开。向右展开的动画是还是思考了一会儿的：可以先绘制完整的地面，再拿一块白色的幕布挡住，当敲空格键时让幕布不断向右移动，来实现向右“展开”的过程。</p>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><p>在Class内部的函数内调用同级的内部函数时要注意丢失this的问题，解决办法可以是<code>let that = this</code>再传递<code>that</code>、用箭头函数获取外部<code>this</code>。<br>比如这样写是会出错的：</p>
+<img src="/tips-of-t-rex/wrong-this.png" title="wrong-this">
+<p>可以改写成这样：</p>
+<img src="/tips-of-t-rex/right-this.png" title="right-this">
+<p>好了，我们的小游戏就告一段落，之后如果有空并且有想法的话，我再来开发自己的小游戏吧！</p>
 
       
     </div>
@@ -482,6 +496,18 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/canvas/" rel="tag"># canvas</a>
+          
+            <a href="/tags/game/" rel="tag"># game</a>
+          
+            <a href="/tags/HTML5/" rel="tag"># HTML5</a>
+          
+            <a href="/tags/ES6/" rel="tag"># ES6</a>
+          
+        </div>
+      
 
       
       
@@ -491,8 +517,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/telnet-smtp/" rel="next" title="Telnet中使用SMTP发送邮件">
-                <i class="fa fa-chevron-left"></i> Telnet中使用SMTP发送邮件
+              <a href="/make-flappy-bird-on-canvas/" rel="next" title="Canvas小游戏初探之Flappy Bird">
+                <i class="fa fa-chevron-left"></i> Canvas小游戏初探之Flappy Bird
               </a>
             
           </div>
@@ -500,10 +526,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/js-note-2/" rel="prev" title="JavaScript学习笔记(2)">
-                JavaScript学习笔记(2) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -661,7 +683,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#诞生背景"><span class="nav-number">1.</span> <span class="nav-text">诞生背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript和ECMAScript"><span class="nav-number">2.</span> <span class="nav-text">JavaScript和ECMAScript</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript实现"><span class="nav-number">3.</span> <span class="nav-text">JavaScript实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ECMAScript"><span class="nav-number">4.</span> <span class="nav-text">ECMAScript</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是ECMAScript兼容"><span class="nav-number">4.1.</span> <span class="nav-text">什么是ECMAScript兼容?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM"><span class="nav-number">5.</span> <span class="nav-text">DOM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-DOM"><span class="nav-number">5.1.</span> <span class="nav-text">Why DOM?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM级别"><span class="nav-number">5.2.</span> <span class="nav-text">DOM级别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BOM"><span class="nav-number">6.</span> <span class="nav-text">BOM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#兼容性"><span class="nav-number">7.</span> <span class="nav-text">兼容性</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码结构"><span class="nav-number">1.</span> <span class="nav-text">代码结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sprite图"><span class="nav-number">2.</span> <span class="nav-text">sprite图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动画实现"><span class="nav-number">3.</span> <span class="nav-text">动画实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#跳跃"><span class="nav-number">3.1.</span> <span class="nav-text">跳跃</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#眨眼"><span class="nav-number">3.2.</span> <span class="nav-text">眨眼</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#起始动画"><span class="nav-number">3.3.</span> <span class="nav-text">起始动画</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意点"><span class="nav-number">4.</span> <span class="nav-text">注意点</span></a></li></ol></div>
             
 
           </div>
