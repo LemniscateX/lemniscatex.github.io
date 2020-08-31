@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="我和我做的宝可梦。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="仿生人会梦见电子羊吗？">
+<meta property="og:url" content="https://lemniscatex.github.io/do-androids-dream-of-electric-sheep/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="我和我做的宝可梦。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://lemniscatex.github.io/do-androids-dream-of-electric-sheep/my-design-of-netease.jpg">
+<meta property="og:updated_time" content="2020-08-31T08:55:00.489Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="仿生人会梦见电子羊吗？">
+<meta name="twitter:description" content="我和我做的宝可梦。">
+<meta name="twitter:image" content="https://lemniscatex.github.io/do-androids-dream-of-electric-sheep/my-design-of-netease.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="https://lemniscatex.github.io/do-androids-dream-of-electric-sheep/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>仿生人会梦见电子羊吗？ | 咱是小羊</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">咱是小羊</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-projects">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/projects/" rel="section"><i class="menu-item-icon fa fa-fw fa-magic"></i> <br>Projects</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/do-androids-dream-of-electric-sheep/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">仿生人会梦见电子羊吗？
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-08-20 11:44:46" itemprop="dateCreated datePublished" datetime="2020-08-20T11:44:46+08:00">2020-08-20</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Diary/" itemprop="url" rel="index"><span itemprop="name">Diary</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我和我做的宝可梦。</p>
+<a id="more"></a>
+<hr>
+<p>我睡眠质量一直都很好，但经常做梦。在梦里，我构建了很多奇妙的场景。<br>梦给人以巨大的沉浸感，然而却又非常飘渺，以至于睁眼爬起的过程中，就能完全地忘却。<br>也不知道是我在做梦呢，还是梦把我给吞噬了。</p>
+<h2 id="2018"><a href="#2018" class="headerlink" title="2018"></a>2018</h2><h3 id="11-20"><a href="#11-20" class="headerlink" title="11/20"></a>11/20</h3><p>梦到会攻击人的变异人，我没有办法安稳地躲在一个地方。隔一段时间就要去看看他们是不是靠近自己，然后再紧张恐惧地把超多门窗给关上。</p>
+<h3 id="12-11"><a href="#12-11" class="headerlink" title="12/11"></a>12/11</h3><p>梦到床上有蚯蚓大小的蛇。</p>
+<h3 id="12-19"><a href="#12-19" class="headerlink" title="12/19"></a>12/19</h3><p>梦到贪吃蛇游戏的背景图怎么做(当时在做Python课程大作业)，可以把游戏主体和操作界面用一整张图作为背景，只不过游戏主体背景要调整下透明度，类似毛玻璃特效。</p>
+<h2 id="2019"><a href="#2019" class="headerlink" title="2019"></a>2019</h2><h3 id="1-1"><a href="#1-1" class="headerlink" title="1/1"></a>1/1</h3><p>梦到带小baby的奶爸惹到了混混，于是一家三口被他们给欺负了(有点像伊甸湖)。</p>
+<h3 id="1-23"><a href="#1-23" class="headerlink" title="1/23"></a>1/23</h3><p>梦到贝克汉姆一家除了男主人都被残忍杀害。背景是他们家住在一个很宽阔的平原上，后面一片巨大的林子是他们家的后院。某天来了一个老男人，和他们一家应该是熟人。老男人给他们带了一些礼物，作为回馈，这一家也送了一些回礼给他。后来老男人看上了家里的一罐奶粉，想向这家人索要，但是这家人并没有同意，于是这家人就被追杀了。这个男人很残忍，不仅杀了这一家人，还布置了陷阱把过来勘察现场的工作人员都以残忍的方式杀害了(大概是那段时间看《西部世界》的后遗症了)。</p>
+<h3 id="2-1"><a href="#2-1" class="headerlink" title="2/1"></a>2/1</h3><p>梦到被拴着链子的狗狗咬。梦到朋友们当着我的面吃乌龟的爪爪，有点恶心得难受。</p>
+<h3 id="2-24"><a href="#2-24" class="headerlink" title="2/24"></a>2/24</h3><p>梦到类似家里的地方有蛇，老攻击人。</p>
+<h3 id="3-6"><a href="#3-6" class="headerlink" title="3/6"></a>3/6</h3><p>梦到我家的冰箱很智能，很多层，内部可以各种旋转让你看清内部构造，但我家只有我不会用它。于是当我按完按钮后，它就一直在动，把冰箱弄得乱七八糟，比如黄豆掉了几颗、菜菜被压扁了之类的，而我还不会怎么让冰箱停止自动操作。</p>
+<h3 id="3-10"><a href="#3-10" class="headerlink" title="3/10"></a>3/10</h3><p>梦到牙齿松松，一咬牙就会掉一两颗牙，最后只剩三颗牙齿了。</p>
+<h3 id="3-23"><a href="#3-23" class="headerlink" title="3/23"></a>3/23</h3><p>梦到长得高高大大的男生，对我老好了。我撒娇要抱抱的时候一把就给我抱起来了，甚至不用走路了哈哈。</p>
+<h3 id="4-10"><a href="#4-10" class="headerlink" title="4/10"></a>4/10</h3><p>梦到很开心的梦。我和基友骑了一个很大但是很灵活的动物，它可以带着我跳跳、跑来跑去，我们一路还见到了好多别的大神兽。梦里还坐了类似过山车的电车，它蓝蓝的，有很多车厢，建在城市上面，我可以直接看见轨道，而且可以直接吹到外面的风。</p>
+<h3 id="5-4"><a href="#5-4" class="headerlink" title="5/4"></a>5/4</h3><p>梦到自己一行人要带着一些违禁品穿越别的国家，所以必须跟着一些当地的小黑帮。在途中各种细节发现，他们在暗地里商量着把货品留下、把我们处理掉，于是斗智斗勇地逃跑。</p>
+<h3 id="5-17"><a href="#5-17" class="headerlink" title="5/17"></a>5/17</h3><p>梦到和弟弟妹妹坐公交，但是公交车是倒着开的，然后撞翻了。还有个背景是家里非常拮据，不能出去玩。</p>
+<h3 id="6-18"><a href="#6-18" class="headerlink" title="6/18"></a>6/18</h3><p>梦到一个人家里养了好多动物，比如蛇、老虎之类的。还梦到男朋友很开心地抱别的妹妹去买吃的(呜呜呜)。</p>
+<h3 id="7-17"><a href="#7-17" class="headerlink" title="7/17"></a>7/17</h3><p>梦到大蛇蛇。</p>
+<h3 id="7-31"><a href="#7-31" class="headerlink" title="7/31"></a>7/31</h3><p>梦到自己怀宝宝了(?)，肚子超级平坦的怀宝宝，然后我走路特小心哈哈。</p>
+<h3 id="8-6"><a href="#8-6" class="headerlink" title="8/6"></a>8/6</h3><p>梦到有人负气从高楼跳楼。</p>
+<h3 id="8-15"><a href="#8-15" class="headerlink" title="8/15"></a>8/15</h3><p>梦到在高中的场景下，老师发现有个同学还没到，于是叫他过来，他竟然骑着神兽进来了，神兽还能被老师变成小屁孩。最后我们还在教室里玩抓人游戏，特别疯。</p>
+<h3 id="9-8"><a href="#9-8" class="headerlink" title="9/8"></a>9/8</h3><p>梦到杀人案，还梦到我的俩门牙都横着碎了一半。</p>
+<h3 id="10-15"><a href="#10-15" class="headerlink" title="10/15"></a>10/15</h3><p>梦到我和弟弟被人骗进家里差点出事，但是忘了怎么逃出来了，后来我们全家在家和一个人斗智斗勇。我弟弟还在很夜深的时候要出门去远方，被我苦口婆心地劝到早上再出门。</p>
+<h3 id="10-20"><a href="#10-20" class="headerlink" title="10/20"></a>10/20</h3><p>梦到妈妈信仰奇怪的东西，我濒临死亡。梦里我和两个兄弟姐妹在房间里，门锁着，但是情况很危急，三个人都有生命危险。于是我和妈妈说能不能下次不锁门了，怕出事。她竟然神情非常凶恶地说那以后就得管得更严了才行，于是被吓醒了(噩梦的原因可能是睡觉没盖胳膊，被冰麻了)。</p>
+<h3 id="10-22"><a href="#10-22" class="headerlink" title="10/22"></a>10/22</h3><p>梦到花了17元钱买了包qq糖和两颗硬糖，好贵，心痛。</p>
+<h3 id="10-23"><a href="#10-23" class="headerlink" title="10/23"></a>10/23</h3><p>梦到失恋。</p>
+<h3 id="10-28"><a href="#10-28" class="headerlink" title="10/28"></a>10/28</h3><p>梦到家里可能有仇人，每天都要提防着被人打针，针里估计是有病毒之类的。</p>
+<h3 id="11-26"><a href="#11-26" class="headerlink" title="11/26"></a>11/26</h3><p>梦到和男朋友牵手手被家里亲戚撞见，亲戚让我带路去学校什么地方。后来不知道为什么和男朋友一起笑疼了肚子。</p>
+<h3 id="12-22"><a href="#12-22" class="headerlink" title="12/22"></a>12/22</h3><p>梦到自己掉进了传销组织。</p>
+<h2 id="2020"><a href="#2020" class="headerlink" title="2020"></a>2020</h2><h3 id="1-5"><a href="#1-5" class="headerlink" title="1/5"></a>1/5</h3><p>梦到以前做过的恐怖梦，关于杀人的情节，有种经历第二次的感觉。梦里大家表面都是好人，实际上非常恐怖，杀起人来不管大人小孩。</p>
+<h3 id="1-7"><a href="#1-7" class="headerlink" title="1/7"></a>1/7</h3><p>梦到我和一个女孩儿上楼回家，我忘记了我家在几楼，就跟着一直向上走。直到她到家门口要进去了我才想起来，但是由于楼梯好黑好危险，我不敢一个人下去。这个时候天台正好有我的同学在踢毽子，就去跟他们玩耍，边踢毽子边唱歌，特别像音乐剧。唱完合影后，广播里传来声音“好~现在大家可以去找工作啦”，在我愣在原地的时候一个人过来，告诉我别去，遂醒。</p>
+<h3 id="1-29"><a href="#1-29" class="headerlink" title="1/29"></a>1/29</h3><p>梦到很多人围着一起唱歌，然后左边的人往右边瞥了一眼突然笑起来，跟我说我脸好圆好可爱(?)，然后就捏着我的脸，笑着跟旁边的人说这个。</p>
+<h3 id="2-3"><a href="#2-3" class="headerlink" title="2/3"></a>2/3</h3><p>梦到教学楼A4门口草地上有好多小长颈鹿躺在草丛边睡觉，露出牙牙的那种蠢蠢睡姿，还有很多别的小动物。</p>
+<h3 id="2-11"><a href="#2-11" class="headerlink" title="2/11"></a>2/11</h3><p>梦到上课的时候被老师针对了，老师总暗讽明说我比别的同学笨，想问题的方式不对。还梦见我得知武汉这座城市是盖在一个别的小城市表面的，把别人占领了，改了改景观这样子。还偶然得知学校的建设速度很快，操场上的校车，竟然是用石头做的。再就是梦到去洗手间，跑到了开放式卫生间的男生区域(?)，蹲着的时候脚表面竟然能放电视剧，我蹲了好久看剧。</p>
+<h3 id="2-21"><a href="#2-21" class="headerlink" title="2/21"></a>2/21</h3><p>梦到和朋友玩耍，有个地方的椰奶冻好好吃。那里有只鸡是我的坐骑，很大，如果要坐上去的话它会侧过身让我坐它背上。</p>
+<h3 id="2-26"><a href="#2-26" class="headerlink" title="2/26"></a>2/26</h3><p>梦到掉了半嘴的牙齿。</p>
+<h3 id="3-2"><a href="#3-2" class="headerlink" title="3/2"></a>3/2</h3><p>梦到自己正在被宽大的传送带送到一个地势更加低一点的地方，梦里的设定是以前自由落体的高度很小，但开始下落的时候我才发现这次好高，差不多是峡谷的高度，被吓醒了。还梦见了RNG的小明在舞台上唱歌，一点都不腼腆的。</p>
+<h3 id="3-6-1"><a href="#3-6-1" class="headerlink" title="3/6"></a>3/6</h3><p>梦到自己考语文，在飞机位，怎么都找不到高度合适的桌子和凳子。</p>
+<h3 id="3-7"><a href="#3-7" class="headerlink" title="3/7"></a>3/7</h3><p>梦到爬很陡的山看星星，路程中扑街掉下来了，于是就在山下面待着了。下来的路是一个大滑坡，我爸爸寻刺激带着两个兄弟姐妹往下冲(这也太虎了)。</p>
+<h3 id="3-9"><a href="#3-9" class="headerlink" title="3/9"></a>3/9</h3><p>梦到男朋友跑自己初中班里去了，还给他看了我的可爱笔袋(这个笔袋现在已经不知道在哪里了)。</p>
+<h3 id="3-10-1"><a href="#3-10-1" class="headerlink" title="3/10"></a>3/10</h3><p>梦到有个同学在教室里订了三鹿奶粉，老师听到了之后就开始给我们讲这个奶粉怎么样，我跑去洗手间，刚好看到过来送货的大叔。</p>
+<h3 id="3-12"><a href="#3-12" class="headerlink" title="3/12"></a>3/12</h3><p>梦到准备面试，把自己吓醒了。</p>
+<h3 id="3-19"><a href="#3-19" class="headerlink" title="3/19"></a>3/19</h3><p>梦到妈妈坚持要看我手机，我一直在说服她，跟她说这样不行。</p>
+<h3 id="4-7"><a href="#4-7" class="headerlink" title="4/7"></a>4/7</h3><p>梦到我爸和朋友在美国，车停到一个很陡的斜坡草坪上，突然来了几个人很冲地讲话，然后就举枪开始朝车顶射击了。</p>
+<h3 id="4-8"><a href="#4-8" class="headerlink" title="4/8"></a>4/8</h3><p>梦到我的房间里都是很大很大的鱼，房间就像充满了水一样，鱼鱼就一直悬浮着游来游去。</p>
+<h3 id="4-15"><a href="#4-15" class="headerlink" title="4/15"></a>4/15</h3><p>梦到去江浙的一个园林逛。这个地方的楼是环形的，它内部包围着很多桥。最神奇的是，这些桥是可以移动的，我好奇地问工作人员，他们跟我说这样可以让地面的维修更方便，只要把桥换一个构造方式就可以单独隔离出来一个施工点。园林的内部竟然有贯穿的隧道，隧道里的情景像是模拟的军事基地，还有人在军训。</p>
+<h3 id="5-4-1"><a href="#5-4-1" class="headerlink" title="5/4"></a>5/4</h3><p>梦到高中班里有同学在教室里断断续续地弹钢琴，歌曲是Jay的。</p>
+<h3 id="5-6"><a href="#5-6" class="headerlink" title="5/6"></a>5/6</h3><p>梦到在深夜的自己公寓里面试，面试官表示还不错然后就准备走了。面试官的设定是学校的某个师兄，走的时候还在和我抱怨有什么课要上，然后他就走了，我就把门关上了。正当我松了一口气，准备洗漱睡觉的时候，我听到门口突然出现了混混互相对话、胡乱敲门的声音。我心想完了，这都凌晨了，刚我关门的声音那么小，他们肯定在之前就盯着我了，而且我刚刚忘记拿钥匙锁门了。心里一咯噔，吓醒了。</p>
+<h3 id="5-10"><a href="#5-10" class="headerlink" title="5/10"></a>5/10</h3><p>梦到刺杀和各种复仇故事。</p>
+<h3 id="5-16"><a href="#5-16" class="headerlink" title="5/16"></a>5/16</h3><p>梦到被几个熊孩子偷看洗澡，警告他们然后被围追堵截，醒之前正在逃跑。</p>
+<h3 id="5-31"><a href="#5-31" class="headerlink" title="5/31"></a>5/31</h3><p>梦到自己还是小学生的样子，和几个人一起跑酷赶车。这里的车站点是设在大型超市里的，在路上我还被两只狗狗给堵住了。</p>
+<h3 id="6-1"><a href="#6-1" class="headerlink" title="6/1"></a>6/1</h3><p>梦到班主任有枪，脾气暴，在班里解决了两个学生。然后老师开始选人上讲台站着，作为潜在的被开枪对象，还让被选的人自己再挑几个人陪他一起上去。我被同桌坑上去了，最后大半个班都上去了，老师戏谑式地给我们讲了几个道理，就下课让我们走了。后来和班里同学聊天，去外面玩耍。外面有个巨大的天然滑滑梯瀑布，水里有青蛙，时不时会冒出个头，虽然我很害怕青蛙，但是它可以一下就被踢开，我好像就没那么嫌弃了。然后我就玩滑滑梯了，还挺好玩的。</p>
+<h3 id="6-1-1"><a href="#6-1-1" class="headerlink" title="6/1"></a>6/1</h3><p>梦到一个开阔的地方有类似红卫兵一样的热血青年在围追人。主角是一家三口，女儿和妈妈一起，两个人和爸爸走散了，他们吵架了。后来他们分别被两拨青年给包围起来了，以至于架都吵不起来了(这个是午觉做的梦)。</p>
+<h3 id="6-4"><a href="#6-4" class="headerlink" title="6/4"></a>6/4</h3><p>梦到见对方家长。</p>
+<h3 id="6-7"><a href="#6-7" class="headerlink" title="6/7"></a>6/7</h3><p>梦到在小的私人书店看书，好像有个知识竞赛之类的活动，我赢了，旁边好几个人过来夸我。后来我带着买的瑜伽垫快递回家，在我家下一层楼的楼道里就开始蹲下拆快递。那层楼的一家人听到门口有声响就开门，发现是我在拆快递，就让我整个人挪进他家一点。我照做了，不过什么危险事情都没有发生，就是那家人的男主人问我要不要吃蹦蹦糖，我说不用了。拆完快递我就走了，那家女主人过来跟我解释说，因为怕外面不安全，所以才让我挪进去的。</p>
+<h3 id="6-10"><a href="#6-10" class="headerlink" title="6/10"></a>6/10</h3><p>梦到手机的qq登录有好多个不认识的账号记录，设定是那些账号是同班同学的，而我好像失忆了，所以就不记得了。</p>
+<h3 id="6-11"><a href="#6-11" class="headerlink" title="6/11"></a>6/11</h3><p>梦到涉及种族歧视的(非常紧跟时事了，George Floyd事件那会儿)。白人黑人身份反了，我在一个类似贫民窟的地方躲着观察，发现有个地位高的黑人经过，白人全部缩成一团，不敢正眼直视黑人。还梦到既有高中同学又有大学同学，一起在中学教室里考试，考卷上既有语文又有数学，还有Python(?)。</p>
+<h3 id="6-15"><a href="#6-15" class="headerlink" title="6/15"></a>6/15</h3><p>梦到有只猫猫从很高的地方摔下来，我和一个同学把它送到一个人家里救治。</p>
+<h3 id="6-17"><a href="#6-17" class="headerlink" title="6/17"></a>6/17</h3><p>梦到危险的逃亡。好几个小孩儿一起逃亡，好多个逃亡任务。</p>
+<h3 id="7-7"><a href="#7-7" class="headerlink" title="7/7"></a>7/7</h3><p>梦到男朋友不对我好了，我一个人哭哭啼啼下楼找对方，下楼了才发现对方已经走了也不等我了。</p>
+<h3 id="7-29"><a href="#7-29" class="headerlink" title="7/29"></a>7/29</h3><p>梦到带着弟弟妹妹去HK。</p>
+<h3 id="8-1"><a href="#8-1" class="headerlink" title="8/1"></a>8/1</h3><p>梦到在面试，但是面试内容是跳舞(?)。前面的妹妹在跳舞，到我的时候我说“我就不了”哈哈。</p>
+<h3 id="8-12"><a href="#8-12" class="headerlink" title="8/12"></a>8/12</h3><p>梦到去恐怖密室之类的地方(前段时间刚好和同事团建去鬼打墙密室了)，快结束的时候一个NPC把我们其中一个人骗入游戏场景，并赶紧自己跑了出来，有点类似诅咒转移，于是那个人就被困在恐怖世界了。</p>
+<h3 id="8-15-1"><a href="#8-15-1" class="headerlink" title="8/15"></a>8/15</h3><p>梦到同事教我学英语。</p>
+<h3 id="8-16"><a href="#8-16" class="headerlink" title="8/16"></a>8/16</h3><p>梦到教室里有一个手是树枝的怪物，它在教室里走了一圈问大家“你的命运由谁主宰？”(太中二了)，其中一个人激怒了他，于是我们就开打了。怪物的设定是必须破坏脑袋才能被消灭(估计是看《行尸走肉》的后遗症)，于是我拿着树枝捅它，大概捅了一个晚上，最后它被消灭了。</p>
+<h3 id="8-18"><a href="#8-18" class="headerlink" title="8/18"></a>8/18</h3><p>梦到和一个妹子，我俩和某地区恶霸是宿敌，我们知道他们是坏人，比较害怕，走路都是绕道的。某天比较晚的时候我们在路上瞥到了他们，撒丫子就开跑，我俩穿过好多人群，跑了好久，最后跑到了一个出口很少的小巷子里了。然后同事和一个女生气喘吁吁地赶到了，问我们什么情况，怎么突然跑起来了，还跑到了死胡同。说时迟那时快，恶霸几个人马上赶到了，他们非常挑衅，要干坏事的样子。于是我们就开始抗争起来了，四人里唯一的那个男生去抗攻击了，后来就醒了。</p>
+<h3 id="8-25"><a href="#8-25" class="headerlink" title="8/25"></a>8/25</h3><p>梦到在一个望海楼的地方看人在前面争执，还能看见远方的海浪。</p>
+<h3 id="8-30"><a href="#8-30" class="headerlink" title="8/30"></a>8/30</h3><p>梦到自己设计了一版网易云音乐(?)。<br><img src="/do-androids-dream-of-electric-sheep/my-design-of-netease.jpg" title="my-design-of-netease"><br>中间那块儿是像火山口一样的，内部有很多岩浆和碎石沙砾，岩浆是在一直翻滚的沸腾状态。灰色的是进度条，中间的黑色点是进度点，它其实是一个大石头，正常的播放状态下，它是被翻滚的岩浆给带动着一路往前滚的。<br>还有一个效果是当移动进度条的时候，它会给这个进度条点点(也就是中间的石块儿)一个初速度和加速度，它就会往进度条的指定方向加速滚动，需要手动停止。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/gains-during-tencent-assessment/" rel="next" title="核周记">
+                <i class="fa fa-chevron-left"></i> 核周记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar/avatar.jpg" alt="">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2018"><span class="nav-number">1.</span> <span class="nav-text">2018</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-20"><span class="nav-number">1.1.</span> <span class="nav-text">11/20</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-11"><span class="nav-number">1.2.</span> <span class="nav-text">12/11</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-19"><span class="nav-number">1.3.</span> <span class="nav-text">12/19</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2019"><span class="nav-number">2.</span> <span class="nav-text">2019</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1"><span class="nav-number">2.1.</span> <span class="nav-text">1/1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-23"><span class="nav-number">2.2.</span> <span class="nav-text">1/23</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1"><span class="nav-number">2.3.</span> <span class="nav-text">2/1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-24"><span class="nav-number">2.4.</span> <span class="nav-text">2/24</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6"><span class="nav-number">2.5.</span> <span class="nav-text">3/6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-10"><span class="nav-number">2.6.</span> <span class="nav-text">3/10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-23"><span class="nav-number">2.7.</span> <span class="nav-text">3/23</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-10"><span class="nav-number">2.8.</span> <span class="nav-text">4/10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4"><span class="nav-number">2.9.</span> <span class="nav-text">5/4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-17"><span class="nav-number">2.10.</span> <span class="nav-text">5/17</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-18"><span class="nav-number">2.11.</span> <span class="nav-text">6/18</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-17"><span class="nav-number">2.12.</span> <span class="nav-text">7/17</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-31"><span class="nav-number">2.13.</span> <span class="nav-text">7/31</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-6"><span class="nav-number">2.14.</span> <span class="nav-text">8/6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-15"><span class="nav-number">2.15.</span> <span class="nav-text">8/15</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-8"><span class="nav-number">2.16.</span> <span class="nav-text">9/8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-15"><span class="nav-number">2.17.</span> <span class="nav-text">10/15</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-20"><span class="nav-number">2.18.</span> <span class="nav-text">10/20</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-22"><span class="nav-number">2.19.</span> <span class="nav-text">10/22</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-23"><span class="nav-number">2.20.</span> <span class="nav-text">10/23</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-28"><span class="nav-number">2.21.</span> <span class="nav-text">10/28</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-26"><span class="nav-number">2.22.</span> <span class="nav-text">11/26</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-22"><span class="nav-number">2.23.</span> <span class="nav-text">12/22</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2020"><span class="nav-number">3.</span> <span class="nav-text">2020</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5"><span class="nav-number">3.1.</span> <span class="nav-text">1/5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7"><span class="nav-number">3.2.</span> <span class="nav-text">1/7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-29"><span class="nav-number">3.3.</span> <span class="nav-text">1/29</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3"><span class="nav-number">3.4.</span> <span class="nav-text">2/3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-11"><span class="nav-number">3.5.</span> <span class="nav-text">2/11</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-21"><span class="nav-number">3.6.</span> <span class="nav-text">2/21</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-26"><span class="nav-number">3.7.</span> <span class="nav-text">2/26</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2"><span class="nav-number">3.8.</span> <span class="nav-text">3/2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-1"><span class="nav-number">3.9.</span> <span class="nav-text">3/6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7"><span class="nav-number">3.10.</span> <span class="nav-text">3/7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-9"><span class="nav-number">3.11.</span> <span class="nav-text">3/9</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-10-1"><span class="nav-number">3.12.</span> <span class="nav-text">3/10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-12"><span class="nav-number">3.13.</span> <span class="nav-text">3/12</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-19"><span class="nav-number">3.14.</span> <span class="nav-text">3/19</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7"><span class="nav-number">3.15.</span> <span class="nav-text">4/7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8"><span class="nav-number">3.16.</span> <span class="nav-text">4/8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-15"><span class="nav-number">3.17.</span> <span class="nav-text">4/15</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-1"><span class="nav-number">3.18.</span> <span class="nav-text">5/4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6"><span class="nav-number">3.19.</span> <span class="nav-text">5/6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-10"><span class="nav-number">3.20.</span> <span class="nav-text">5/10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-16"><span class="nav-number">3.21.</span> <span class="nav-text">5/16</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-31"><span class="nav-number">3.22.</span> <span class="nav-text">5/31</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1"><span class="nav-number">3.23.</span> <span class="nav-text">6/1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-1"><span class="nav-number">3.24.</span> <span class="nav-text">6/1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4"><span class="nav-number">3.25.</span> <span class="nav-text">6/4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-7"><span class="nav-number">3.26.</span> <span class="nav-text">6/7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-10"><span class="nav-number">3.27.</span> <span class="nav-text">6/10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-11"><span class="nav-number">3.28.</span> <span class="nav-text">6/11</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-15"><span class="nav-number">3.29.</span> <span class="nav-text">6/15</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-17"><span class="nav-number">3.30.</span> <span class="nav-text">6/17</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-7"><span class="nav-number">3.31.</span> <span class="nav-text">7/7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-29"><span class="nav-number">3.32.</span> <span class="nav-text">7/29</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1"><span class="nav-number">3.33.</span> <span class="nav-text">8/1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-12"><span class="nav-number">3.34.</span> <span class="nav-text">8/12</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-15-1"><span class="nav-number">3.35.</span> <span class="nav-text">8/15</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-16"><span class="nav-number">3.36.</span> <span class="nav-text">8/16</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-18"><span class="nav-number">3.37.</span> <span class="nav-text">8/18</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-25"><span class="nav-number">3.38.</span> <span class="nav-text">8/25</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-30"><span class="nav-number">3.39.</span> <span class="nav-text">8/30</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.7.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.7.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
