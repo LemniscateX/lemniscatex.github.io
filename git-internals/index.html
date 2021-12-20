@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="我们不生产文章，我们只是 Pro Git Book 的搬运工。本文通过例子，来阐述 Git 是如何对「版本控制」这个命题进行抽象和实践的，以及是如何用「底层命令」去实现「上层命令」的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git内部原理">
+<meta property="og:url" content="https://lemniscatex.github.io/git-internals/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="我们不生产文章，我们只是 Pro Git Book 的搬运工。本文通过例子，来阐述 Git 是如何对「版本控制」这个命题进行抽象和实践的，以及是如何用「底层命令」去实现「上层命令」的。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lemniscatex.github.io/git-internals/sample-tree-object.png">
+<meta property="og:image" content="https://lemniscatex.github.io/git-internals/sample-commit-object.png">
+<meta property="og:image" content="https://lemniscatex.github.io/git-internals/sample-ref.png">
+<meta property="article:published_time" content="2021-04-20T06:41:45.000Z">
+<meta property="article:modified_time" content="2021-04-20T08:21:54.000Z">
+<meta property="article:tag" content="essence">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lemniscatex.github.io/git-internals/sample-tree-object.png">
+
+<link rel="canonical" href="https://lemniscatex.github.io/git-internals/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Git内部原理 | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/git-internals/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Git内部原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-04-20 14:41:45 / Modified: 16:21:54" itemprop="dateCreated datePublished" datetime="2021-04-20T14:41:45+08:00">2021-04-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我们不生产文章，我们只是 Pro Git Book 的搬运工。<br>本文通过例子，来阐述 Git 是如何对「版本控制」这个命题进行抽象和实践的，以及是如何用「底层命令」去实现「上层命令」的。</p>
+<span id="more"></span>
+
+<hr>
+<p>git 的本质是一个内容寻址(content-addressable)系统，并在此基础上提供了一个版本控制系统的用户界面。早期的 git 侧重于文件系统而不是一个被打磨过的版本控制系统，现在则已经成为了一个优秀的版本控制系统。</p>
+<p>git 分为两层，一层是我们日常使用的上层命令(procelain)；一层是更加低抽象层次的底层命令(plumbing)。通过底层命令，可以很好地窥探 git 内部的工作机制。</p>
+<p>git 将版本控制相关内容放在了 <code>.git</code> 目录下，它包含了几乎所有 git 存储和操作的东西，它的典型结构如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ls -F1</span></span><br><span class="line">config      # 包含项目特有的配置选项</span><br><span class="line">description # 仅供 GitWeb 程序使用</span><br><span class="line">hooks/      # 包含客户端服务端的钩子脚本(hook script)</span><br><span class="line">info/       # 包含全局性排除文件，即没有放在 .gitignore 里的忽略模式(ignored pattern)</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git 核心组成成分</span></span><br><span class="line">objects/    # 存储所有数据内容</span><br><span class="line">refs/       # 存储指向数据(分支、远程仓库、标签等)的提交对象的指针</span><br><span class="line">HEAD        # 指向当前被检出的分支</span><br><span class="line">index       # 保存暂存区信息</span><br></pre></td></tr></table></figure>
+
+<p>下面就用例子来按顺序讲解这四个部分。</p>
+<h2 id="git-对象"><a href="#git-对象" class="headerlink" title="git 对象"></a>git 对象</h2><p>git 核心是内容寻址系统，一个简单的 key-value 数据库。不管插入任何类型的内容，它都会返回唯一的键，通过它可以进行读取。对一个仓库来说，所有的对象都存储在它的 <code>.git/objects</code> 目录下。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git init <span class="built_in">test</span></span></span><br><span class="line">Initialized empty Git repository in /tmp/test/.git/</span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> <span class="built_in">test</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> find ./git/objects</span></span><br><span class="line">.git/objects</span><br><span class="line">.git/objects/info</span><br><span class="line">.git/objects/pack</span><br></pre></td></tr></table></figure>
+
+<p>目前我们初始化了一个仓库，git 对 <code>objects</code> 目录进行了初始化，创建了 <code>info</code> 和 <code>pack</code> 子目录，不过也都是空的。下面我们分别介绍不同的对象类型以及相应操作。</p>
+<h3 id="文件对象-blob"><a href="#文件对象-blob" class="headerlink" title="文件对象 blob"></a>文件对象 blob</h3><p>先来创建一个新的对象并把它手动存入这个 git 数据库中。</p>
+<blockquote>
+<p>创建数据对象： git hash-object</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -w 表示该命令不止要返回键，还要将该对象写入数据库</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> --stdin 表示该命令从标准输出读取输入，如果不指定则需要在命令尾部给出待存储文件的路径</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&#x27;test content&#x27;</span> | git hash-object -w --stdin</span></span><br><span class="line">d670460b4b4aece5915caf5c68d12f560a9fe3e4</span><br></pre></td></tr></table></figure>
+
+<p>这里返回了一个长度 40 字符的 key，它是待存储数据和头部信息做 SHA-1 校验运算得到的校验和。现在，我们看一下 git是怎么存储文件的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> find .git/objects -<span class="built_in">type</span> f</span></span><br><span class="line">.git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4</span><br></pre></td></tr></table></figure>
+
+<p>这里，校验和前 2 位作为目录，余下的 38 位作为文件名。要注意的是，文件内容被保存了，但是文件名并没有被保存。我们把内容存进了对象数据库后，就可以通过 key 来从 git 取回数据、查看文件内容了，如下：</p>
+<blockquote>
+<p>查看数据对象：git cat-file</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -p 表示自动判断内容类型，并显示大致内容</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p d670460b4b4aece5915caf5c68d12f560a9fe3e4</span></span><br><span class="line">test content</span><br></pre></td></tr></table></figure>
+
+<p>这种类型的对象被称为数据对象(blob object)，可以通过下面的命令查看对象类型：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -t d670460b4b4aece5915caf5c68d12f560a9fe3e4</span></span><br><span class="line">blob</span><br></pre></td></tr></table></figure>
+
+<p>下面我们再往数据库里写一些内容，演示一下，同时作为后面操作 <code>.git</code> 内容的对象：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ---------- 存入 ----------</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建新文件并存入数据库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&#x27;version 1&#x27;</span> &gt; test.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git hash-object -w test.txt</span></span><br><span class="line">83baae61804e65cc73a7201a7252750c76066a30</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件并存入数据库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&#x27;version 2&#x27;</span> &gt; test.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git hash-object -w test.txt</span></span><br><span class="line">1f7a7a472abf3dd9643fd615f6da379c4acb3e3a</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- 查看 ----------</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 现在，对象数据库记录了该文件的两个不同版本</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> find .git/objects -<span class="built_in">type</span> f</span></span><br><span class="line">.git/objects/1f/7a7a472abf3dd9643fd615f6da379c4acb3e3a # 之前存的 &#x27;test content&#x27;</span><br><span class="line">.git/objects/83/baae61804e65cc73a7201a7252750c76066a30 # &#x27;version 1&#x27;</span><br><span class="line">.git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4 # &#x27;version 2&#x27;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- 读取 ----------</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 83baae61804e65cc73a7201a7252750c76066a30 &gt; test.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat test.txt</span></span><br><span class="line">version 1</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 1f7a7a472abf3dd9643fd615f6da379c4acb3e3a &gt; test.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat test.txt</span></span><br><span class="line">version 2</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="树对象-tree"><a href="#树对象-tree" class="headerlink" title="树对象 tree"></a>树对象 tree</h3><p>树对象可以解决文件名保存的问题，允许我们将多个文件组织到一起。和 UNIX 系统对应的话，树对象类似目录项，数据对象类似 inodes 或文件内容。我们尝试读取一个树对象(不是我们的仓库)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> master^&#123;tree&#125; 表示 master 分支上最新的提交所指向的树对象</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> PS: 不同系统里的 ^ 和 &#123;&#125; 可能有特殊用途，需要转义或者用引号括起来</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> CMD: master^^&#123;tree&#125;, PowerShell: <span class="string">&#x27;master^&#123;tree&#125;&#x27;</span>, ZSH: <span class="string">&quot;master^&#123;tree&#125;&quot;</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p master^&#123;tree&#125;</span></span><br><span class="line">100644 blob a906cb2a4a904a152e80877d4088654daad0c859      README</span><br><span class="line">100644 blob 8f94139338f9404f26296befa88755fc2598c289      Rakefile</span><br><span class="line">040000 tree 99f1a6d12cb4b6f19c8655fca46c3ecf317074e0      lib</span><br></pre></td></tr></table></figure>
+
+<p>可以看到它里面有 blob 也有 tree。</p>
+<p>在 git 中，树对象通常被用来保存某一时刻暂存区(index 区域)所表示的状态。过程是这样的，一是先创建暂存区，二是把指定文件添加到暂存区，下面我们存一下之前创建的第一个版本的 <code>test.txt</code>：</p>
+<blockquote>
+<p>将文件存入暂存区：git update-index</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> --add 表示将文件添加到暂存区</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> --cacheinfo 表示要添加的文件在 git 数据库中而不是当前目录下</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 100644 表示要添加的文件模式为普通文件(100755 表示可执行文件，1200000 表示符号链接)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> SHA-1 表示要添加的文件对应的 key</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> test.txt 表示要添加的文件对应的文件名</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git update-index --add --cacheinfo 100644 \</span></span><br><span class="line"><span class="bash">  83baae61804e65cc73a7201a7252750c76066a30 test.txt</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>将暂存区写入树对象：git write-tree</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 树对象此前并不存在则不需要 -w 选项，这里根据暂存区状态自动创建了新的树对象</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git write-tree</span></span><br><span class="line">d8329fc1cc938780ffdd9f94e0d364e0ea74f579</span><br></pre></td></tr></table></figure>
+
+<p>那我们来看看这个树对象：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p d8329fc1cc938780ffdd9f94e0d364e0ea74f579</span></span><br><span class="line">100644 blob 83baae61804e65cc73a7201a7252750c76066a30      test.txt</span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -t d8329fc1cc938780ffdd9f94e0d364e0ea74f579</span></span><br><span class="line">tree</span><br></pre></td></tr></table></figure>
+
+<p>为了好玩，我们拿第二个版本的 <code>text.txt</code> 并添加一个 <code>new.txt</code>，再存一个新的树对象：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ---------- 文件存入暂存区 ----------</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&#x27;new file&#x27;</span> &gt; new.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git update-index --add --cacheinfo 100644 \</span></span><br><span class="line"><span class="bash">  1f7a7a472abf3dd9643fd615f6da379c4acb3e3a test.txt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git update-index --add new.txt</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- 暂存区存成新的树对象 ----------</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git write-tree</span></span><br><span class="line">0155eb4229851634a0f03eb265b69f5a2d56f341</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- 读取新的树对象 ----------</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 0155eb4229851634a0f03eb265b69f5a2d56f341</span></span><br><span class="line">100644 blob fa49b077972391ad58037050f2a75f74e3671e92      new.txt</span><br><span class="line">100644 blob 1f7a7a472abf3dd9643fd615f6da379c4acb3e3a      test.txt</span><br></pre></td></tr></table></figure>
+
+<p>还是为了好玩，我们把第一个树对象加入第二个树对象，创建第三个树对象：</p>
+<blockquote>
+<p>将树对象存入暂存区：git read-tree</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ---------- 树对象存入暂存区 ----------</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git read-tree --prefix=bak d8329fc1cc938780ffdd9f94e0d364e0ea74f579</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- 暂存区存成新的树对象 ----------</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git write-tree</span></span><br><span class="line">3c4e9cd789d88d8d89c1073707c3585e41b0e614</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- 读取新的树对象 ----------</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 3c4e9cd789d88d8d89c1073707c3585e41b0e614</span></span><br><span class="line">040000 tree d8329fc1cc938780ffdd9f94e0d364e0ea74f579      bak</span><br><span class="line">100644 blob fa49b077972391ad58037050f2a75f74e3671e92      new.txt</span><br><span class="line">100644 blob 1f7a7a472abf3dd9643fd615f6da379c4acb3e3a      test.txt</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这里的 <code>bak</code> 并不是数据对象，而是树对象，是一个指向另一个树对象的指针，读一下看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p d8329fc1cc938780ffdd9f94e0d364e0ea74f579</span></span><br><span class="line">100644 blob 83baae61804e65cc73a7201a7252750c76066a30      test.txt</span><br></pre></td></tr></table></figure>
+
+<p>第三个树对象的结构大概如下：</p>
+<img src="/git-internals/sample-tree-object.png" class="" title="sample-tree-object">
+
+
+
+
+<h3 id="提交对象-commit"><a href="#提交对象-commit" class="headerlink" title="提交对象 commit"></a>提交对象 commit</h3><p>现在我们有三个树对象了，分别代表项目的快照。目前我们只能用复杂的 SHA-1 来记住他们，而且还不知道快照的保存时刻、保存者、保存原因等，而这就引出了提交对象 commit。我们先用第一个树对象创建一个提交对象：</p>
+<blockquote>
+<p>创建提交对象：git commit-tree</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&#x27;first commit&#x27;</span> | git commit-tree d8329f</span></span><br><span class="line">fdf4fc3344e67ab068f836878b6c4951e3b15f3d</span><br></pre></td></tr></table></figure>
+
+<p>读取一下这个提交对象看看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p fdf4fc3</span></span><br><span class="line">tree d8329fc1cc938780ffdd9f94e0d364e0ea74f579               # 项目快照的顶层树对象</span><br><span class="line"><span class="meta">#</span><span class="bash"> (此提交无)                                                 <span class="comment"># 父提交</span></span></span><br><span class="line">author Scott Chacon &lt;schacon@gmail.com&gt; 1243040974 -0700    # user.name + 时间戳</span><br><span class="line">committer Scott Chacon &lt;schacon@gmail.com&gt; 1243040974 -0700 # user.email + 时间戳</span><br><span class="line">                                                            # 留空一行</span><br><span class="line">first commit                                                # 提交注释</span><br></pre></td></tr></table></figure>
+
+<p>我们再拿第二个和第三个树对象创建两个提交对象，它们分别引用各自的上一个提交作为父提交：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&#x27;second commit&#x27;</span> | git commit-tree 0155eb -p fdf4fc3</span></span><br><span class="line">cac0cab538b970a37ea1e769cbbde608743bc96d</span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&#x27;third commit&#x27;</span>  | git commit-tree 3c4e9c -p cac0cab</span></span><br><span class="line">1a410efbd13591db07496601ebc7a059dd55cfe9</span><br></pre></td></tr></table></figure>
+
+<p>进行完毕后，我们对最后一个提交的 SHA-1 进行 log，就可以看到真实的一个 git 提交历史了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> --<span class="built_in">stat</span> 1a410e</span></span><br><span class="line">commit 1a410efbd13591db07496601ebc7a059dd55cfe9</span><br><span class="line">Author: Scott Chacon &lt;schacon@gmail.com&gt;</span><br><span class="line">Date:   Fri May 22 18:15:24 2009 -0700</span><br><span class="line"></span><br><span class="line">	third commit</span><br><span class="line"></span><br><span class="line"> bak/test.txt | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"></span><br><span class="line">commit cac0cab538b970a37ea1e769cbbde608743bc96d</span><br><span class="line">Author: Scott Chacon &lt;schacon@gmail.com&gt;</span><br><span class="line">Date:   Fri May 22 18:14:29 2009 -0700</span><br><span class="line"></span><br><span class="line">	second commit</span><br><span class="line"></span><br><span class="line"> new.txt  | 1 +</span><br><span class="line"> test.txt | 2 +-</span><br><span class="line"> 2 files changed, 2 insertions(+), 1 deletion(-)</span><br><span class="line"></span><br><span class="line">commit fdf4fc3344e67ab068f836878b6c4951e3b15f3d</span><br><span class="line">Author: Scott Chacon &lt;schacon@gmail.com&gt;</span><br><span class="line">Date:   Fri May 22 18:09:34 2009 -0700</span><br><span class="line"></span><br><span class="line">    first commit</span><br><span class="line"></span><br><span class="line"> test.txt | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
+
+<p>上面的操作，正是我们运行 <code>git add</code> 和 <code>git commit</code> 时，git 所做的实质工作：将被修改的文件保存为数据对象、更新暂存区、记录树对象、创建(指明了顶层树对象和父提交对象的)提交对象。对于涉及到的的数据对象、树对象、提交对象，最初都存在 <code>.git/objects</code> 中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> find .git/objects -<span class="built_in">type</span> f</span></span><br><span class="line">.git/objects/01/55eb4229851634a0f03eb265b69f5a2d56f341 # tree 2</span><br><span class="line">.git/objects/1a/410efbd13591db07496601ebc7a059dd55cfe9 # commit 3</span><br><span class="line">.git/objects/1f/7a7a472abf3dd9643fd615f6da379c4acb3e3a # test.txt v2</span><br><span class="line">.git/objects/3c/4e9cd789d88d8d89c1073707c3585e41b0e614 # tree 3</span><br><span class="line">.git/objects/83/baae61804e65cc73a7201a7252750c76066a30 # test.txt v1</span><br><span class="line">.git/objects/ca/c0cab538b970a37ea1e769cbbde608743bc96d # commit 2</span><br><span class="line">.git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4 # &#x27;test content&#x27;</span><br><span class="line">.git/objects/d8/329fc1cc938780ffdd9f94e0d364e0ea74f579 # tree 1</span><br><span class="line">.git/objects/fa/49b077972391ad58037050f2a75f74e3671e92 # new.txt</span><br><span class="line">.git/objects/fd/f4fc3344e67ab068f836878b6c4951e3b15f3d # commit 1</span><br></pre></td></tr></table></figure>
+
+<p>当前所有数据的结构如下：</p>
+<img src="/git-internals/sample-commit-object.png" class="" title="sample-commit-object">
+
+
+
+<h3 id="对象存储"><a href="#对象存储" class="headerlink" title="对象存储"></a>对象存储</h3><p>之前我们讲返回的 40 个字符串是“待存储数据和头部信息做 SHA-1 校验运算得到的校验和”，现在我们就举存一个字符串的例子，看看这个头部信息和待存储数据是怎么存的，下面用了 Ruby。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 进入 ruby 交互命令行</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> irb</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 待存储数据</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt; content = <span class="string">&quot;what is up, doc?&quot;</span></span></span><br><span class="line">=&gt; &quot;what is up, doc?&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 头部信息</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> git 根据识别出的对象类型构造头部信息，对于字符串，就是`对象类型 + 内容字节数 + 空字节`</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt; header = <span class="string">&quot;blob #&#123;content.length&#125;\0&quot;</span></span></span><br><span class="line">=&gt; &quot;blob 16\u0000&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 拼接二者</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt; store = header + content</span></span><br><span class="line">=&gt; &quot;blob 16\u0000what is up, doc?&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 计算校验和</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt; require <span class="string">&#x27;digest/sha1&#x27;</span></span></span><br><span class="line">=&gt; true</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt; sha1 = Digest::SHA1.hexdigest(store)</span></span><br><span class="line">=&gt; &quot;bd9dbf5aae1a3862dd1526723246b20206e5fc37&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 确定要写入的路径</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt; path = <span class="string">&#x27;.git/objects/&#x27;</span> + sha1[0,2] + <span class="string">&#x27;/&#x27;</span> + sha1[2,38]</span></span><br><span class="line">=&gt; &quot;.git/objects/bd/9dbf5aae1a3862dd1526723246b20206e5fc37&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 写入文件</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt; require <span class="string">&#x27;fileutils&#x27;</span></span></span><br><span class="line">=&gt; true</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt; FileUtils.mkdir_p(File.dirname(path))</span></span><br><span class="line">=&gt; &quot;.git/objects/bd&quot;</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt; File.open(path, <span class="string">&#x27;w&#x27;</span>) &#123; |f| f.write zlib_content &#125;</span></span><br><span class="line">=&gt; 32</span><br></pre></td></tr></table></figure>
+
+<p>我们比较一下 git 里返回的校验和，二者是一样的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> -n <span class="string">&quot;what is up, doc?&quot;</span> | git hash-object --stdin</span></span><br><span class="line">bd9dbf5aae1a3862dd1526723246b20206e5fc37</span><br></pre></td></tr></table></figure>
+
+<p>用 git 读取一下这个对象：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p bd9dbf5aae1a3862dd1526723246b20206e5fc37</span></span><br><span class="line">what is up, doc?</span><br></pre></td></tr></table></figure>
+
+<p>上面演示了整个过程，不同类型对象的区别仅在于头部信息的 <code>blob</code> 或 <code>tree</code> 或 <code>commit</code>，以及前者内容可以是任何东西，后两者内容有固定的格式。</p>
+<h2 id="git-引用"><a href="#git-引用" class="headerlink" title="git 引用"></a>git 引用</h2><p>对 commit 来说，目前我们只能用复杂的 SHA-1 值来记住它们。git 中提供了一种便捷途径：用一个文件存储 SHA-1 值，而该文件有个简单的名字。这个简单的名字，就是引用，它存储在 <code>.git/refs</code> 目录下。在目前项目中，它还是空的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> find .git/refs</span></span><br><span class="line">.git/refs</span><br><span class="line">.git/refs/heads</span><br><span class="line">.git/refs/tags</span><br></pre></td></tr></table></figure>
+
+<p>修改它有两种办法，一是直接硬写(不建议)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> 1a410efbd13591db07496601ebc7a059dd55cfe9 &gt; .git/refs/heads/master</span></span><br></pre></td></tr></table></figure>
+
+<p>二是通过 git 底层命令(建议)：</p>
+<blockquote>
+<p>更新引用：git update-ref</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 先获取一下提交</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> --pretty=oneline master</span></span><br><span class="line">1a410efbd13591db07496601ebc7a059dd55cfe9 third commit</span><br><span class="line">cac0cab538b970a37ea1e769cbbde608743bc96d second commit</span><br><span class="line">fdf4fc3344e67ab068f836878b6c4951e3b15f3d first commit</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建 third commit 的引用</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git update-ref refs/heads/master 1a410efbd13591db07496601ebc7a059dd55cfe9</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建 second commit 的引用</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git update-ref refs/heads/<span class="built_in">test</span> cac0ca</span></span><br></pre></td></tr></table></figure>
+
+<p>现在的 git 数据库长这样了：</p>
+<img src="/git-internals/sample-ref.png" class="" title="sample-ref">
+
+<p>这也是 git 分支的本质：一个指向某一系列提交之首的指针或引用。当运行 <code>git branch &lt;branch&gt;</code> 时，实际上就是将最新的提交的 SHA-1 用 <code>update-ref</code> 存入新创建的引用中。</p>
+<h3 id="HEAD-引用"><a href="#HEAD-引用" class="headerlink" title="HEAD 引用"></a>HEAD 引用</h3><p>接上面的话题，怎么知道最新的提交的 SHA-1 值呢？答案是 <code>HEAD</code> 文件，它是符号引用(symbolic reference，指向其它引用的指针)，指向目前所在分支。在特殊情况下它不再指向其它引用，而是包含一个 git 对象的 SHA-1 值，比如当正在检出标签、提交或远程分支时，此时仓库处于 <a href="https://git-scm.com/docs/git-checkout#_detached_head">dateched head</a> 状态。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看 HEAD</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat .git/HEAD</span></span><br><span class="line">ref: refs/heads/master</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 假如执行 git checkout <span class="built_in">test</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat .git/HEAD</span></span><br><span class="line">ref: refs/heads/test</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 假如执行 git commit</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 会创建一个提交对象，并用 HEAD 文件中那个引用指向的 SHA-1 值设置其父提交字段</span></span><br></pre></td></tr></table></figure>
+
+<p>手动操作这个文件是可行的，但是容易 typo 而造成错误，建议是用下面的命令。</p>
+<blockquote>
+<p>操作 HEAD：git symbolic-ref</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 读取 HEAD 引用</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git symbolic-ref HEAD</span></span><br><span class="line">refs/heads/master</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置 HEAD 引用</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git symbolic-ref HEAD refs/heads/<span class="built_in">test</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat .git/HEAD</span></span><br><span class="line">ref: refs/heads/test</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 错误地设置 HEAD 引用会报错</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git symbolic-ref HEAD <span class="built_in">test</span></span></span><br><span class="line">fatal: Refusing to point HEAD outside of refs/</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="标签引用"><a href="#标签引用" class="headerlink" title="标签引用"></a>标签引用</h3><p>其实除了 blob、tree、commit，还有第四种主要对象类型：标签对象(tag object)。它含有标签创建时间、创建者、注释信息、一个指向提交对象的指针。它像一个永不移动的分支引用——永远指向同一个提交对象，只不过给这个提交对象加了个更友好的名字。创建标签的过程，实际就是更新标签引用。</p>
+<p>我们知道有两种类型的标签，那自然有两种标签引用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建轻量标签(很简单，一个固定的引用)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git update-ref refs/tags/v1.0 cac0cab538b970a37ea1e769cbbde608743bc96d</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建附注标签(要先创建一个标签对象，用引用记录该标签对象而非直接指向提交对象)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 958519 是“引用”记录的“标签对象”</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 1a410e 是“标签对象”记录的“提交对象”</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag -a v1.1 1a410efbd13591db07496601ebc7a059dd55cfe9 -m <span class="string">&#x27;test tag&#x27;</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat .git/refs/tags/v1.1</span></span><br><span class="line">9585191f37f7b0fb9444f35a9bf50de191beadc2</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p 9585191f37f7b0fb9444f35a9bf50de191beadc2</span></span><br><span class="line">object 1a410efbd13591db07496601ebc7a059dd55cfe9</span><br><span class="line">type commit</span><br><span class="line">tag v1.1</span><br><span class="line">tagger Scott Chacon &lt;schacon@gmail.com&gt; Sat May 23 16:48:58 2009 -0700</span><br><span class="line"></span><br><span class="line">test tag</span><br></pre></td></tr></table></figure>
+
+<p>不过标签对象并不是必须指向 commit object，可以对任何类型的 git 对象打标签。比如 git 源码里给 GPG 公钥创建了一个数据对象，给这个数据对象打了个标签；linux 源码里首个被创建的标签是给首个树对象打的。</p>
+<h3 id="远程引用"><a href="#远程引用" class="headerlink" title="远程引用"></a>远程引用</h3><p>如果我们添加了某个 remote 并且 push 过，那么远程引用会记录了最近一次 push 时每个分支对应的值，并保存在 <code>refs/remotes</code> 目录下。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 假如推送到某一个远程仓库的某一个分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote add origin git@github.com:schacon/simplegit-progit.git</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin master</span></span><br><span class="line">Counting objects: 11, done.</span><br><span class="line">Compressing objects: 100% (5/5), done.</span><br><span class="line">Writing objects: 100% (7/7), 716 bytes, done.</span><br><span class="line">Total 7 (delta 2), reused 4 (delta 1)</span><br><span class="line">To git@github.com:schacon/simplegit-progit.git</span><br><span class="line">  a11bef0..ca82a6d  master -&gt; master</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看远程引用，可以发现 SHA-1 值和上面是一样的</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat .git/refs/remotes/origin/master</span></span><br><span class="line">ca82a6dff817ec66f44342007202690a93763949</span><br></pre></td></tr></table></figure>
+
+<p>远程引用 <code>refs/remotes</code> 和分支 <code>refs/heads</code> 的区别在于前者是只读的。虽然可以 <code>git checkout</code> 到某个远程引用，但 git 并不会将 <code>HEAD</code> 指向它，因此永远不能通过 <code>git commit</code> 来更新远程引用，它只是作为记录远程各分支最后已知位置状态的书签。</p>
+<h2 id="包文件"><a href="#包文件" class="headerlink" title="包文件"></a>包文件</h2><p>到目前为止，我们仓库里共有 11 个对象：4 个 blob、3 个 tree、3 个 commit、1 个 tag，共占用 925 bytes。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> find .git/objects -<span class="built_in">type</span> f</span></span><br><span class="line">.git/objects/01/55eb4229851634a0f03eb265b69f5a2d56f341 # tree 2</span><br><span class="line">.git/objects/1a/410efbd13591db07496601ebc7a059dd55cfe9 # commit 3</span><br><span class="line">.git/objects/1f/7a7a472abf3dd9643fd615f6da379c4acb3e3a # test.txt v2</span><br><span class="line">.git/objects/3c/4e9cd789d88d8d89c1073707c3585e41b0e614 # tree 3</span><br><span class="line">.git/objects/83/baae61804e65cc73a7201a7252750c76066a30 # test.txt v1</span><br><span class="line">.git/objects/95/85191f37f7b0fb9444f35a9bf50de191beadc2 # tag</span><br><span class="line">.git/objects/ca/c0cab538b970a37ea1e769cbbde608743bc96d # commit 2</span><br><span class="line">.git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4 # &#x27;test content&#x27;</span><br><span class="line">.git/objects/d8/329fc1cc938780ffdd9f94e0d364e0ea74f579 # tree 1</span><br><span class="line">.git/objects/fa/49b077972391ad58037050f2a75f74e3671e92 # new.txt</span><br><span class="line">.git/objects/fd/f4fc3344e67ab068f836878b6c4951e3b15f3d # commit 1</span><br></pre></td></tr></table></figure>
+
+<p>为了便于演示，这里加一个大文件进来。再把它进行部分更新并重新存储，看看 git 的存储策略有哪些缺点，以及 git 自身有哪些解决办法。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ---------- 版本 1 ----------</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> curl https://raw.githubusercontent.com/mojombo/grit/master/lib/grit/repo.rb &gt; repo.rb</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout master</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add repo.rb</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">&#x27;added repo.rb&#x27;</span></span></span><br><span class="line">[master 484a592] added repo.rb</span><br><span class="line"> 3 files changed, 709 insertions(+), 2 deletions(-)</span><br><span class="line"> delete mode 100644 bak/test.txt</span><br><span class="line"> create mode 100644 repo.rb</span><br><span class="line"> rewrite test.txt (100%)</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 对这个大文件，生成了一个 blob</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -p master^&#123;tree&#125;</span></span><br><span class="line">100644 blob fa49b077972391ad58037050f2a75f74e3671e92      new.txt</span><br><span class="line">100644 blob 033b4468fa6b2a9547a70d88d1bbe8bf3f9ed0d5      repo.rb</span><br><span class="line">100644 blob e3f094f522629ae358806b17daf78246c27c007b      test.txt</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看这个 blob 大小</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -s 033b4468fa6b2a9547a70d88d1bbe8bf3f9ed0d5</span></span><br><span class="line">22044</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- 版本 2 ----------</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 简单修改</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&#x27;# testing&#x27;</span> &gt;&gt; repo.rb</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -am <span class="string">&#x27;modified repo.rb a bit&#x27;</span></span></span><br><span class="line">[master 2431da6] modified repo.rb a bit</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"><span class="meta"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 对这个大文件，又生成了一个 blob，即使只是加了一行注释</span></span><br><span class="line"><span class="meta"> $</span><span class="bash"> git cat-file -p master^&#123;tree&#125;</span></span><br><span class="line">100644 blob fa49b077972391ad58037050f2a75f74e3671e92      new.txt</span><br><span class="line">100644 blob b042a60ef7dff760008df33cee372b945b6e884e      repo.rb</span><br><span class="line">100644 blob e3f094f522629ae358806b17daf78246c27c007b      test.txt</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看这个 blob 大小</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cat-file -s b042a60ef7dff760008df33cee372b945b6e884e</span></span><br><span class="line">22054</span><br></pre></td></tr></table></figure>
+
+<p>现在磁盘上有两个几乎一模一样的 22K 大小文件(实际上压缩到大约 7K)，如果只保存其中一个再加上差异内容，岂不是更好？</p>
+<p>实际上 git 虽然是以松散模式存储对象，但它也会不时地将多个对象打包成叫做包文件(packfile)的二进制文件，以节省空间和提高效率。比如当仓库里有太多松散对象，或者要向服务器推送时，都会进行打包过程，当然，我们也可以随时手动执行命令来打包。</p>
+<blockquote>
+<p>打包： git gc</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 打包</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git gc</span></span><br><span class="line">Counting objects: 18, done.</span><br><span class="line">Delta compression using up to 8 threads.</span><br><span class="line">Compressing objects: 100% (14/14), done.</span><br><span class="line">Writing objects: 100% (18/18), done.</span><br><span class="line">Total 18 (delta 3), reused 0 (delta 0)</span><br></pre></td></tr></table></figure>
+
+<p>现在去 <code>objects</code> 目录看看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> find .git/objects -<span class="built_in">type</span> f</span></span><br><span class="line">.git/objects/bd/9dbf5aae1a3862dd1526723246b20206e5fc37 # 之前的 &quot;what is up, doc?&quot;</span><br><span class="line">.git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4 # 之前的 &quot;test content&quot;</span><br><span class="line">.git/objects/info/packs</span><br><span class="line">.git/objects/pack/pack-978e03944f5c581011e6998cd0e9e30000905586.idx</span><br><span class="line">.git/objects/pack/pack-978e03944f5c581011e6998cd0e9e30000905586.pack</span><br></pre></td></tr></table></figure>
+
+<p>这里我们可以发现，大部分对象不见了，剩下两个没被添加到任何提交记录里的、悬空(dangling)的数据对象，同时新增了一对新文件：索引 <code>.idx</code>，记录包文件的偏移信息，可以用来快速定位想要的对象；包文件 <code>.pack</code>，包含刚从文件系统移除的所有对象的内容。现在，磁盘占用从之前的 15k 变成了 7k，gc 是怎么做到的呢？我们不妨看看这个 <code>.pack</code> 文件：</p>
+<blockquote>
+<p>查看打包文件：git verify-pack</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git verify-pack -v .git/objects/pack/pack-978e03944f5c581011e6998cd0e9e30000905586.idx</span></span><br><span class="line">2431da676938450a4d72e260db3bf7b0f587bbc1 commit 223 155 12</span><br><span class="line">69bcdaff5328278ab1c0812ce0e07fa7d26a96d7 commit 214 152 167</span><br><span class="line">80d02664cb23ed55b226516648c7ad5d0a3deb90 commit 214 145 319</span><br><span class="line">43168a18b7613d1281e5560855a83eb8fde3d687 commit 213 146 464</span><br><span class="line">092917823486a802e94d727c820a9024e14a1fc2 commit 214 146 610</span><br><span class="line">702470739ce72005e2edff522fde85d52a65df9b commit 165 118 756</span><br><span class="line">d368d0ac0678cbe6cce505be58126d3526706e54 tag    130 122 874</span><br><span class="line">fe879577cb8cffcdf25441725141e310dd7d239b tree   136 136 996</span><br><span class="line">d8329fc1cc938780ffdd9f94e0d364e0ea74f579 tree   36 46 1132</span><br><span class="line">deef2e1b793907545e50a2ea2ddb5ba6c58c4506 tree   136 136 1178</span><br><span class="line">d982c7cb2c2a972ee391a85da481fc1f9127a01d tree   6 17 1314 1 \</span><br><span class="line">  deef2e1b793907545e50a2ea2ddb5ba6c58c4506</span><br><span class="line">3c4e9cd789d88d8d89c1073707c3585e41b0e614 tree   8 19 1331 1 \</span><br><span class="line">  deef2e1b793907545e50a2ea2ddb5ba6c58c4506</span><br><span class="line">0155eb4229851634a0f03eb265b69f5a2d56f341 tree   71 76 1350</span><br><span class="line">83baae61804e65cc73a7201a7252750c76066a30 blob   10 19 1426</span><br><span class="line">fa49b077972391ad58037050f2a75f74e3671e92 blob   9 18 1445</span><br><span class="line"><span class="meta">#</span><span class="bash"> b042a6 就是 repo.rb 文件的第二个版本</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> b042a6 占用 22k 空间</span></span><br><span class="line">b042a60ef7dff760008df33cee372b945b6e884e blob   22054 5799 1463</span><br><span class="line"><span class="meta">#</span><span class="bash"> 033b44 就是 repo.rb 文件的第一个版本，注意这里引用了数据对象 b042a6</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 033b44 占用 9 bytes 空间</span></span><br><span class="line">033b4468fa6b2a9547a70d88d1bbe8bf3f9ed0d5 blob   9 20 7262 1 \</span><br><span class="line">  b042a60ef7dff760008df33cee372b945b6e884e</span><br><span class="line">1f7a7a472abf3dd9643fd615f6da379c4acb3e3a blob   10 19 7282</span><br><span class="line">non delta: 15 objects</span><br><span class="line">chain length = 1: 3 objects</span><br><span class="line">.git/objects/pack/pack-978e03944f5c581011e6998cd0e9e30000905586.pack: ok</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是，第二个版本保存了文件完整内容，而原始版本反而是以差异方式保存的——因为大部分情况下我们需要快速访问的是新版本而非原始版本呀！</p>
+<h2 id="引用规范"><a href="#引用规范" class="headerlink" title="引用规范"></a>引用规范</h2><p>引用规范(refspec)，指的是引用的映射关系。之前有写远程和本地引用的简单映射方式，不过其实还有更加复杂的映射，取决于想达到什么样的效果。</p>
+<p>引用规范的格式为：一个可选的 <code>+</code> 号，以及紧随其后的 <code>&lt;src&gt;:&lt;dst&gt;</code>。<code>+</code> 表示即使不能快进的情况下也要强制更新引用；<code>src</code> 是一个 pattern，表示远程版本库中的引用；<code>dst</code> 表示本地跟踪的远程引用的位置。</p>
+<p>比如当我们想添加一个远程仓库，这个时候就会在 <code>.git/config</code> 添加一节：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git remote add origin https://github.com/schacon/simplegit-progit</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> .git/config 会新增这些</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 表示 git 获取服务器中 refs/heads/ 下所有引用，将其写入本地的 refs/remotes/origin/</span></span><br><span class="line">[remote &quot;origin&quot;]</span><br><span class="line">	url = https://github.com/schacon/simplegit-progit</span><br><span class="line">	fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line"><span class="meta">	</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 下面的三个命令都是等效的，因为都会被拓展成 refs/remotes/origin/master</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> origin/master</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> remotes/origin/master</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> refs/remotes/origin/master</span></span><br></pre></td></tr></table></figure>
+
+<p>引用规范可以存到 <code>.git/config</code> 中作为默认选项，也可以在命令末尾使用来只执行一次：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将远程的 master 分支拉到本地的 origin/mymaster</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 永久(将下行写入 .git/config)</span></span><br><span class="line">fetch = +refs/heads/master:refs/remotes/origin/master</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 一次性</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git fetch origin master:refs/remotes/origin/mymaster</span></span><br></pre></td></tr></table></figure>
+
+<p>还可以一次指定多个引用规范，这样就会只拉取指定的分支，不管其它的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 永久(将下行写入 .git/config)</span></span><br><span class="line">[remote &quot;origin&quot;]</span><br><span class="line">	url = https://github.com/schacon/simplegit-progit</span><br><span class="line">	fetch = +refs/heads/master:refs/remotes/origin/master</span><br><span class="line">	fetch = +refs/heads/experiment:refs/remotes/origin/experiment</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 一次性</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git fetch origin master:refs/remotes/origin/mymaster \</span></span><br><span class="line"><span class="bash">	 topic:refs/remotes/origin/topic</span></span><br><span class="line">From git@github.com:schacon/simplegit</span><br><span class="line"> ! [rejected]        master     -&gt; origin/mymaster  (non fast forward)</span><br><span class="line"> * [new branch]      topic      -&gt; origin/topic</span><br></pre></td></tr></table></figure>
+
+<p>模式中不能使用部分通配符，下面的引用规范是不合法的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fetch = +refs/heads/qa*:refs/remotes/origin/qa*</span><br></pre></td></tr></table></figure>
+
+<p>不过可以通过创建命名空间来达到类似目的。比如有个 QA 团队，我们只关心 <code>master</code> 分支和 QA 团队推送的分支，怎么办呢？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 对于 QA 团队方，设置引用规范</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 这样，当 QA 团队推送 whatever 分支时，就会推到远程服务器的 qa/whatever 上</span></span><br><span class="line">[remote &quot;origin&quot;]</span><br><span class="line">	url = https://github.com/schacon/simplegit-progit</span><br><span class="line">	fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">	push = refs/heads/*:refs/heads/qa/*</span><br><span class="line"><span class="meta">	</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 对于我们，设置引用规范</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 这样，我们就可以只关心 master 和 qa 团队的分支了</span></span><br><span class="line">[remote &quot;origin&quot;]</span><br><span class="line">	url = https://github.com/schacon/simplegit-progit</span><br><span class="line">	fetch = +refs/heads/master:refs/remotes/origin/master</span><br><span class="line">	fetch = +refs/heads/qa/*:refs/remotes/origin/qa/*</span><br></pre></td></tr></table></figure>
+
+<p>根据引用规范的格式(<code>src:dst</code>)，我们也很容易想到删除引用的方法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git push origin :topic</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 不过其实还有个新语法啦</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin --delete topic</span></span><br></pre></td></tr></table></figure>
+
+<p>* 后记</p>
+<p>写的时候感觉：哇，我都懂了，好有条理！<br>读的时候感觉：叙述不够行云流水，这篇讲得不好啊…<br>而且还发现我目前使用的版本的 hexo-next-theme 所依赖的 highlight.js 并没有给 shell 代码块高亮，好丑。<br>在搜索解决方案过程中还在 <a href="https://github.com/iissnan/hexo-theme-next/issues/504">某个 issue</a> 里发现了高中同学的评论，神奇。</p>
+<p>不过我们还是暂时按兵不动，先这样吧QAQ</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/essence/" rel="tag"># essence</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/recap-of-2020/" rel="prev" title="Not just getting older">
+      <i class="fa fa-chevron-left"></i> Not just getting older
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/git-submodules/" rel="next" title="Git子模块">
+      Git子模块 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#git-%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.</span> <span class="nav-text">git 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%AF%B9%E8%B1%A1-blob"><span class="nav-number">1.1.</span> <span class="nav-text">文件对象 blob</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%91%E5%AF%B9%E8%B1%A1-tree"><span class="nav-number">1.2.</span> <span class="nav-text">树对象 tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E5%AF%B9%E8%B1%A1-commit"><span class="nav-number">1.3.</span> <span class="nav-text">提交对象 commit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8"><span class="nav-number">1.4.</span> <span class="nav-text">对象存储</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-%E5%BC%95%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">git 引用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HEAD-%E5%BC%95%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">HEAD 引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E7%AD%BE%E5%BC%95%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">标签引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E5%BC%95%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">远程引用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">包文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E8%A7%84%E8%8C%83"><span class="nav-number">4.</span> <span class="nav-text">引用规范</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

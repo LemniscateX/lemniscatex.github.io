@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flappy Bird</title>
+  <link rel="shortcut icon" type="image/x-icon" href="./images/bird.ico" />
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url("./images/body-bg.jpg");
+      background-size: cover;
+      background-color: rgba(255, 255, 255, .15);
+      backdrop-filter: blur(15px);
+    }
+
+    #canvas {
+      width: 480px;
+      min-height: 640px;
+      /* This works for Android to prevent double tap zoom */
+      touch-action: manipulation;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <script src="main.js"></script>
+</body>
+
+</html>

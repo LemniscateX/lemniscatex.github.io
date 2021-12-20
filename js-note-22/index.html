@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="《JavaScript高级程序设计》第二十二章，高级技巧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript学习笔记(22)">
+<meta property="og:url" content="https://lemniscatex.github.io/js-note-22/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="《JavaScript高级程序设计》第二十二章，高级技巧。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-22/setTimeout-after-onclick.png">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-22/setInterval-after-onclick.png">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-22/drag.png">
+<meta property="article:published_time" content="2021-01-26T05:32:17.000Z">
+<meta property="article:modified_time" content="2021-01-26T17:07:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lemniscatex.github.io/js-note-22/setTimeout-after-onclick.png">
+
+<link rel="canonical" href="https://lemniscatex.github.io/js-note-22/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>JavaScript学习笔记(22) | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/js-note-22/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript学习笔记(22)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-26 13:32:17" itemprop="dateCreated datePublished" datetime="2021-01-26T13:32:17+08:00">2021-01-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-27 01:07:26" itemprop="dateModified" datetime="2021-01-27T01:07:26+08:00">2021-01-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>《JavaScript高级程序设计》第二十二章，高级技巧。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>下面都是关于函数的特殊操作，用来解决一些问题，满足一些需求。</p>
+<h3 id="判断类型-amp-判断原生"><a href="#判断类型-amp-判断原生" class="headerlink" title="判断类型&amp;判断原生"></a>判断类型&amp;判断原生</h3><h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>JavaScript里用<code>typeof</code>和<code>instanceof</code>来判断类型的操作都不能完全得到正确的结果。比如Safari在对正则表达式使用<code>typeof</code>时会返回<code>&quot;function&quot;</code>；比如在一个页面包含多个框架的情况下，对另一个框架中定义的数组使用<code>instanceof</code>判断是否为<code>Array</code>时会返回<code>false</code>(因为该数组与该<code>Array</code>构造函数不在同个全局作用域内)。</p>
+<p>检测某个对象到底是原生对象还是开发人员自定义对象，也是一个需求点。比如之前很多人一直在使用Douglas Crockford的JSON库，里面有个全局JSON对象，后来浏览器开始原生支持JSON对象了，就很难判断到底是哪种情况。</p>
+<h4 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h4><p>使用<code>Object</code>的<code>toString()</code>方法，会返回<code>[object NativeConstructorName]</code>格式的字符串，其中<code>NativeConstructorName</code>就是每个类内部的<code>[[Class]]</code>属性，也就是构造函数名。且构造函数名和全局作用域无关，所以能保证返回一致的值。</p>
+<p>那我们就用<code>Object.toString()</code>解决一下上面的问题。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isRegExp</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>.prototype.toString.call(value) == <span class="string">&quot;[object RegExp]&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isArray</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Object</span>.prototype.toString.call(value) == <span class="string">&quot;[object Array]&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> isNativeJSON = </span><br><span class="line">  <span class="built_in">window</span>.JSON &amp;&amp; </span><br><span class="line">  <span class="built_in">Object</span>.prototype.toString.call(<span class="built_in">JSON</span>) == <span class="string">&quot;[object JSON]&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="作用域安全的构造函数"><a href="#作用域安全的构造函数" class="headerlink" title="作用域安全的构造函数"></a>作用域安全的构造函数</h3><h4 id="问题-1"><a href="#问题-1" class="headerlink" title="问题"></a>问题</h4><p>不正确地使用构造函数时，会导致属性的错误赋予。举例如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.name = name;</span><br><span class="line">  <span class="built_in">this</span>.age = age;</span><br><span class="line">  <span class="built_in">this</span>.job = job;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> Person(<span class="string">&quot;Nicholas&quot;</span>, <span class="number">29</span>, <span class="string">&quot;Software Engineer&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line"><span class="keyword">let</span> person = Person(<span class="string">&quot;Nicholas&quot;</span>, <span class="number">29</span>, <span class="string">&quot;Software Engineer&quot;</span>);</span><br><span class="line">alert(<span class="built_in">window</span>.name); <span class="comment">// &quot;Nicholas&quot;</span></span><br><span class="line">alert(<span class="built_in">window</span>.age);  <span class="comment">// 29</span></span><br><span class="line">alert(<span class="built_in">window</span>.job);  <span class="comment">// &quot;Software Engineer&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里用<code>new</code>的话，构造函数内的<code>this</code>会指向新创建的对象实例；不用<code>new</code>的话，该<code>this</code>对象在运行时绑定，直接调用<code>Person()</code>时<code>this</code>会映射到全局对象<code>window</code>上。</p>
+<h4 id="解决-1"><a href="#解决-1" class="headerlink" title="解决"></a>解决</h4><p>那我们就要先确定<code>this</code>的指向是否正确才行。使用下面这种方法，就可以锁定可以调用构造函数的环境。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(<span class="built_in">this</span> <span class="keyword">instanceof</span> Person) &#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name;</span><br><span class="line">    <span class="built_in">this</span>.age = age;</span><br><span class="line">    <span class="built_in">this</span>.job = job;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Person(name, age, job);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> Person(<span class="string">&quot;Nicholas&quot;</span>, <span class="number">29</span>, <span class="string">&quot;Software Engineer&quot;</span>);</span><br><span class="line">alert(person.name); <span class="comment">// &quot;Nicholas&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person = Person(<span class="string">&quot;Shelby&quot;</span>, <span class="number">34</span>, <span class="string">&quot;Ergonomist&quot;</span>);</span><br><span class="line">alert(person.name); <span class="comment">// &quot;Shelby&quot;</span></span><br><span class="line">alert(<span class="built_in">window</span>.name); <span class="comment">// &quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>当使用构造函数窃取模式的继承且不使用原型链时，继承就很可能被破坏。举例如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Polygon</span>(<span class="params">sides</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(<span class="built_in">this</span> <span class="keyword">instanceof</span> Polygon) &#123;</span><br><span class="line">    <span class="built_in">this</span>.sides = sides;</span><br><span class="line">    <span class="built_in">this</span>.getArea = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Polygon(sides);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Rectangle</span>(<span class="params">width, height</span>) </span>&#123;</span><br><span class="line">  Polygon.call(<span class="built_in">this</span>, <span class="number">2</span>);</span><br><span class="line">  <span class="built_in">this</span>.width = width;</span><br><span class="line">  <span class="built_in">this</span>.height = height;</span><br><span class="line">  <span class="built_in">this</span>.getArea = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.width * <span class="built_in">this</span>.height;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> rect = <span class="keyword">new</span> Rectangle(<span class="number">5</span>, <span class="number">10</span>);</span><br><span class="line">alert(rect.sides); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+
+<p>这里新创建的<code>Rectangle</code>实例本应通过<code>Polygon.call()</code>来继承<code>Polygon</code>的<code>sides</code>属性，但由于<code>Polygon</code>构造函数是作用域安全的，<code>this</code>对象并非<code>Polygon</code>实例，所以会创建并返回一个新的<code>Polygon</code>对象。这下，<code>Rectangle</code>构造函数中的<code>this</code>对象并没有增长，<code>Polygon.call()</code>返回的值也没用到，所以就没有<code>sides</code>属性。</p>
+<p>如果构造函数窃取结合使用原型链或寄生组合则可以解决这个问题。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Polygon</span>(<span class="params">sides</span>) </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Rectangle</span>(<span class="params">width, height</span>) </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Rectangle.prototype = <span class="keyword">new</span> Polygon();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> rect = <span class="keyword">new</span> Rectangle(<span class="number">5</span>, <span class="number">10</span>);</span><br><span class="line">alert(rect.sides); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>这里<code>Rectangle</code>实例也是<code>Polygon</code>实例，所以<code>Polygon.call()</code>会按照原意执行，最终为<code>Rectangle</code>实例添加<code>sides</code>属性。</p>
+<h3 id="惰性载入函数"><a href="#惰性载入函数" class="headerlink" title="惰性载入函数"></a>惰性载入函数</h3><h4 id="问题-2"><a href="#问题-2" class="headerlink" title="问题"></a>问题</h4><p>有一些函数的分支判断很复杂，且在某些条件下从来不会变，这时反复执行分支很耗时。举个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createXHR</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(<span class="keyword">typeof</span> XMLHttpRequest != <span class="string">&quot;undefined&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> ActiveXObject != <span class="string">&quot;undefined&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="built_in">arguments</span>.callee.activeXString != <span class="string">&quot;string&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> versions = [<span class="string">&quot;MSXML2.XMLHttp.6.0&quot;</span>, <span class="string">&quot;MSXML2.XMLHttp.3.0&quot;</span>, <span class="string">&quot;MSXML2.XMLHttp&quot;</span>];</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; versions.length; i++) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">          <span class="keyword">new</span> ActiveXObject(versions[i]);</span><br><span class="line">          <span class="built_in">arguments</span>.callee.activeXString = versions[i];</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span>(ex) &#123;&#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ActiveXObject(<span class="built_in">arguments</span>.callee.activeXString);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&quot;No XHR object available&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每次调用这个函数，都要对浏览器所支持的能力仔细检查，即使每次调用时分支的结果都不变(因为如果浏览器支持XHR，那它就一直支持了，这种测试就没必要了)。</p>
+<h4 id="解决-2"><a href="#解决-2" class="headerlink" title="解决"></a>解决</h4><p>就是惰性载入，让if语句不必每次执行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法一，在函数被调用时再处理函数</span></span><br><span class="line"><span class="comment">// 第一次调用时，该函数会被覆盖为合适的函数，之后的调用都不用执行分支了</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createXHR</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(<span class="keyword">typeof</span> XMLHttpRequest != <span class="string">&quot;undefined&quot;</span>) &#123;</span><br><span class="line">    createXHR = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> ActiveXObject != <span class="string">&quot;undefined&quot;</span>) &#123;</span><br><span class="line">    createXHR = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    createXHR = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> createXHR();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法二，在声明函数时指定适当的函数</span></span><br><span class="line"><span class="comment">// 在首次加载时会执行分支，而每次调用都不用执行分支</span></span><br><span class="line"><span class="keyword">const</span> createXHR = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(<span class="keyword">typeof</span> XMLHttpRequest != <span class="string">&quot;undefined&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> ActiveXObject != <span class="string">&quot;undefined&quot;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h3 id="函数绑定"><a href="#函数绑定" class="headerlink" title="函数绑定"></a>函数绑定</h3><h4 id="问题-3"><a href="#问题-3" class="headerlink" title="问题"></a>问题</h4><p>直接用例子吧。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> handler = &#123;</span><br><span class="line">  <span class="attr">message</span>: <span class="string">&quot;Event handled&quot;</span>,</span><br><span class="line">  <span class="attr">handleClick</span>: <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">    alert(<span class="built_in">this</span>.message);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&quot;my-btn&quot;</span>);</span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>, handler.handleClick);</span><br></pre></td></tr></table></figure>
+
+<p>这个例子里，<code>handler.handleClick()</code>被分配为一个DOM按钮的事件处理程序，当按下按钮时，警告框里的字不是<code>Event handled</code>而是<code>undefined</code>。问题在于没有保存<code>handler.handleClick()</code>的「环境」，所以<code>this</code>指向的是DOM按钮而非<code>handler</code>。</p>
+<h4 id="解决-3"><a href="#解决-3" class="headerlink" title="解决"></a>解决</h4><p>可以用一个闭包来解决。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  handler.handleClick(event);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>还可以将函数绑定到指定环境(可以用手写/浏览器支持的<code>bind()</code>)。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bind</span>(<span class="params">fn, ctx</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> fn.apply(ctx, <span class="built_in">arguments</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 手写的</span></span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>, bind(handler.handleClick, handler));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原生的</span></span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>, handler.handleClick.bind(handler));</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们在<code>bind()</code>中创建了一个闭包，闭包使用<code>apply()</code>调用传入的函数，并给它传入了ctx对象和(内层函数的而非外层函数<code>bind()</code>的)参数，这样就可以在给定的环境中执行被传入的函数并给出所有参数。</p>
+<h3 id="函数柯里化"><a href="#函数柯里化" class="headerlink" title="函数柯里化"></a>函数柯里化</h3><p>它用于创建已经设置好了一个或多个参数的函数，基本方法与函数绑定一样，即用闭包返回一个函数，区别在于这里返回的函数还需要设置一些传入的参数。</p>
+<p>先来一个基础的版本理解一下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">num1, num2</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> num1 + num2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curriedAdd</span>(<span class="params">num2</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> add(<span class="number">5</span>, num2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">alert(add(<span class="number">2</span>, <span class="number">3</span>));     <span class="comment">// 5</span></span><br><span class="line">alert(curriedAdd(<span class="number">3</span>)); <span class="comment">// 8</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>curriedAdd()</code>本质上是在任何情况下第一个参数为<code>5</code>的<code>add()</code>版本，并非柯里化的函数，不过很好地展示了其概念。</p>
+<p>柯里化函数通常由以下步骤动态创建：调用另一个函数并为它传入要柯里化的函数和必要参数，返回一个函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curry</span>(<span class="params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> args = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> innerArgs = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>);</span><br><span class="line">    <span class="keyword">const</span> finalArgs = args.concat(innerArgs);</span><br><span class="line">    <span class="keyword">return</span> fn.apply(<span class="literal">null</span>, finalArgs);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解释一下这个<code>curry()</code>，它的主要工作是将被返回函数的参数进行排序。它的第一个参数是要进行柯里化的函数，<code>args</code>就是所有目前暂时可能接收到的参数(柯里化函数暂时存起来的参数，也就是外部的参数)，<code>innerArgs</code>用来存放内部函数传入的所有参数。有了存放来自外部函数和内部函数的参数数组后，就可以把它们都传给实际执行的函数了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> curriedAdd = curry(add, <span class="number">5</span>);</span><br><span class="line">alert(curriedAdd(<span class="number">3</span>)); <span class="comment">// 8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> curriedAdd = curry(add, <span class="number">5</span>, <span class="number">3</span>);</span><br><span class="line">alert(curriedAdd());  <span class="comment">// 8</span></span><br></pre></td></tr></table></figure>
+
+<p>BTW，通过柯里化还可以构造出更复杂的<code>bind()</code>(之前那个手写的函数缺少后面的参数)。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bind</span>(<span class="params">fn, ctx</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> args = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">2</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> innerArgs = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>);</span><br><span class="line">    <span class="keyword">const</span> finalArgs = args.concat(innerArgs);</span><br><span class="line">    <span class="keyword">return</span> fn.apply(ctx, finalArgs);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> handler = &#123;</span><br><span class="line">  <span class="attr">message</span>: <span class="string">&quot;Event handled&quot;</span>,</span><br><span class="line">  <span class="attr">handleClick</span>: <span class="function"><span class="keyword">function</span>(<span class="params">name, event</span>) </span>&#123;</span><br><span class="line">    alert(<span class="string">`<span class="subst">$&#123;<span class="built_in">this</span>.message&#125;</span> : <span class="subst">$&#123;name&#125;</span> : <span class="subst">$&#123;event.type&#125;</span>`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 手写的</span></span><br><span class="line">btn.addEventHandler(<span class="string">&quot;click&quot;</span>, bind(handler.handleClick, handler, <span class="string">&quot;my-btn&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原生的</span></span><br><span class="line">btn.addEventHandler(<span class="string">&quot;click&quot;</span>, handler.handleClick.bind(handler, <span class="string">&quot;my-btn&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="防篡改对象"><a href="#防篡改对象" class="headerlink" title="防篡改对象"></a>防篡改对象</h2><p>基础的防篡改方法，可以参考第6章手工设置每个属性来改变属性的行为：<code>[[Configurable]]</code>、<code>[[Writable]]</code>、<code>[[Enumerable]]</code>、<code>[[Value]]</code>、<code>[[Get]]</code>、<code>[[Set]]</code>。</p>
+<h3 id="不可扩展对象"><a href="#不可扩展对象" class="headerlink" title="不可扩展对象"></a>不可扩展对象</h3><p>指不能添加属性的对象，可以用<code>Object.preventExtensions()</code>来设置，用<code>Object.isExtensible()</code>来判断对象是否可扩展。虽然不能给对象添加新成员，但已有的成员丝毫不受影响，依然可以修改删除。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 默认情况下，所有对象都是可扩展的</span></span><br><span class="line"><span class="keyword">let</span> person = &#123; <span class="attr">name</span>: <span class="string">&quot;Nicholas&quot;</span> &#125;;</span><br><span class="line">person.age = <span class="number">29</span>;</span><br><span class="line">alert(person.age);                  <span class="comment">// 29</span></span><br><span class="line">alert(<span class="built_in">Object</span>.isExtensible(person)); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 不可扩展对象</span></span><br><span class="line"><span class="keyword">let</span> person = &#123; <span class="attr">name</span>: <span class="string">&quot;Nicholas&quot;</span> &#125;;</span><br><span class="line"><span class="built_in">Object</span>.preventExtensions(person);</span><br><span class="line">person.age = <span class="number">29</span>;</span><br><span class="line">alert(person.age);                  <span class="comment">// undefined</span></span><br><span class="line">alert(<span class="built_in">Object</span>.isExtensible(person)); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="密封对象"><a href="#密封对象" class="headerlink" title="密封对象"></a>密封对象</h3><p>在不可扩展的基础上，将<code>[[Configurable]]</code>设置为<code>false</code>，即已有的属性和方法不能删除。可以用<code>Object.seal()</code>来设置，用<code>Object.isSealed()</code>来判断对象是否被密封。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = &#123; <span class="attr">name</span>: <span class="string">&quot;Nicholas&quot;</span> &#125;;</span><br><span class="line"><span class="built_in">Object</span>.seal(person);</span><br><span class="line"></span><br><span class="line">person.age = <span class="number">29</span>;</span><br><span class="line">alert(person.age);                  <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> person.name;</span><br><span class="line">alert(person.name);                 <span class="comment">// &quot;Nicholas&quot;</span></span><br><span class="line"></span><br><span class="line">alert(<span class="built_in">Object</span>.isExtensible(person)); <span class="comment">// false</span></span><br><span class="line">alert(<span class="built_in">Object</span>.isSealed(person));     <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="冻结对象"><a href="#冻结对象" class="headerlink" title="冻结对象"></a>冻结对象</h3><p>在密封的基础上，将<code>[[Writable]]</code>设置为<code>false</code>，不过定义了<code>[[Set]]</code>函数的话访问器属性就是可写的。可以用<code>Object.freeze()</code>来设置，用<code>Object.isFrozen()</code>类判断对象是否被冻结。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = &#123; <span class="attr">name</span>: <span class="string">&quot;Nicholas&quot;</span> &#125;;</span><br><span class="line"><span class="built_in">Object</span>.freeze(person);</span><br><span class="line"></span><br><span class="line">person.age = <span class="number">29</span>;</span><br><span class="line">alert(person.age);                  <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> person.name;</span><br><span class="line">alert(person.name);                 <span class="comment">// &quot;Nicholas&quot;</span></span><br><span class="line"></span><br><span class="line">person.name = <span class="string">&quot;Greg&quot;</span>;</span><br><span class="line">alert(person.name);                 <span class="comment">// &quot;Greg&quot;</span></span><br><span class="line"></span><br><span class="line">alert(<span class="built_in">Object</span>.isExtensible(person)); <span class="comment">// false</span></span><br><span class="line">alert(<span class="built_in">Object</span>.isSealed(person));     <span class="comment">// true</span></span><br><span class="line">alert(<span class="built_in">Object</span>.isFrozen(person));     <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h2><p>这里的重点是，JavaScript是运行在单线程环境中的，定时器仅仅只是在指定的时间后「将任务放进队列」，而不是在指定的事件后「执行任务」。如果在进程空闲时放入队列，那么任务队列就可以开始按序执行了；如果进程此刻在执行任务，那么任务队列里的所有任务都还要等待执行(然后等待执行也要区分是排在前面还是后面)。</p>
+<p>假设如下情景：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&quot;my-btn&quot;</span>);</span><br><span class="line">btn.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">&quot;message&quot;</span>).style.visibility = <span class="string">&quot;visible&quot;</span>;</span><br><span class="line">  &#125;, <span class="number">250</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这里给按钮设置了一个事件处理程序，它设置了一个250ms后调用的定时器。首先将<code>onclick</code>事件处理程序加入队列，该程序执行后才设置定时器，再过250ms指定的代码才被添加到队列中等待执行。</p>
+<p>假设<code>onclick</code>事件处理程序执行了300ms，那么定时器的代码至少要在定时器设置之后的300ms后才会被执行，因为队列中所有代码都要等到JavaScript进程空闲之后才能执行。</p>
+<img src="/js-note-22/setTimeout-after-onclick.png" class="" title="setTimeout-after-onclick">
+
+<p>上图中，尽管在255ms处添加了定时器，但这个时候还不能执行，因为<code>onclick</code>事件处理程序还在运行。定时器代码最早能执行的时机时300ms处，即<code>onclick</code>事件处理程序结束之后。</p>
+<h3 id="重复的定时器"><a href="#重复的定时器" class="headerlink" title="重复的定时器"></a>重复的定时器</h3><h4 id="问题-4"><a href="#问题-4" class="headerlink" title="问题"></a>问题</h4><p><code>setInterval()</code>只能确保定时器代码被规则地插入队列中，而不能保证规则地执行。</p>
+<p>如定时器代码可能在代码再次被添加到队列之前还没有完成执行，结果导致定时器代码连续运行多次而没有任何停顿。不过JavaScript引擎也有自己的解决策略，那就是：当用<code>setInterval()</code>时，仅当没有该定时器的任何其它代码实例时，才将定时器代码添加到队列中。</p>
+<p>这确保了定时器代码加入到队列中的最小时间间隔为指定间隔。但也有其它问题：一是某些间隔会被跳过，二是多个定时器的代码执行之间的间隔可能比预期的小。</p>
+<img src="/js-note-22/setInterval-after-onclick.png" class="" title="setInterval-after-onclick">
+
+<p>第一个定时器在205ms添加到队列，但因为<code>onclick</code>在执行的原因直到在300ms才能够执行；第二个定时器在405ms添加到队列，但因为第一个定时器还在执行，它暂时还得待在任务队列里；第三个定时器本来要在605ms添加到队列的，但因为队列中有定时器了，结果就是这个时间点上的定时器不会被添加到队列中(即缺点一)；第一个定时器执行完后还是会紧接着取出任务队列里第二个定时器执行(即缺点二)。</p>
+<h4 id="解决-4"><a href="#解决-4" class="headerlink" title="解决"></a>解决</h4><p>用<code>setTimeout()</code>模拟。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 处理中</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="built_in">arguments</span>.callee, interval);</span><br><span class="line">&#125;, interval);</span><br></pre></td></tr></table></figure>
+
+<p>这样的链式调用，每次函数执行的时候都会创建一个新的定时器，新的定时器通过<code>arguments.callee</code>来设置相同的函数。这样做的好处时，在前一个定时器代码执行完之前，不会向队列插入新的定时器，不会有缺失的间隔；且可以保证下一次定时器代码执行之前，至少要等待指定的间隔，避免了连续运行。</p>
+<h3 id="Yielding-Processes"><a href="#Yielding-Processes" class="headerlink" title="Yielding Processes"></a>Yielding Processes</h3><h4 id="问题-5"><a href="#问题-5" class="headerlink" title="问题"></a>问题</h4><p>运行在浏览器中的JavaScript都被分配了一个确定数量的资源，有限制长时间运行脚本的制约。如果代码运行超过指定时间/指定语句数量就不让它继续执行，弹出对话框问用户是否继续。</p>
+<p>脚本长时间运行就是问题所在。</p>
+<h4 id="解决-5"><a href="#解决-5" class="headerlink" title="解决"></a>解决</h4><p>运行时间长通常是因为：过长、过深嵌套的函数调用；进行大量处理的循环。这里主要解决循环的问题，所以我们先要消除无用的循环，看看什么情况下循环是不必要的。</p>
+<p>当处理不需要同步完成，或者不需要按顺序完成，那么我们就可以使用数组分块(array chunking)。基本思路是，为要处理的项目创建一个队列，使用定时器取出下一个要处理的项目进行处理，接着再设置另一个定时器。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">chunk</span>(<span class="params">array, process, context</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 取出下一个条目并处理</span></span><br><span class="line">    <span class="keyword">let</span> item = array.lift();</span><br><span class="line">    process.call(context, item);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 若还有条目，再设置另一个定时器</span></span><br><span class="line">    <span class="keyword">if</span>(array.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="built_in">setTimeout</span>(<span class="built_in">arguments</span>.callee, <span class="number">100</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, <span class="number">100</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="函数防抖-节流"><a href="#函数防抖-节流" class="headerlink" title="函数防抖/节流"></a>函数防抖/节流</h3><p>有一些耗时的复杂操作会连续触发，这种时候可以使用定时器来解决问题，一般有两种解决方案：防抖(debounce)和节流(throttle)。二者区别可以参考<a href="http://demo.nimius.net/debounce_throttle/">这个</a>可视化呈现。</p>
+<h4 id="防抖"><a href="#防抖" class="headerlink" title="防抖"></a>防抖</h4><p>任务频繁触发的情况下，只有任务触发的间隔超过指定间隔时候，任务才会执行。</p>
+<p>比如判断用户名是否已注册，我既要及时出结果告诉用户目前字符串是否已注册，又不想每输入一个字符就判断一下，所以在用户输入一个字符后如果紧接着又输入字符，就暂时不判断。</p>
+<p>比如给按钮加防抖来防止多次提交，适合多次事件一次响应的情况。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过闭包来保存一个标记来保存setTimeout的返回值，每当用户输入的时候就把前一个seTimeout给clear，然后创建一个新的setTimeout，这样就能保证输入一个字符后，在其后一个间隔内再输入的话就clear掉计时器从而不会执行函数，在其后一个间隔内没输入的话就会执行函数。</span></span><br><span class="line"><span class="keyword">const</span> handle = <span class="function">(<span class="params">fn, delay</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> timeId</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (timeId) <span class="built_in">clearTimeout</span>(timeId)</span><br><span class="line">        timeId = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            fn.apply(<span class="built_in">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line">        &#125;, delay)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第一次立刻执行版本</span></span><br><span class="line"><span class="keyword">const</span> handle = (fn, delay, immediate) &#123;</span><br><span class="line">    <span class="keyword">let</span> timeId;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(timeId) <span class="built_in">clearTimeout</span>(timeId);</span><br><span class="line">        <span class="keyword">if</span>(immediate) &#123;</span><br><span class="line">            <span class="keyword">let</span> callNow = !timeId;</span><br><span class="line">            timeId = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                timeId = <span class="literal">null</span>;</span><br><span class="line">            &#125;, delay);</span><br><span class="line">            <span class="keyword">if</span>(callNow) fn.aply(<span class="built_in">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            timeId = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                fn.apply(<span class="built_in">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">            &#125;, delay);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="节流"><a href="#节流" class="headerlink" title="节流"></a>节流</h4><p>指定时间间隔内只能执行一次任务。</p>
+<p>比如监听页面滚动的事件时，我又需要监听，但又不想让他时时刻刻都去计算判断是否位移了，所以想隔一段时间去执行事件处理程序。</p>
+<p>比如游戏里的刷新率，适合大量事件按时间做平均分配的情况。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定时器</span></span><br><span class="line"><span class="comment">// 最初flag为true可以进入判断设置定时器，但马上要把flag设为false来使后续时间内不能进入判断，而在seTimeout执行的函数内部要执行函数并把flag设为true，这样才可以在这次执行函数时马上再进入判断设置定时器。也就是间隔内flag是false不能设定时器，间隔点flag是true能设置定时器。</span></span><br><span class="line"><span class="keyword">const</span> handle = <span class="function">(<span class="params">fn, interval</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> timeId = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!timeId) &#123;</span><br><span class="line">            timeId = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                fn.apply(<span class="built_in">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line">                timeId = <span class="literal">null</span></span><br><span class="line">            &#125;, interval)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 时间戳</span></span><br><span class="line"><span class="keyword">const</span> handle = <span class="function">(<span class="params">fn, interval</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> lastTime = <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> now = <span class="built_in">Date</span>.now();</span><br><span class="line">        <span class="keyword">if</span> (now - lastTime &gt; interval) &#123;</span><br><span class="line">            fn.apply(<span class="built_in">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line">            lastTime = now</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="自定义事件"><a href="#自定义事件" class="headerlink" title="自定义事件"></a>自定义事件</h2><p>事件是JavaScript与浏览器交互的主要途径，是一种叫做观察者的设计模式。设计者模式分为主体和观察者，主体负责发布事件，观察者通过订阅这些事件来观察主体。涉及到DOM时，DOM元素就是主体，事件处理代码就是观察者。</p>
+<p>这里我们自定义事件，创建一个管理事件的对象，其它对象监听那些事件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">EventTarget</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">this</span>.handlers = &#123;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">EventTarget.prototype = &#123;</span><br><span class="line"></span><br><span class="line">  <span class="attr">constructor</span>: EventTarget,</span><br><span class="line">  </span><br><span class="line">  <span class="attr">addHandler</span>: <span class="function"><span class="keyword">function</span>(<span class="params">type, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="built_in">this</span>.handlers[type] == <span class="string">&quot;undefined&quot;</span>) &#123;</span><br><span class="line">      <span class="built_in">this</span>.handlers[type] = [];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">this</span>.handlers[type].push(handler);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="attr">fire</span>: <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!event.target) &#123;</span><br><span class="line">      event.target = <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">this</span>.handlers[event.type] <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">      <span class="keyword">let</span> handlers = <span class="built_in">this</span>.handlers[event.type];</span><br><span class="line">      handlers.forEach(<span class="function"><span class="params">handler</span> =&gt;</span> handler(event));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="attr">removeHandler</span>: <span class="function"><span class="keyword">function</span>(<span class="params">type, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">this</span>.handlers[type] <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">      <span class="keyword">let</span> handlers = <span class="built_in">this</span>.handlers[type];</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; handlers.length; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span>(handlers[i] === handler) &#123;</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      handlers.splice(i, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleMessage</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  alert(<span class="string">`Message recieved: <span class="subst">$&#123;event.message&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个新对象</span></span><br><span class="line"><span class="keyword">const</span> target = <span class="keyword">new</span> EventTarget();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加事件处理程序</span></span><br><span class="line">target.addHandler(<span class="string">&quot;message&quot;</span>, handleMessage);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 触发事件</span></span><br><span class="line">target.fire(&#123;</span><br><span class="line">  <span class="attr">type</span>: <span class="string">&quot;message&quot;</span>,</span><br><span class="line">  <span class="attr">message</span>: <span class="string">&quot;Hello world&quot;</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除事件处理程序</span></span><br><span class="line">target.removeHandler(<span class="string">&quot;message&quot;</span>, handlerMessage);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 再次触发事件，应没有处理程序</span></span><br><span class="line">target.fire(&#123;</span><br><span class="line">  <span class="attr">type</span>: <span class="string">&quot;message&quot;</span>,</span><br><span class="line">  <span class="attr">message</span>: <span class="string">&quot;Hello world&quot;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="拖放"><a href="#拖放" class="headerlink" title="拖放"></a>拖放</h2><p>拖放的基本概念很简单：创建一个绝对定位的元素，使其跟着鼠标指针移动。要注意的点是，要将指针和被移动元素保持相对静止，也就是维持在原始的相对位置上。</p>
+<img src="/js-note-22/drag.png" class="" title="drag">
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义</span></span><br><span class="line"><span class="keyword">const</span> DragDrop = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 创建自定义事件</span></span><br><span class="line">  <span class="keyword">let</span> dragdrop = <span class="keyword">new</span> EventTarget();</span><br><span class="line">      dragging = <span class="literal">null</span>,</span><br><span class="line">      diffX = <span class="number">0</span>,</span><br><span class="line">      diffY = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">handleEvent</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> target = event.target;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 确定事件类型</span></span><br><span class="line">    <span class="keyword">switch</span>(event.type) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">&quot;mousedown&quot;</span>:</span><br><span class="line">        <span class="keyword">if</span>(target.className.indexOf(<span class="string">&quot;draggable&quot;</span>) &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">          dragging = target;</span><br><span class="line">          diffX = event.clientX - target.offsetLeft;</span><br><span class="line">          diffY = event.clientY - target.offsetTop;</span><br><span class="line">          <span class="comment">// 触发自定义事件</span></span><br><span class="line">          dragdrop.fire(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&quot;dragstart&quot;</span>,</span><br><span class="line">            <span class="attr">target</span>: dragging,</span><br><span class="line">            <span class="attr">x</span>: event.clientX,</span><br><span class="line">            <span class="attr">y</span>: event.clientY</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">case</span> <span class="string">&quot;mousemove&quot;</span>:</span><br><span class="line">        <span class="keyword">if</span>(dragging !== <span class="literal">null</span>) &#123;</span><br><span class="line">          dragging.style.left = <span class="string">`<span class="subst">$&#123;event.clientX - diffX&#125;</span>px`</span>;</span><br><span class="line">          dragging.style.top = <span class="string">`<span class="subst">$&#123;event.clientY - diffY&#125;</span>px`</span>;</span><br><span class="line">          <span class="comment">// 触发自定义事件</span></span><br><span class="line">          dragdrop.fire(&#123;</span><br><span class="line">            <span class="attr">type</span>: <span class="string">&quot;drag&quot;</span>,</span><br><span class="line">            <span class="attr">target</span>: dragging,</span><br><span class="line">            <span class="attr">x</span>: event.clientX,</span><br><span class="line">            <span class="attr">y</span>: event.clientY</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">case</span> <span class="string">&quot;mouseup&quot;</span>:</span><br><span class="line">        <span class="comment">// 触发自定义事件</span></span><br><span class="line">        dragdrop.fire(&#123;</span><br><span class="line">          <span class="attr">type</span>: <span class="string">&quot;dragend&quot;</span>,</span><br><span class="line">          <span class="attr">target</span>: dragging,</span><br><span class="line">          <span class="attr">x</span>: event.clientX,</span><br><span class="line">          <span class="attr">y</span>: event.clientY</span><br><span class="line">        &#125;);</span><br><span class="line">        dragging = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  dragdrop.enable = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.addEventListener(<span class="string">&quot;mousedown&quot;</span>, handleEvent);</span><br><span class="line">    <span class="built_in">document</span>.addEventListener(<span class="string">&quot;mousemove&quot;</span>, handleEvent);</span><br><span class="line">    <span class="built_in">document</span>.addEventListener(<span class="string">&quot;mouseup&quot;</span>, handleEvent);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  dragdrop.disable = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.removeEventListener(<span class="string">&quot;mousedown&quot;</span>, handleEvent);</span><br><span class="line">    <span class="built_in">document</span>.removeEventListener(<span class="string">&quot;mousemove&quot;</span>, handleEvent);</span><br><span class="line">    <span class="built_in">document</span>.removeEventListener(<span class="string">&quot;mouseup&quot;</span>, handleEvent);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> dragdrop;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用</span></span><br><span class="line">Dragdrop.addHandler(<span class="string">&quot;dragstart&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> status = <span class="built_in">document</span>.getElementById(<span class="string">&quot;status&quot;</span>);</span><br><span class="line">  status.innerHTML = <span class="string">`Started dragging <span class="subst">$&#123;event.target.id&#125;</span>`</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Dragdrop.addHandler(<span class="string">&quot;drag&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> status = <span class="built_in">document</span>.getElementById(<span class="string">&quot;status&quot;</span>);</span><br><span class="line">  status.innerHTML += <span class="string">`&lt;br/&gt; Dragged <span class="subst">$&#123;event.target.id&#125;</span> to (<span class="subst">$&#123;event.x&#125;</span>, <span class="subst">$&#123;event.y&#125;</span>)`</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Dragdrop.addHandler(<span class="string">&quot;dragend&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> status = <span class="built_in">document</span>.getElementById(<span class="string">&quot;status&quot;</span>);</span><br><span class="line">  status.innerHTML += <span class="string">`&lt;br/&gt; Dropped <span class="subst">$&#123;event.target.id&#125;</span> at (<span class="subst">$&#123;event.x&#125;</span>, <span class="subst">$&#123;event.y&#125;</span>)`</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/js-note-21/" rel="prev" title="JavaScript学习笔记(21)">
+      <i class="fa fa-chevron-left"></i> JavaScript学习笔记(21)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/js-note-23/" rel="next" title="JavaScript学习笔记(23)">
+      JavaScript学习笔记(23) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E7%B1%BB%E5%9E%8B-amp-%E5%88%A4%E6%96%AD%E5%8E%9F%E7%94%9F"><span class="nav-number">1.1.</span> <span class="nav-text">判断类型&amp;判断原生</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3"><span class="nav-number">1.1.2.</span> <span class="nav-text">解决</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%AE%89%E5%85%A8%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">作用域安全的构造函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">解决</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%83%B0%E6%80%A7%E8%BD%BD%E5%85%A5%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">惰性载入函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-2"><span class="nav-number">1.3.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3-2"><span class="nav-number">1.3.2.</span> <span class="nav-text">解决</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E7%BB%91%E5%AE%9A"><span class="nav-number">1.4.</span> <span class="nav-text">函数绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-3"><span class="nav-number">1.4.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3-3"><span class="nav-number">1.4.2.</span> <span class="nav-text">解决</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96"><span class="nav-number">1.5.</span> <span class="nav-text">函数柯里化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E7%AF%A1%E6%94%B9%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.</span> <span class="nav-text">防篡改对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AF%E6%89%A9%E5%B1%95%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.1.</span> <span class="nav-text">不可扩展对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E5%B0%81%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.2.</span> <span class="nav-text">密封对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%BB%E7%BB%93%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.3.</span> <span class="nav-text">冻结对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">定时器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="nav-number">3.1.</span> <span class="nav-text">重复的定时器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-4"><span class="nav-number">3.1.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3-4"><span class="nav-number">3.1.2.</span> <span class="nav-text">解决</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Yielding-Processes"><span class="nav-number">3.2.</span> <span class="nav-text">Yielding Processes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-5"><span class="nav-number">3.2.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3-5"><span class="nav-number">3.2.2.</span> <span class="nav-text">解决</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E9%98%B2%E6%8A%96-%E8%8A%82%E6%B5%81"><span class="nav-number">3.3.</span> <span class="nav-text">函数防抖&#x2F;节流</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B2%E6%8A%96"><span class="nav-number">3.3.1.</span> <span class="nav-text">防抖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8A%82%E6%B5%81"><span class="nav-number">3.3.2.</span> <span class="nav-text">节流</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">自定义事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%96%E6%94%BE"><span class="nav-number">5.</span> <span class="nav-text">拖放</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

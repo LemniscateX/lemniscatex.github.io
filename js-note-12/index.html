@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="《JavaScript高级程序设计》第十二章，DOM2和DOM3。事实上，我有点不太喜欢看DOM。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript学习笔记(12)">
+<meta property="og:url" content="https://lemniscatex.github.io/js-note-12/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="《JavaScript高级程序设计》第十二章，DOM2和DOM3。事实上，我有点不太喜欢看DOM。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-12/offset.png">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-12/client.png">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-12/scroll.png">
+<meta property="article:published_time" content="2020-12-03T01:33:01.000Z">
+<meta property="article:modified_time" content="2020-12-04T15:26:29.000Z">
+<meta property="article:tag" content="DOM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lemniscatex.github.io/js-note-12/offset.png">
+
+<link rel="canonical" href="https://lemniscatex.github.io/js-note-12/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>JavaScript学习笔记(12) | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/js-note-12/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript学习笔记(12)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-12-03 09:33:01" itemprop="dateCreated datePublished" datetime="2020-12-03T09:33:01+08:00">2020-12-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-12-04 23:26:29" itemprop="dateModified" datetime="2020-12-04T23:26:29+08:00">2020-12-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>《JavaScript高级程序设计》第十二章，DOM2和DOM3。<br>事实上，我有点不太喜欢看DOM。</p>
+<span id="more"></span>
+
+<hr>
+<p>DOM1主要定义HTML和XML文档的底层结构(?)，DOM2和DOM3则引入了更多的交互，分为几个模块：</p>
+<ul>
+<li>核心：在DOM1核心基础上构建，给节点添加了更多方法/属性</li>
+<li>视图：定义了基于样式的不同视图(?)</li>
+<li>事件：说明了如何用事件与DOM文档交互</li>
+<li>样式：定义了怎么通过编程来访问/改变CSS样式</li>
+<li>遍历和范围：引入了新的遍历、选择DOM元素接口</li>
+<li>HTML：在DOM1级HTML基础上构建，添加了更多方法/属性/接口</li>
+</ul>
+<p>可以通过调用<code>hasFeature()</code>来判断浏览器是否支持以上模块。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> supportDOM2Core = <span class="built_in">document</span>.implementation.hasFeature(<span class="string">&quot;Core&quot;</span>, <span class="string">&quot;2.0&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> supportDOM3Core = <span class="built_in">document</span>.implementation.hasFeature(<span class="string">&quot;Core&quot;</span>, <span class="string">&quot;3.0&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> supportDOM2HTML = <span class="built_in">document</span>.implementation.hasFeature(<span class="string">&quot;HTML&quot;</span>, <span class="string">&quot;2.0&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> supportDOM2Views = <span class="built_in">document</span>.implementation.hasFeature(<span class="string">&quot;Views&quot;</span>, <span class="string">&quot;2.0&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> supportDOM2XML = <span class="built_in">document</span>.implementation.hasFeature(<span class="string">&quot;XML&quot;</span>, <span class="string">&quot;2.0&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>下面就分模块来叙述，除了把事件放到下一章讲。</p>
+<p>PS: 有一说一，这一篇我感觉自己不会想再看一遍…就当它是manual好了。</p>
+<h2 id="核心、视图、HTML"><a href="#核心、视图、HTML" class="headerlink" title="核心、视图、HTML"></a>核心、视图、HTML</h2><h3 id="命名空间相关变化"><a href="#命名空间相关变化" class="headerlink" title="命名空间相关变化"></a>命名空间相关变化</h3><p>XML的命名空间可以让不同XML文档的元素混在一起而不用担心冲突。不过，XHTML支持XML命名空间，但HTML不支持XML命名空间，所以下面的都是XHTML的例子。先举几个例子吧。</p>
+<p>比如下面的例子里，命名空间用<code>xmlns</code>来指定，也就是<code>http://www.w3.org/1999/xhtml</code>。这里所有元素都默认是该命名空间的元素。</p>
+<figure class="highlight xhtml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Example XHTML page<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    Hello world!</span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果想显式地指定命名空间，可以在<code>xmlns</code>处定义一个前缀，并把该前缀放到元素的<code>tag</code>前面。如果想要把一些属性也限制在命名空间内的话，也把前缀加到属性名前面即可。</p>
+<figure class="highlight xhtml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xhtml:html</span> <span class="attr">xmlns:xhtml</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">xhtml:head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">xhtml:title</span>&gt;</span>Example XHTML page<span class="tag">&lt;/<span class="name">xhtml:title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">xhtml:head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">xhtml:body</span> <span class="attr">xhtml:class</span>=<span class="string">&quot;home&quot;</span>&gt;</span></span><br><span class="line">    Hello world!</span><br><span class="line">  <span class="tag">&lt;/<span class="name">xhtml:body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xhtml:html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的例子都只用了一个命名空间，看上去没有什么必要，这里举一个混合两种语言的情况。</p>
+<p>这里<code>&lt;svg&gt;</code>元素及其所有子元素都属于它自身的命名空间<code>http://www.w3.org/2000/svg</code>。虽然这个文档是<code>XHTML</code>文档，但因为有命名空间，其中的SVG代码也是有效的。</p>
+<figure class="highlight xhtml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>Example XHTML page<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span></span></span><br><span class="line"><span class="tag">             <span class="attr">viewBox</span>=<span class="string">&quot;0 0 100 100&quot;</span> <span class="attr">style</span>=<span class="string">&quot;width:100%; height:100%&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y</span>=<span class="string">&quot;0&quot;</span> <span class="attr">width</span>=<span class="string">&quot;100&quot;</span> <span class="attr">height</span>=<span class="string">&quot;100&quot;</span> <span class="attr">style</span>=<span class="string">&quot;fill:red&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>那我们就会遇到一些问题了，譬如创建一个元素时，它会属于哪个命名空间呢？查询一个特殊标签名时，应该把结果包含在哪个命名空间呢？要解决这些，就要引出DOM2核心在DOM1核心基础上新增的一些与命名空间有关的属性/方法了。</p>
+<h4 id="Node类型"><a href="#Node类型" class="headerlink" title="Node类型"></a>Node类型</h4><p>对于Dode类型，DOM2新增了和命名空间有关的属性。</p>
+<ul>
+<li><code>localName</code>：不带前缀的节点名称</li>
+<li><code>namespaceURL</code>：命名空间URL或<code>null</code></li>
+<li><code>prefix</code>：命名空间前缀或<code>null</code></li>
+</ul>
+<p>举个例子，<code>&lt;html&gt;</code>元素的<code>localName</code>和<code>tagName</code>都是<code>&quot;html&quot;</code>;<code>&lt;s:svg&gt;</code>元素的<code>localName</code>是<code>&quot;svg&quot;</code>，<code>tagName</code>是<code>&quot;s:svg&quot;</code>。</p>
+<p>对于Dode类型，DOM3新增了一些与命名空间有关的方法。</p>
+<ul>
+<li><code>isDefaultNamespace(namespaceURL)</code>：判断URL是不是当前节点的默认命名空间</li>
+<li><code>lookupNamespaceURL(prefix)</code>：返回命名空间</li>
+<li><code>lookupPrefix(namespaceURL)</code>：返回前缀</li>
+</ul>
+<h4 id="Document类型"><a href="#Document类型" class="headerlink" title="Document类型"></a>Document类型</h4><ul>
+<li><code>createElementNS(namespaceURL, tagName)</code>：创建元素</li>
+<li><code>createAttributeNS(namespaceURL, attributeName)</code>：创建特性</li>
+<li><code>getElementsByTagNameNS(namespaceURL, tagName)</code>：返回匹配元素的NodeList</li>
+</ul>
+<h4 id="Element类型"><a href="#Element类型" class="headerlink" title="Element类型"></a>Element类型</h4><ul>
+<li><code>getAttributeNS(namespaceURL, localName)</code>：返回特性</li>
+<li><code>getAttributeNodeNS(namespaceURL, localName)</code>：返回节点</li>
+<li><code>getElementsByTagNameNS(namespaceURL, tagName)</code>：返回匹配元素的NodeList</li>
+<li><code>hasAttributeNS(namespaceURL, localName)</code>：判断元素是否有<code>namespaceURL</code>命名空间的<code>localName</code>特性</li>
+<li><code>removeAttributeNS(namespaceURL, localName)</code>：删除特性</li>
+<li><code>setAttributeNS(namespaceURL, qualifiedName, value)</code>：设置特性值</li>
+<li><code>setAttributeNodeNS(attNode)</code>：设置特性节点</li>
+</ul>
+<p>* 这里的特性attribute指的是诸如<code>id</code>、<code>href</code>、<code>name</code>等。</p>
+<h4 id="NamedNodeMap类型"><a href="#NamedNodeMap类型" class="headerlink" title="NamedNodeMap类型"></a>NamedNodeMap类型</h4><p>由于特性是通过<code>NamedNodeMap</code>表示的，所以<code>NamedNodeMap</code>也新增了的命名空间有关的方法，不过以下方法只针对特性使用。</p>
+<ul>
+<li><code>getNamedItemNS(namespaceURL, localName)</code>：取出项目</li>
+<li><code>removeNamedItemNS(namespaceURL, localName)</code>：移除项目</li>
+<li><code>setNamedItemNS(node)</code>：添加node，此节点已事先指定了命名空间信息</li>
+</ul>
+<h3 id="其他变化"><a href="#其他变化" class="headerlink" title="其他变化"></a>其他变化</h3><h4 id="DocumentType类型"><a href="#DocumentType类型" class="headerlink" title="DocumentType类型"></a>DocumentType类型</h4><ul>
+<li><code>publicId</code></li>
+<li><code>systemId</code></li>
+<li><code>internalSubset</code>(内部子集，HTML中用的少，XML中更常见)</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">HTML</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//W3C//DTD HTML 4.01//EN&quot;</span></span></span><br><span class="line"><span class="meta">  <span class="meta-string">&quot;http://www.w3.org/TR/html4/strict.dtd&quot;</span></span></span><br><span class="line"><span class="meta">  [<span class="meta">&lt;!ELEMENT <span class="meta-keyword">name</span> (<span class="meta-keyword">#PCDATA</span>)&gt;</span>]&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="built_in">document</span>.doctype.publicId); <span class="comment">// &quot;-//W3C//DTD HTML 4.01//EN&quot;</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">document</span>.doctype.systemId); <span class="comment">// &quot;http://www.w3.org/TR/html4/strict.dtd&quot;</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">document</span>.doctype.internalSubset); <span class="comment">// &quot;[&lt;!ELEMENT name (#PCDATA)&gt;]&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Document类型-1"><a href="#Document类型-1" class="headerlink" title="Document类型"></a>Document类型</h4><ul>
+<li><code>importNode(nodeToBeCopied, true | false)</code><br>用来从一个文档中获取一个节点，再将其导入到另一个文档(如果只是用<code>appendChild</code>的话来自另一个文档会报错)。第二个参数表示是否要复制子节点，此方法参数和<code>element.cloneNode()</code>一致。</li>
+<li><code>defaultView</code>：一个指向拥有文档的窗口/框架的指针</li>
+<li><code>implementation.createDocumentType(文档类型名称, publicId, systemId)</code>：创建新的<code>DocumentType</code>节点</li>
+<li><code>implementation.createDocument(namespaceURL, 文档元素标签名, 新文档的文档类型)</code>：创建新文档</li>
+<li><code>implementation.createHTMLDocument(文档标题)</code>：创建完整的HTML文档，包括<code>&lt;html&gt;</code>、<code>&lt;head&gt;</code>、<code>&lt;title&gt;</code>、<code>&lt;body&gt;</code></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> doctype = <span class="built_in">document</span>.implementation.createDocumentType(</span><br><span class="line">  <span class="string">&quot;html&quot;</span>,</span><br><span class="line">  <span class="string">&quot;-//W3C//DTD HTML 4.01//EN&quot;</span>,</span><br><span class="line">  <span class="string">&quot;http://www.w3.org/TR/html4/strict.dtd&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> doc = <span class="built_in">document</span>.implementation.createDocument(</span><br><span class="line">  <span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>,</span><br><span class="line">  <span class="string">&quot;html&quot;</span>,</span><br><span class="line">  doctype);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> htmldoc = <span class="built_in">document</span>.implementation.createHTMLDocument(<span class="string">&quot;New Doc&quot;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(htmldoc.title); <span class="comment">// &quot;New Doc&quot;</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> htmldoc.body); <span class="comment">// &quot;object&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Node类型-1"><a href="#Node类型-1" class="headerlink" title="Node类型"></a>Node类型</h4><ul>
+<li><code>isSupported(特性名, 特性版本号)</code>：判断节点是否支持该特性</li>
+<li><code>isSameNode(node)</code>：判断两个节点是否为同一个对象</li>
+<li><code>isEqualNode(node)</code>：判断两个节点是否为一样的类型、有一样的属性</li>
+<li><code>setUserData(key, value, handler)</code>：给节点添加额外数据，设置的数据可通过<code>getUserData(key)</code>取得。<code>handler</code>参数为处理函数，会在带有数据的节点被复制、删除、重命名、引入一个文档时调用。其类型为<code>function (operationType, key, value, sourceNode, targetNode)</code>，其中<code>operationType</code>为<code>1~4</code>四个数字，依次表示上述操作。</li>
+</ul>
+<h2 id="样式"><a href="#样式" class="headerlink" title="样式"></a>样式</h2><h3 id="访问元素样式"><a href="#访问元素样式" class="headerlink" title="访问元素样式"></a>访问元素样式</h3><h4 id="常规样式"><a href="#常规样式" class="headerlink" title="常规样式"></a>常规样式</h4><p>元素通过<code>style</code>设置的样式可以通过<code>element.style</code>属性来获取(注意驼峰/连接符)。DOM2给这个<code>style</code>添加了一系列属性和方法。</p>
+<ul>
+<li><code>cssText</code>：<code>style</code>特性中的CSS代码</li>
+<li><code>parentRule</code>：CSS信息的<code>CSSRule</code>对象</li>
+<li><code>length</code>：设置的CSS属性的数量</li>
+<li><code>item(index)</code>：返回给定位置的CSS属性名称</li>
+<li><code>getPropertyValue(propertyName)</code>：返回该属性对应值(一个字符串)</li>
+<li><code>getPropertyCSSValue(propertyName)</code>：返回该属性对应值(一个<code>CSSValue</code>对象)</li>
+<li><code>getPropertyPriority(propertyName)</code>：如果用了<code>!important</code>会返回<code>&quot;important&quot;</code>，非则返回<code>&quot;&quot;</code></li>
+<li><code>removeProperty(propertyName)</code>：删除属性</li>
+<li><code>setProperty(propertyName, value, priority)</code>：设置属性</li>
+</ul>
+<p>其中<code>CSSValue</code>是一个对象，含两个属性：<code>cssText</code>表示该属性值的字符串，<code>cssValueType</code>表示值的类型，是一个数值常量(<code>0</code>表示继承的值，<code>1</code>表示基本的值，<code>2</code>表示值列表，<code>3</code>表示自定义的值)。</p>
+<h4 id="计算样式"><a href="#计算样式" class="headerlink" title="计算样式"></a>计算样式</h4><p><code>style</code>只能得到通过<code>style</code>属性设置的样式，DOM2则增强了<code>document.defaultView</code>，提供了<code>getComputedStyle(元素, 伪元素字符串 | null)</code>来获取层叠的样式，该方法返回一个只读的<code>CSSStyleDeclaration</code>对象。</p>
+<h3 id="操作样式表"><a href="#操作样式表" class="headerlink" title="操作样式表"></a>操作样式表</h3><p><code>document.styleSheets</code>是表示样式表的<code>CSSStyleSheet</code>类型，包含<code>&lt;link&gt;</code>和<code>&lt;style&gt;</code>中定义的样式，只读(除了一个例外)，有以下属性/方法。</p>
+<ul>
+<li><code>disabled</code>：可读写(这个就是例外)，表示样式表是否被禁用</li>
+<li><code>href</code>：当样式表是<code>&lt;link&gt;</code>包含的，则是样式表的URL，否则为<code>null</code></li>
+<li><code>media</code>：当前样式表支持的所有媒体类型集合，即<code>&lt;link&gt;</code>和<code>&lt;style&gt;</code>中的<code>media</code>特性值字符串</li>
+<li><code>ownerNode</code>：指向拥有当前样式表的节点的指针，即某个<code>&lt;link&gt;</code>或<code>&lt;style&gt;</code>节点或<code>null</code>(针对<code>@import</code>导入的样式)</li>
+<li><code>parentStyleSheet</code>：指向导入样式表的指针(针对<code>@import</code>导入的样式)</li>
+<li><code>title</code>：<code>ownerNode</code>中<code>title</code>属性值</li>
+<li><code>type</code>：样式类型，对于CSS样式来说是<code>&quot;type/css&quot;</code></li>
+<li><code>cssRules</code>：样式表中的样式规则集合</li>
+<li><code>ownerRule</code>：指向表示导入的规则(针对<code>@import</code>导入的样式)，或<code>null</code>(针对其它)</li>
+<li><code>deleteRule(index)</code>：删除规则</li>
+<li><code>insertRule(rule, index)</code>：添加规则</li>
+</ul>
+<p>也可以通过<code>&lt;link&gt;</code>或<code>&lt;style&gt;</code>元素的<code>sheet</code>属性获取<code>CSSStyleSheet</code>对象。</p>
+<h4 id="规则属性"><a href="#规则属性" class="headerlink" title="规则属性"></a>规则属性</h4><p><code>CSSRule</code>是表示样式表中每一条规则的基类，最常见的是表示样式的继承类<code>CSSStyleRule</code>(其它的规则有诸如<code>@import</code>、<code>@font-face</code>、<code>page</code>、<code>charset</code>)，<code>CSSStyleRule</code>有下面这些属性。</p>
+<ul>
+<li><code>cssText</code>：整个规则文本</li>
+<li><code>parentRule</code>：当当前规则为导入的规则时，此属性为导入规则，否则为<code>null</code></li>
+<li><code>parentStyleSheet</code>：当前规则所属的样式表</li>
+<li><code>selectorText</code>：当前规则的选择符文本</li>
+<li><code>style</code>：<code>CSSStyleDeclaration</code>对象，可以通过此设置/取得规则中特定的样式值</li>
+<li><code>type</code>：表示规则类型的常量值。对于样式规则，为<code>1</code></li>
+</ul>
+<p>举个例子</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: blue;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sheet = <span class="built_in">document</span>.styleSheets[<span class="number">0</span>]; <span class="comment">// 假设此规则位于页面第一个样式表中</span></span><br><span class="line"><span class="keyword">let</span> rules = sheet.cssRules || sheet.rules; <span class="comment">// 获取规则列表</span></span><br><span class="line"><span class="keyword">let</span> rule = rules[<span class="number">0</span>]; <span class="comment">// 获取第一条规则</span></span><br><span class="line"><span class="built_in">console</span>.log(rule.selectorText); <span class="comment">// &quot;div.box&quot;</span></span><br><span class="line"><span class="built_in">console</span>.log(rule.style.cssText); <span class="comment">// 完整的CSS代码</span></span><br><span class="line"><span class="built_in">console</span>.log(rule.style.backgroundColor); <span class="comment">// &quot;blue&quot;</span></span><br><span class="line"><span class="built_in">console</span>.log(rule.style.width); <span class="comment">// &quot;100px&quot;</span></span><br><span class="line"><span class="built_in">console</span>.log(rule.style.height); <span class="comment">// &quot;200px&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="规则方法"><a href="#规则方法" class="headerlink" title="规则方法"></a>规则方法</h4><ul>
+<li><code>insertRule(选择符, 规则文本, 插入位置的索引)</code>：插入规则<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sheet.insertRule(<span class="string">&quot;body&quot;</span>, <span class="string">&quot;background-color: silver&quot;</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure></li>
+<li><code>deleteRule(要删除的规则的位置)</code>：删除规则<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sheet.deleteRule(<span class="number">0</span>);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="元素大小"><a href="#元素大小" class="headerlink" title="元素大小"></a>元素大小</h3><p>这一节貌似和DOM2并无关系…没事，继续看看吧。</p>
+<h4 id="偏移量"><a href="#偏移量" class="headerlink" title="偏移量"></a>偏移量</h4><ul>
+<li><code>offsetHeight</code></li>
+<li><code>offsetWidth</code></li>
+<li><code>offsetLeft</code></li>
+<li><code>offsetRight</code></li>
+</ul>
+<img src="/js-note-12/offset.png" class="" title="offset">
+
+<p>如上，它们都是只读的。<code>offsetParent</code>属性为包含元素，但不一定与<code>parentNode</code>相等。例如<code>&lt;td&gt;</code>的<code>offsetParent</code>是<code>&lt;table&gt;</code>而非<code>&lt;tr&gt;</code>，因为<code>&lt;table&gt;</code>是在DOM层次中距离<code>&lt;td&gt;</code>最近的一个具有大小的元素。</p>
+<p>要想知道某个元素在页面的偏移量，可以将自身和<code>offsetParent</code>的<code>offsetLeft</code>和<code>offsetTop</code>递归累加直至根元素。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getElementLeft</span>(<span class="params">element</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> actualLeft = element.offsetLeft;</span><br><span class="line">  <span class="keyword">let</span> current = element.offsetParent;</span><br><span class="line">  <span class="keyword">while</span>(current !== <span class="literal">null</span>) &#123;</span><br><span class="line">    actualLeft += current.offsetLeft;</span><br><span class="line">    current = current.offsetParent;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> actualLeft;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<h4 id="客户区"><a href="#客户区" class="headerlink" title="客户区"></a>客户区</h4><ul>
+<li><code>clientHeight</code></li>
+<li><code>clientWidth</code></li>
+</ul>
+<img src="/js-note-12/client.png" class="" title="client">
+
+<p>如上，也是只读的，滚动条占用的空间不计算在内。</p>
+<h4 id="滚动"><a href="#滚动" class="headerlink" title="滚动"></a>滚动</h4><ul>
+<li><code>scrollHeight</code></li>
+<li><code>scrollWidth</code></li>
+<li><code>scrollLeft</code></li>
+<li><code>scrollRight</code></li>
+</ul>
+<img src="/js-note-12/scroll.png" class="" title="scroll">
+
+<p>如上。有些元素(如<code>&lt;html&gt;</code>)会自动地添加滚动条，有些元素则要通过<code>overflow</code>属性设置才能滚动。</p>
+<p>因为不同浏览器在对非滚动元素的数值定义不同，因此在确定文档的总高度的时候，必须取得<code>scrollWidth</code>/<code>clientWidth</code>和<code>scrollHeight</code>/<code>clientHeight</code>中的最大值，才能保证跨浏览器时得到精确的结果。</p>
+<h4 id="一个方法"><a href="#一个方法" class="headerlink" title="一个方法"></a>一个方法</h4><p>每个元素都有一个<code>getBoundingClientRect()</code>方法，它返回一个矩形对象，含四个属性：<code>left</code>、<code>top</code>、<code>right</code>、<code>bottom</code>。这些属性表示元素在页面中相对于视口的位置，不过不同浏览器对文档的<code>原点</code>定义不同，因此略有差异。</p>
+<h2 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h2><p>DOM2定义了两个辅助完成DOM树遍历的类型：<code>NodeIterator</code>、<code>TreeWalker</code>，用它们可以基于给定起点进行DFS。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> supportsTraversals = <span class="built_in">document</span>.implementation.hasFeature(<span class="string">&quot;Traversal&quot;</span>, <span class="string">&quot;2.0&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> supportsNodeIterator = (<span class="keyword">typeof</span> <span class="built_in">document</span>.createNodeIterator == <span class="string">&quot;function&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> supportsTreeWalker = (<span class="keyword">typeof</span> <span class="built_in">document</span>.createTreeWalker == <span class="string">&quot;function&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="NodeIterator"><a href="#NodeIterator" class="headerlink" title="NodeIterator"></a>NodeIterator</h3><h4 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h4><p>创建一个迭代器的方法是<code>document.createNodeIterator()</code>，有四个参数：</p>
+<ul>
+<li><code>root</code>：搜索起点DOM节点</li>
+<li><code>whatToShow</code>：要访问的节点类型的数字代码</li>
+<li><code>filter</code>：<code>NodeFilter</code>对象，过滤函数</li>
+<li><code>entityReferenceExpansion</code>：布尔值，表示是否要扩展实体引用。此参数在HTML页面中没有用，因为其中的实体引用不能扩展</li>
+</ul>
+<p>对于<code>whatToShow</code>，它的值以常量形式存在于<code>NodeFilter</code>类型中，稍微举个例子如下。如果想要多种类型，直接用<code>|</code>来或一下即可。</p>
+<ul>
+<li><code>NodeFiler.SHOW_ALL</code></li>
+<li><code>NodeFiler.SHOW_ELEMENT</code></li>
+<li><code>NodeFiler.SHOW_ATTRIBUTE</code></li>
+<li><code>NodeFiler.SHOW_TEXT</code></li>
+<li>…</li>
+</ul>
+<p>对于<code>filter</code>，这个<code>NodeFilter</code>对象只有一个方法<code>acceptNode</code>，当需要访问给定节点时返回<code>NodeFilter.FILTER_ACCEPT</code>，否则返回<code>NodeFilter.FILTER_SKIP</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Both are OK</span></span><br><span class="line"><span class="keyword">let</span> filter = <span class="function"><span class="keyword">function</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> node.tagName.toLowerCase() == <span class="string">&quot;p&quot;</span> </span><br><span class="line">    ? NodeFilter.FILTER_ACCEPT</span><br><span class="line">    : NodeFilter.FILTER_SKIP;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> filter = &#123;</span><br><span class="line">  <span class="attr">acceptNode</span>: <span class="function"><span class="keyword">function</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> node.tagName.toLowerCase() == <span class="string">&quot;p&quot;</span> </span><br><span class="line">    ? NodeFilter.FILTER_ACCEPT</span><br><span class="line">    : NodeFilter.FILTER_SKIP;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h4><ul>
+<li><code>nextNode()</code></li>
+<li><code>previousNode()</code></li>
+</ul>
+<p>举一个遍历DOM树的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> div = <span class="built_in">document</span>.getElementById(<span class="string">&quot;div1&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> iterator = <span class="built_in">document</span>.createNodeIterator(div, NodeFilter.SHOW_ELEMENT, <span class="literal">null</span>, <span class="literal">false</span>);</span><br><span class="line"><span class="keyword">let</span> node = iterator.nextNode();</span><br><span class="line"><span class="keyword">while</span>(node !== <span class="literal">null</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(node.tagName);</span><br><span class="line">  node = iterator.nextNode();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="TreeWalker"><a href="#TreeWalker" class="headerlink" title="TreeWalker"></a>TreeWalker</h3><p><code>TreeWalker</code>是高级版本的<code>NodeIterator</code>，它还提供了不同方向遍历DOM的方法。</p>
+<h4 id="创建-1"><a href="#创建-1" class="headerlink" title="创建"></a>创建</h4><p>创建方法为<code>document.createTreeWalker()</code>，接收参数与<code>NodeIterator</code>相同。这里不同的是<code>filter</code>多了个不一样的选择<code>NodeFilter.FILTER_REJECT</code>。</p>
+<ul>
+<li>对于<code>NodeIterator</code>，二者表现一致<ul>
+<li><code>FILTER_SKIP</code>：仅跳过相应节点，前进到子树中下一节点</li>
+<li><code>FILTER_REJECT</code>：仅跳过相应节点，前进到子树中下一节点</li>
+</ul>
+</li>
+<li>对于<code>TreeWalker</code><ul>
+<li><code>FILTER_SKIP</code>：仅跳过相应节点，前进到子树中下一节点</li>
+<li><code>FILTER_REJECT</code>：跳过相应节点及该节点的整个子树</li>
+</ul>
+</li>
+</ul>
+<p><code>TreeWalker</code>还有一个属性叫<code>currentNode</code>，表示上一次遍历中返回的节点。可读写，设置它可以修改遍历继续进行的起点。</p>
+<h4 id="操作-1"><a href="#操作-1" class="headerlink" title="操作"></a>操作</h4><ul>
+<li><code>parentNode()</code></li>
+<li><code>firstChild()</code></li>
+<li><code>lastChild()</code></li>
+<li><code>nextSibling()</code></li>
+<li><code>previousSibling()</code></li>
+</ul>
+<h2 id="范围"><a href="#范围" class="headerlink" title="范围"></a>范围</h2><p>DOM2在<code>Document</code>类型中定义了<code>createRange()</code>，用它可以创建一个范围(<code>Range</code>类型)，来实现对DOM树更精细的控制。<code>Range</code>类型有以下位置信息属性：</p>
+<ul>
+<li><code>startContainer</code>：包含范围起点的节点，即选取第一个节点的父节点</li>
+<li><code>startOffset</code>：范围在<code>startContainer</code>中起点的偏移量。若<code>startContainer</code>为文本/注释/CDATA节点，此为范围起点之前跳过的字符数量；否则为范围中第一个子节点的索引</li>
+<li><code>endContainer</code>：包含范围终点的节点，即选取最后一个节点的父节点</li>
+<li><code>endOffset</code>：范围在<code>endContainer</code>中终点的偏移量</li>
+<li><code>commonAncestorContainer</code>：<code>startContainer</code>和<code>endContainer</code>共同的祖先</li>
+</ul>
+<h3 id="用范围实现简单的选择"><a href="#用范围实现简单的选择" class="headerlink" title="用范围实现简单的选择"></a>用范围实现简单的选择</h3><ul>
+<li><code>selectNode()</code>：选择整个节点包括子节点</li>
+<li><code>selectNodeContents()</code>：只选择子节点</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p1&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">b</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">b</span>&gt;</span> world<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> range1 = <span class="built_in">document</span>.createRange();</span><br><span class="line"><span class="keyword">const</span> range2 = <span class="built_in">document</span>.createRange();</span><br><span class="line"><span class="keyword">const</span> p1 = <span class="built_in">document</span>.getElementById(<span class="string">&quot;p1&quot;</span>);</span><br><span class="line"></span><br><span class="line">range1.selectNode(p1);</span><br><span class="line"><span class="comment">// startContainer: &lt;body&gt;元素</span></span><br><span class="line"><span class="comment">// endContainer: &lt;body&gt;元素</span></span><br><span class="line"><span class="comment">// commonAncestorContainer: &lt;body&gt;元素</span></span><br><span class="line"><span class="comment">// startOffset: 给定节点在父节点内的索引，即&lt;p&gt;在&lt;body&gt;中的索引，为1(因为把空格也算为一个节点了)</span></span><br><span class="line"><span class="comment">// endOffset: startOffset + 1，因为只选择了一个节点，为2</span></span><br><span class="line"></span><br><span class="line">range2.selectNodeContents(p1);</span><br><span class="line"><span class="comment">// startContainer: &lt;p&gt;元素</span></span><br><span class="line"><span class="comment">// endContainer: &lt;p&gt;元素</span></span><br><span class="line"><span class="comment">// commonAncestorContainer: &lt;p&gt;元素</span></span><br><span class="line"><span class="comment">// startOffset: 因为范围从给定节点的第一个子节点开始，始终为0</span></span><br><span class="line"><span class="comment">// endOffset: 子节点的数量，为2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *     ⬇-------------range1-------------⬇</span></span><br><span class="line"><span class="comment"> *     &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;Hello&lt;/b&gt; world!&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> *                ⬆------range2-----⬆</span></span><br><span class="line"><span class="comment"> */</span> </span><br></pre></td></tr></table></figure>
+
+<p>还有一些相对选择的方法：</p>
+<ul>
+<li><code>setStartBefore(refNode)</code>：将范围起点设置在<code>refNode</code>前，因此<code>refNode</code>为范围选区的第一个子节点，此时：<ul>
+<li><code>startContainer</code>：<code>refNode.parentNode</code></li>
+<li><code>startOffset</code>：<code>refNode</code>在其父节点的<code>childNodes</code>中的下标</li>
+</ul>
+</li>
+<li><code>setStartAfter(refNode)</code>：将范围起点设置在<code>refNode</code>后，因此<code>refNode</code>下一个同辈节点为范围选区的第一个子节点，此时：<ul>
+<li><code>startContainer</code>：<code>refNode.parentNode</code></li>
+<li><code>startOffset</code>：<code>refNode</code>在其父节点的<code>childNodes</code>中的下标加一</li>
+</ul>
+</li>
+<li><code>setEndBefore(refNode)</code>：将范围终点设置在<code>refNode</code>前，因此<code>refNode</code>上一个同辈节点为范围选区的最后一个子节点，此时：<ul>
+<li><code>endContainer</code>：<code>refNode.parentNode</code></li>
+<li><code>endOffset</code>：<code>refNode</code>在其父节点的<code>childNodes</code>中的下标</li>
+</ul>
+</li>
+<li><code>setEndAfter(refNode)</code>：将范围终点设置在<code>refNode</code>后，因此<code>refNode</code>为范围选区的最后一个子节点，此时：<ul>
+<li><code>endContainer</code>：<code>refNode.parentNode</code></li>
+<li><code>endOffset</code>：<code>refNode</code>在其父节点的<code>childNodes</code>中的下标加一</li>
+</ul>
+</li>
+</ul>
+<h3 id="用范围实现复杂的选择"><a href="#用范围实现复杂的选择" class="headerlink" title="用范围实现复杂的选择"></a>用范围实现复杂的选择</h3><ul>
+<li><code>setStart(refNode, offset)</code>：参数分别会变成<code>startContainer</code>、<code>startOffset</code></li>
+<li><code>setEnd(refNode, offset)</code>：参数分别会变成<code>endContainer</code>、<code>endOffset</code></li>
+</ul>
+<p>以上方法可以模拟<code>selectNode()</code>和<code>selectNodeContents()</code>，不过它们的特性在于可以选择节点内的一部分。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p1 = <span class="built_in">document</span>.getElementById(<span class="string">&quot;p1&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> helloNode = p1.firstChild.firstChild;</span><br><span class="line"><span class="keyword">const</span> worldNode = p1.firstChild;</span><br><span class="line"><span class="keyword">const</span> range = <span class="built_in">document</span>.createRange();</span><br><span class="line"></span><br><span class="line">range.setStart(helloNode, <span class="number">2</span>);</span><br><span class="line">range.setEnd(worldNode, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*     选了从&quot;hello&quot;的&quot;llo&quot;到&quot;world!&quot;的&quot;o&quot;所在范围</span></span><br><span class="line"><span class="comment"> *                     ⬇--range-⬇</span></span><br><span class="line"><span class="comment"> *     &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;Hello&lt;/b&gt; world!&lt;/p&gt;</span></span><br><span class="line"><span class="comment"> *                   01234     0123456</span></span><br><span class="line"><span class="comment"> */</span> </span><br></pre></td></tr></table></figure>
+
+<h3 id="操作范围"><a href="#操作范围" class="headerlink" title="操作范围"></a>操作范围</h3><p>创建范围时，内部会为它创建一个文档片段(Fragment)，其中的每个节点都是指向文档中相应节点的指针。我们应该保持选区的DOM格式有效，像上个例子选取了<code>llo&lt;/b&gt; wo</code>就不算很好。不过范围本身知道自己缺少哪些开标签/闭标签，因此它会自己将它补全成<code>&lt;b&gt;llo&lt;/b&gt; wo</code>，也会对范围外的标签进行补全(给He所在地方补上<code>&lt;/b&gt;</code>)，也就是最终结果为</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p1&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">b</span>&gt;</span>He<span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">b</span>&gt;</span>llo<span class="tag">&lt;/<span class="name">b</span>&gt;</span> world!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>有几个方法可以对范围进行操作。以下都是<code>range.xxx</code>。</p>
+<ul>
+<li><code>deleteContents()</code>：删除范围所包含的内容</li>
+<li><code>extractContents()</code>：删除范围所包含的内容，并将该片段返回</li>
+<li><code>cloneContents()</code>：创建范围对象副本</li>
+<li><code>insertNode(node)</code>：在范围选区开始处插入节点</li>
+<li><code>surroundContents(node)</code>：环绕范围选区插入内容</li>
+<li><code>collapse(true | false)</code>：折叠范围，<code>true</code>表示折叠到开始位置，<code>false</code>表示折叠到结束位置</li>
+<li><code>compareBoundaryPoints()</code>：比较两个范围是否有公共的边界，如果没有的话哪个在前那个在后</li>
+<li><code>cloneRange()</code>：复制范围</li>
+<li><code>detach()</code>：解除范围对文档的引用</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p1 = <span class="built_in">document</span>.getElementById(<span class="string">&quot;p1&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> helloNode = p1.firstChild.firstChild;</span><br><span class="line"><span class="keyword">const</span> worldNode = p1.firstChild;</span><br><span class="line"><span class="keyword">const</span> range = <span class="built_in">document</span>.createRange();</span><br><span class="line">range.setStart(helloNode, <span class="number">2</span>);</span><br><span class="line">range.setEnd(worldNode, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> span = <span class="built_in">document</span>.createElement(<span class="string">&quot;span&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;He&lt;span&gt;&lt;/span&gt;llo&lt;/b&gt; world!&lt;/p&gt;</span></span><br><span class="line">range.insertNode(span);</span><br><span class="line"></span><br><span class="line"><span class="comment">// &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;He&lt;/b&gt;&lt;span&gt;&lt;b&gt;llo&lt;/b&gt; wo&lt;/span&gt;rld!&lt;/p&gt;</span></span><br><span class="line">range.surroundContents(span);</span><br><span class="line"></span><br><span class="line"><span class="comment">// emoji为光标位置</span></span><br><span class="line"><span class="comment">// 原始范围：      &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;He🖱llo&lt;/b&gt; wo🖱rld!&lt;/p&gt;</span></span><br><span class="line"><span class="comment">// 折叠到开始位置：&lt;p id=&quot;p1&quot;&gt;&lt;b&gt;He🖱llo&lt;/b&gt; world!&lt;/p&gt;</span></span><br><span class="line"><span class="comment">// 折叠到结束位置：&lt;p id=&quot;p1&quot;&gt;&lt;b&gt;Hello&lt;/b&gt; wo🖱rld!&lt;/p&gt;</span></span><br><span class="line">range.collapse(<span class="literal">true</span>);</span><br><span class="line"><span class="built_in">console</span>.log(range.collapsed); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// PS: collapsed还有个妙用，用来确定范围中两个节点是否紧密相邻</span></span><br><span class="line"><span class="comment">// 比如HTML为：&lt;p id=&quot;p1&quot;&gt;p1&lt;/p&gt;&lt;p id=&quot;p2&quot;&gt;p2&lt;/p&gt;</span></span><br><span class="line"><span class="keyword">const</span> p1 = <span class="built_in">document</span>.getElementById(<span class="string">&quot;p1&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> p2 = <span class="built_in">document</span>.getElementById(<span class="string">&quot;p2&quot;</span>);</span><br><span class="line">range = docuemnt.createRange();</span><br><span class="line">range.setStartAfter(p1);</span><br><span class="line">range.setStartBefore(p2);</span><br><span class="line"><span class="built_in">console</span>.log(range.collapsed); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>* 看完这一章我人没了…看得头疼</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/DOM/" rel="tag"># DOM</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/interviews-during-2020/" rel="prev" title="小羊上岸记">
+      <i class="fa fa-chevron-left"></i> 小羊上岸记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/js-note-13/" rel="next" title="JavaScript学习笔记(13)">
+      JavaScript学习笔记(13) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E3%80%81%E8%A7%86%E5%9B%BE%E3%80%81HTML"><span class="nav-number">1.</span> <span class="nav-text">核心、视图、HTML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E7%9B%B8%E5%85%B3%E5%8F%98%E5%8C%96"><span class="nav-number">1.1.</span> <span class="nav-text">命名空间相关变化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Node%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">Node类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Document%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.2.</span> <span class="nav-text">Document类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Element%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.3.</span> <span class="nav-text">Element类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NamedNodeMap%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.4.</span> <span class="nav-text">NamedNodeMap类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%8F%98%E5%8C%96"><span class="nav-number">1.2.</span> <span class="nav-text">其他变化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DocumentType%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">DocumentType类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Document%E7%B1%BB%E5%9E%8B-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">Document类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Node%E7%B1%BB%E5%9E%8B-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">Node类型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B7%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">样式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E5%85%83%E7%B4%A0%E6%A0%B7%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">访问元素样式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%84%E6%A0%B7%E5%BC%8F"><span class="nav-number">2.1.1.</span> <span class="nav-text">常规样式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%A0%B7%E5%BC%8F"><span class="nav-number">2.1.2.</span> <span class="nav-text">计算样式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%A0%B7%E5%BC%8F%E8%A1%A8"><span class="nav-number">2.2.</span> <span class="nav-text">操作样式表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%84%E5%88%99%E5%B1%9E%E6%80%A7"><span class="nav-number">2.2.1.</span> <span class="nav-text">规则属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%84%E5%88%99%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.2.</span> <span class="nav-text">规则方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E7%B4%A0%E5%A4%A7%E5%B0%8F"><span class="nav-number">2.3.</span> <span class="nav-text">元素大小</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%81%8F%E7%A7%BB%E9%87%8F"><span class="nav-number">2.3.1.</span> <span class="nav-text">偏移量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E5%8C%BA"><span class="nav-number">2.3.2.</span> <span class="nav-text">客户区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BB%9A%E5%8A%A8"><span class="nav-number">2.3.3.</span> <span class="nav-text">滚动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.4.</span> <span class="nav-text">一个方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%8D%E5%8E%86"><span class="nav-number">3.</span> <span class="nav-text">遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NodeIterator"><span class="nav-number">3.1.</span> <span class="nav-text">NodeIterator</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA"><span class="nav-number">3.1.1.</span> <span class="nav-text">创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-number">3.1.2.</span> <span class="nav-text">操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TreeWalker"><span class="nav-number">3.2.</span> <span class="nav-text">TreeWalker</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C-1"><span class="nav-number">3.2.2.</span> <span class="nav-text">操作</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8C%83%E5%9B%B4"><span class="nav-number">4.</span> <span class="nav-text">范围</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E8%8C%83%E5%9B%B4%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">4.1.</span> <span class="nav-text">用范围实现简单的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E8%8C%83%E5%9B%B4%E5%AE%9E%E7%8E%B0%E5%A4%8D%E6%9D%82%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">4.2.</span> <span class="nav-text">用范围实现复杂的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E8%8C%83%E5%9B%B4"><span class="nav-number">4.3.</span> <span class="nav-text">操作范围</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

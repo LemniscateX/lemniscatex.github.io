@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="《JavaScript高级程序设计》第十五章，使用canvas绘图。我的体会是，WebGL比我以为的要更难些。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript学习笔记(15)">
+<meta property="og:url" content="https://lemniscatex.github.io/js-note-15/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="《JavaScript高级程序设计》第十五章，使用canvas绘图。我的体会是，WebGL比我以为的要更难些。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-15/clock.png">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-15/clock-rotate.png">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-15/shadow.png">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-15/outside-viewport.png">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-15/inside-viewport.png">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-15/triangles-result.png">
+<meta property="og:image" content="https://lemniscatex.github.io/js-note-15/line-loop-set-result.png">
+<meta property="article:published_time" content="2021-01-10T06:14:14.000Z">
+<meta property="article:modified_time" content="2021-01-20T15:54:45.000Z">
+<meta property="article:tag" content="canvas">
+<meta property="article:tag" content="webgl">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lemniscatex.github.io/js-note-15/clock.png">
+
+<link rel="canonical" href="https://lemniscatex.github.io/js-note-15/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>JavaScript学习笔记(15) | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/js-note-15/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript学习笔记(15)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-10 14:14:14" itemprop="dateCreated datePublished" datetime="2021-01-10T14:14:14+08:00">2021-01-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-20 23:54:45" itemprop="dateModified" datetime="2021-01-20T23:54:45+08:00">2021-01-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>《JavaScript高级程序设计》第十五章，使用canvas绘图。<br>我的体会是，WebGL比我以为的要更难些。</p>
+<span id="more"></span>
+
+<hr>
+<p>包括具备基本绘图能力的2D上下文和命名为WebGL的3D上下文。</p>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>首先，设置元素的宽高来指定绘图区域大小；其次，通过<code>canvasElem.getContext(&quot;2d&quot;)</code>或<code>canvasElem.getContext(&quot;webgl&quot;)</code>取得绘图上下文，这样方能绘图。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">&quot;drawing&quot;</span> <span class="attr">width</span>=<span class="string">&quot;200&quot;</span> <span class="attr">height</span>=<span class="string">&quot;200&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 当浏览器不支持时的兜底信息 --&gt;</span></span><br><span class="line">  A drawing of something</span><br><span class="line"><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> drawing = <span class="built_in">document</span>.getElementById(<span class="string">&quot;drawing&quot;</span>);</span><br><span class="line"><span class="keyword">if</span>(drawing.getContext) &#123;</span><br><span class="line">  <span class="keyword">const</span> ctx = drawing.getContext(<span class="string">&quot;2d&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> gl = drawing.getContext(<span class="string">&quot;webgl&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>* 一个神奇的方法<br>使用<code>canvas.toDataURL()</code>方法可以导出在canvas上绘制的图像，它接收图像的MIME类型格式作为参数。下例把画布上的内容导出为一个PNG格式图像。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> drawing = <span class="built_in">document</span>.getElementById(<span class="string">&quot;drawing&quot;</span>);</span><br><span class="line"><span class="keyword">if</span>(drawing.getContext) &#123;</span><br><span class="line">  <span class="keyword">const</span> imageURL = drawing.toDataURL(<span class="string">&quot;image/png&quot;</span>); <span class="comment">// 取得图像的数据URL</span></span><br><span class="line">  <span class="keyword">const</span> image = <span class="built_in">document</span>.createElement(<span class="string">&quot;img&quot;</span>);     <span class="comment">// 显示图像</span></span><br><span class="line">  image.src = imageURL;</span><br><span class="line">  <span class="built_in">document</span>.body.appendChild(image);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2D上下文"><a href="#2D上下文" class="headerlink" title="2D上下文"></a>2D上下文</h2><p>用2D上下文提供的方法，可以绘制简单的2D图形。下面内容就权当记录一下这些API吧~</p>
+<h3 id="填充和描边"><a href="#填充和描边" class="headerlink" title="填充和描边"></a>填充和描边</h3><p>就是给图像填充颜色/渐变/图像的<code>fillStyle</code>，以及给图形边缘画线的<code>strokeStyle</code>。这俩属性的默认值都是<code>&quot;#000000&quot;</code>，可以指定任何格式的颜色(颜色名、十六进制码、rgb、rgba、hsl、hsla)。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ctx = drawing.getContext(<span class="string">&quot;2d&quot;</span>);</span><br><span class="line">ctx.fillStyle = <span class="string">&quot;#0000ff&quot;</span>;</span><br><span class="line">ctx.strokeStyle = <span class="string">&quot;red&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="画矩形"><a href="#画矩形" class="headerlink" title="画矩形"></a>画矩形</h3><p>没想到矩形居然是唯一一种可以直接在2D上下文绘制的形状！有几个方法：<code>fillRect()</code>、<code>strokeRect()</code>、<code>clearRect()</code>，它们接收4个参数：<code>x</code>坐标、<code>y</code>坐标、宽度、高度。前面两个要分别配合<code>fillStyle</code>和<code>strokeStyle</code>来使用。<code>clearRect()</code>则用于将画布上某个矩形区域变透明。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ctx = drawing.getContext(<span class="string">&quot;2d&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绘制红色填充的矩形</span></span><br><span class="line">ctx.fillStyle = <span class="string">&quot;#ff0000&quot;</span>;</span><br><span class="line">ctx.fillRect(<span class="number">10</span>, <span class="number">10</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绘制红色描边的矩形</span></span><br><span class="line">ctx.strokeStyle = <span class="string">&quot;#ff0000&quot;</span>;</span><br><span class="line">ctx.strokeRect(<span class="number">10</span>, <span class="number">10</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="画路径"><a href="#画路径" class="headerlink" title="画路径"></a>画路径</h3><p>通过路径可以创造出复杂的形状和线条。画路径的第一步是，调用<code>beginPath()</code>方法，表示要开始绘制新路径。接着，用下面这些方法来实际地画：</p>
+<ul>
+<li><code>arc(x, y, radius, startAngle, endAngle, counterclockwise)</code><br>以<code>(x, y)</code>为圆心画一条半径为<code>radius</code>、起始和结束弧度为<code>startAngle</code>和<code>endAngle</code>的弧线，最后一个参数是表示是否为逆时针的一个布尔值。</li>
+<li><code>arcTo(x1, y1, x2, y2, radius)</code><br>从上一点开始绘制一条弧线，并以<code>radius</code>为半径穿过<code>(x1, y1)</code>，到<code>(x2, y2)</code>为止。</li>
+<li><code>bezierCurveTo(c1x, c1y, c2x, c2y, x, y)</code><br>从上一点开始绘制一条曲线，并以<code>(c1x, c1y)</code>和<code>(c2x, c2y)</code>为控制点，到<code>(x, y)</code>为止。* bezier意为贝塞尔</li>
+<li><code>lineTo(x, y)</code><br>从上一点开始绘制一条直线，到<code>(x, y)</code>为止。</li>
+<li><code>moveTo(x, y)</code><br>将绘图游标移动到<code>(x, y)</code>，不画线。</li>
+<li><code>quadraticCurveTo(cx, cy, x, y)</code><br>从上一点开始绘制一条二次曲线，并以<code>(cx, cy)</code>作为控制点，到<code>(x, y)</code>为止。</li>
+<li><code>rect(x, y, width, height)</code><br>从点<code>(x, y)</code>开始绘制一个宽为<code>width</code>高为<code>height</code>的矩形，这个方法绘制的是矩形路径，而非<code>strokeRect()</code>和<code>fillRect()</code>绘制的形状。</li>
+</ul>
+<p>创建完路径后，有几种选择。如果想把终点连回起点，可以用<code>closePath()</code>；如果路径已完成，可以用<code>fillStyle</code>和<code>fill()</code>去填充颜色、用<code>strokeStyle</code>和<code>stroke()</code>去对路径描边；如果想在路径上创建一个剪切区域，可以用<code>clip()</code>。</p>
+<p>举一个画线的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ctx = drawing.getContext(<span class="string">&quot;2d&quot;</span>);</span><br><span class="line"></span><br><span class="line">ctx.beginPath();                              <span class="comment">// 开始路径</span></span><br><span class="line">ctx.arc(<span class="number">100</span>, <span class="number">100</span>, <span class="number">99</span>, <span class="number">0</span>, <span class="number">2</span> * <span class="built_in">Math</span>.PI, <span class="literal">false</span>); <span class="comment">// 画外圆</span></span><br><span class="line">ctx.moveTo(<span class="number">194</span>, <span class="number">100</span>);</span><br><span class="line">ctx.arc(<span class="number">100</span>, <span class="number">100</span>, <span class="number">94</span>, <span class="number">0</span>, <span class="number">2</span> * <span class="built_in">Math</span>.PI, <span class="literal">false</span>); <span class="comment">// 画内圆</span></span><br><span class="line">ctx.moveTo(<span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">ctx.lineTo(<span class="number">100</span>, <span class="number">15</span>);                          <span class="comment">// 画分针</span></span><br><span class="line">ctx.moveTo(<span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">ctx.lineTo(<span class="number">35</span>, <span class="number">100</span>);                          <span class="comment">// 画时针</span></span><br><span class="line">ctx.stroke();                                 <span class="comment">// 描边路径</span></span><br></pre></td></tr></table></figure>
+
+<img src="/js-note-15/clock.png" class="" title="clock">
+
+<p>由于路径使用得很频繁，所以有了一个叫<code>isPointInPath(x, y)</code>的方法，可以在路径被关闭之前确定画布上的某一点是否位于路径上。</p>
+<h3 id="写文本"><a href="#写文本" class="headerlink" title="写文本"></a>写文本</h3><p>主要用<code>fillText()</code>和<code>strokeText()</code>，它们接收4个参数：文本字符串、<code>x</code>坐标、<code>y</code>坐标、可选的最大像素宽度(这个参数的作用是，当字符串长超过宽度时，会适当地横向压缩)。它们都以下面3个属性为基础(这3个属性都有默认值，因此不需要每次都重新设置)：</p>
+<ul>
+<li><code>font</code><br>表示文本样式、大小、字体，如<code>&quot;10px Arial&quot;</code>。</li>
+<li><code>textAlign</code><br>表示文本对齐方式，有5种取值：<code>start</code>、<code>end</code>、<code>left</code>、<code>right</code>、<code>center</code>。一般建议用<code>start</code>/<code>end</code>而非<code>left</code>/<code>right</code>，这样对LTR和RTL语言都比较友好。</li>
+<li><code>textBaseline</code><br>表示文本基线，有6种取值：<code>top</code>、<code>hanging</code>、<code>middle</code>、<code>alphabetic</code>、<code>ideographic</code>、<code>bottom</code>。</li>
+</ul>
+<p>有一些场景下，需要将文本控制在某一区域中，2D上下文提供了一个辅助方法<code>measureText()</code>，它可以根据<code>font</code>、<code>textAlign</code>、<code>textBaseline</code>计算处指定文本的大小。它将要绘制的文本作为参数，返回一个<code>TextMetrics</code>对象，目前这个对象只有个<code>width</code>属性，但之后还会增加的。</p>
+<p>举个例子，假设我们想在<code>140px</code>的矩形区域里绘制文本，可以用下面的方法枚举来找到合适的字体大小：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fontSize = <span class="number">100</span>;</span><br><span class="line">ctx.font = fontSize + <span class="string">&quot;px Arial&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(ctx.measureText(<span class="string">&quot;Hello World&quot;</span>).width &gt; <span class="number">140</span>) &#123;</span><br><span class="line">  fontSize--;</span><br><span class="line">  ctx.font = fontSize + <span class="string">&quot;px Arial&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ctx.fillText(<span class="string">&quot;Hello World&quot;</span>, <span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line">ctx.fillText(<span class="string">`Suitable font size is <span class="subst">$&#123;fontSize&#125;</span>px`</span>, <span class="number">10</span>, <span class="number">50</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="变换"><a href="#变换" class="headerlink" title="变换"></a>变换</h3><p>有几种变换：</p>
+<ul>
+<li><code>rotate(angle)</code><br>围绕原点旋转图像<code>angle</code>弧度。</li>
+<li><code>scale(scaleX, scaleY)</code><br>缩放图像，在<code>x</code>方向乘以<code>scaleX</code>，在<code>y</code>方向乘以<code>scaleY</code>，二者的默认值为<code>1</code>。</li>
+<li><code>translate(x, y)</code><br>将坐标原点移动到<code>(x, y)</code>。</li>
+<li><code>transform(m11, m12, m21, m22, dx, dy)</code><br>直接修改变换矩阵，将其乘以矩阵<code>[m11 m12 dx, m21 m22 dy, 0 0 1]</code>。</li>
+<li><code>setTransform(m11, m12, m21, m22, dx, dy)</code><br>将变换矩阵重置为默认状态，然后再调用<code>transform()</code>。</li>
+</ul>
+<p>举个例子，像之前的绘制表针，如果把原点换到表盘中心，就会很方便，因为所有计算都会基于<code>(0, 0)</code>而非<code>(100, 100)</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ctx = drawing.getContext(<span class="string">&quot;2d&quot;</span>);</span><br><span class="line"></span><br><span class="line">ctx.beginPath();                              <span class="comment">// 开始路径</span></span><br><span class="line">ctx.arc(<span class="number">100</span>, <span class="number">100</span>, <span class="number">99</span>, <span class="number">0</span>, <span class="number">2</span> * <span class="built_in">Math</span>.PI, <span class="literal">false</span>); <span class="comment">// 画外圆</span></span><br><span class="line">ctx.moveTo(<span class="number">194</span>, <span class="number">100</span>);</span><br><span class="line">ctx.arc(<span class="number">100</span>, <span class="number">100</span>, <span class="number">94</span>, <span class="number">0</span>, <span class="number">2</span> * <span class="built_in">Math</span>.PI, <span class="literal">false</span>); <span class="comment">// 画内圆</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ctx.moveTo(100, 100);</span></span><br><span class="line"><span class="comment">// ctx.lineTo(100, 15);                          // 画分针</span></span><br><span class="line"><span class="comment">// ctx.moveTo(100, 100);</span></span><br><span class="line"><span class="comment">// ctx.lineTo(35, 100);                          // 画时针</span></span><br><span class="line"></span><br><span class="line">ctx.translate(<span class="number">100</span>, <span class="number">100</span>);                      <span class="comment">// 变换原点</span></span><br><span class="line">ctx.moveTo(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">ctx.lineTo(<span class="number">0</span>, -<span class="number">85</span>);                           <span class="comment">// 画分针</span></span><br><span class="line">ctx.moveTo(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">ctx.lineTo(-<span class="number">65</span>, <span class="number">0</span>);                           <span class="comment">// 画时针</span></span><br><span class="line"></span><br><span class="line">ctx.stroke();                                 <span class="comment">// 描边路径</span></span><br></pre></td></tr></table></figure>
+
+<p>再基于上面的例子，演示一下当原点移到中心之后<code>rotate()</code>的好处，结果如下图：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ctx = drawing.getContext(<span class="string">&quot;2d&quot;</span>);</span><br><span class="line"></span><br><span class="line">ctx.beginPath();                              <span class="comment">// 开始路径</span></span><br><span class="line">ctx.arc(<span class="number">100</span>, <span class="number">100</span>, <span class="number">99</span>, <span class="number">0</span>, <span class="number">2</span> * <span class="built_in">Math</span>.PI, <span class="literal">false</span>); <span class="comment">// 画外圆</span></span><br><span class="line">ctx.moveTo(<span class="number">194</span>, <span class="number">100</span>);</span><br><span class="line">ctx.arc(<span class="number">100</span>, <span class="number">100</span>, <span class="number">94</span>, <span class="number">0</span>, <span class="number">2</span> * <span class="built_in">Math</span>.PI, <span class="literal">false</span>); <span class="comment">// 画内圆</span></span><br><span class="line">ctx.translate(<span class="number">100</span>, <span class="number">100</span>);                      <span class="comment">// 变换原点</span></span><br><span class="line"></span><br><span class="line">ctx.rotate(<span class="number">1</span>);                                <span class="comment">// 旋转表针</span></span><br><span class="line"></span><br><span class="line">ctx.moveTo(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">ctx.lineTo(<span class="number">0</span>, -<span class="number">85</span>);                           <span class="comment">// 画分针</span></span><br><span class="line">ctx.moveTo(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">ctx.lineTo(-<span class="number">65</span>, <span class="number">0</span>);                           <span class="comment">// 画时针</span></span><br><span class="line"></span><br><span class="line">ctx.stroke();                                 <span class="comment">// 描边路径</span></span><br></pre></td></tr></table></figure>
+
+<img src="/js-note-15/clock-rotate.png" class="" title="clock-rotate">
+
+<h3 id="跟踪状态"><a href="#跟踪状态" class="headerlink" title="跟踪状态"></a>跟踪状态</h3><p>无论是变换还是<code>fillStyle</code>、<code>strokeStyle</code>等属性，都会在当前上下文中一直有效，除非再对上下文进行什么修改。虽然没法把上下文重置回默认值，但是有两个方法可以跟踪上下文状态变化：<code>save()</code>、<code>restore()</code>。当知道当前的所有属性或变换，会在将来有用时，可以用<code>save()</code>将当前的所有设置都存进一个栈结构中；然后可以对上下文进行其他修改；当想要回到之前保存的设置时，可以用<code>restore()</code>让栈结构向前返回一级，恢复之前的状态。连续调用<code>save()</code>可以把很多设置都保存到栈中，之后再连续调用<code>restore()</code>则可一级一级返回。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ctx.fillStyle = <span class="string">&quot;red&quot;</span>;</span><br><span class="line">ctx.save();</span><br><span class="line"></span><br><span class="line">ctx.fillStyle = <span class="string">&quot;green&quot;</span>;</span><br><span class="line">ctx.translate(<span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">ctx.save();</span><br><span class="line"></span><br><span class="line">ctx.fillStyle = <span class="string">&quot;blue&quot;</span>;</span><br><span class="line">ctx.fillRect(<span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">200</span>);   <span class="comment">// 从(100, 100)开始绘制蓝色矩形</span></span><br><span class="line"></span><br><span class="line">ctx.restore();</span><br><span class="line">ctx.fillRect(<span class="number">10</span>, <span class="number">10</span>, <span class="number">100</span>, <span class="number">200</span>); <span class="comment">// 从(110, 110)开始绘制绿色矩形</span></span><br><span class="line"></span><br><span class="line">ctx.restore();</span><br><span class="line">ctx.fillRect(<span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">200</span>);   <span class="comment">// 从(0, 0)开始绘制红色矩形</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="图像"><a href="#图像" class="headerlink" title="图像"></a>图像</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> image = <span class="built_in">document</span>.images[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// (10, 10)为起点将图像画到画布上</span></span><br><span class="line">ctx.drawImage(image, <span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// (50, 10)为起点，图像大小为20*30</span></span><br><span class="line">ctx.drawImage(image, <span class="number">50</span>, <span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将原始图像中以(0, 10)为起点，大小为50*50的部分</span></span><br><span class="line"><span class="comment">// 画到画布上以(0, 100)为起点，大小为40*60的地方</span></span><br><span class="line">ctx.drawImage(image, <span class="number">0</span>, <span class="number">10</span>, <span class="number">50</span>, <span class="number">50</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">40</span>, <span class="number">60</span>);</span><br></pre></td></tr></table></figure>
+
+<p>除了可以传<code>&lt;img&gt;</code>，还可以传另一个<code>&lt;canvas&gt;</code>元素，这样就能把另一个画布的内容绘制到当前画布上。</p>
+<h3 id="阴影"><a href="#阴影" class="headerlink" title="阴影"></a>阴影</h3><p>2D上下文会根据下面几个属性的值，自动为形状或路径绘制阴影。只要在绘制前先为这几个属性设置好值，就能在之后绘制形状或路径的时候自动产生阴影。</p>
+<ul>
+<li><code>shadowColor</code>：阴影颜色，默认黑色</li>
+<li><code>shadowOffsetX</code>：形状或路径<code>x</code>轴方向的阴影偏移量，默认为<code>0</code></li>
+<li><code>shadowOffsetY</code>：形状或路径<code>y</code>轴方向的阴影偏移量，默认为<code>0</code></li>
+<li><code>shadowBlur</code>：模糊的像素数，默认为<code>0</code>，即不模糊</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ctx = drawing.getContext(<span class="string">&quot;2d&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置阴影</span></span><br><span class="line">ctx.shadowColor = <span class="string">&quot;rgba(0, 0, 0, 0.5)&quot;</span>;</span><br><span class="line">ctx.shadowOffsetX = <span class="number">5</span>;</span><br><span class="line">ctx.shadowOffsetY = <span class="number">5</span>;</span><br><span class="line">ctx.shadowBlur = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 画红色矩形</span></span><br><span class="line">ctx.fillStyle = <span class="string">&quot;red&quot;</span>;</span><br><span class="line">ctx.fillRect(<span class="number">10</span>, <span class="number">10</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 画蓝色矩形</span></span><br><span class="line">ctx.fillStyle = <span class="string">&quot;blue&quot;</span>;</span><br><span class="line">ctx.fillRect(<span class="number">30</span>, <span class="number">30</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br></pre></td></tr></table></figure>
+
+<img src="/js-note-15/shadow.png" class="" title="shadow">
+
+
+<h3 id="渐变"><a href="#渐变" class="headerlink" title="渐变"></a>渐变</h3><p>首先需要创建一个指定大小的渐变实例<code>CanvasGradient</code>，有两种渐变方式如下。</p>
+<ul>
+<li><p>线性渐变<code>createLinearGradient()</code><br>接收4个参数：起点<code>x</code>坐标、起点<code>y</code>坐标、终点<code>x</code>坐标、终点<code>y</code>坐标。</p>
+</li>
+<li><p>径向渐变<code>createRadialGradient()</code><br>接收6个参数，对应两个圆的圆心和半径：起点圆圆心<code>x</code>坐标、起点圆圆心<code>y</code>坐标、起点圆半径、终点圆圆心<code>x</code>坐标、终点圆圆心<code>y</code>坐标、终点圆半径。</p>
+</li>
+</ul>
+<p>创建之后，需要通过<code>addColorStop()</code>来指定色标，它接收2个参数：作为色标的一个从0(开始的颜色)到1(结束的颜色)之间的数字、颜色值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从(30, 30)到(70, 70)，起点为白色，终点为黑色的线性渐变</span></span><br><span class="line"><span class="keyword">const</span> lGradient = ctx.createLinearGradient(<span class="number">30</span>, <span class="number">30</span>, <span class="number">70</span>, <span class="number">70</span>);</span><br><span class="line">lGradient.addColorStop(<span class="number">0</span>, <span class="string">&quot;white&quot;</span>);</span><br><span class="line">lGradient.addColorStop(<span class="number">1</span>, <span class="string">&quot;black&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 径向渐变从以(55, 55)为圆心，10为半径的圆，</span></span><br><span class="line"><span class="comment">// 拓展到以(55, 55)为圆心，30为半径的圆处</span></span><br><span class="line"><span class="keyword">const</span> rGradient = ctx.createRadialGradient(<span class="number">55</span>, <span class="number">55</span>, <span class="number">10</span>, <span class="number">55</span>, <span class="number">55</span>, <span class="number">30</span>);</span><br><span class="line">rGradient.addColorStop(<span class="number">0</span>, <span class="string">&quot;white&quot;</span>);</span><br><span class="line">rGradient.addColorStop(<span class="number">1</span>, <span class="string">&quot;black&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>创建好渐变之后，就可以把<code>fillStyle</code>或<code>strokeStyle</code>设置为这个对象，从而使用渐变来绘制形状或描边。这里要注意的是渐变坐标和形状坐标要斟酌匹配一下，尽量不要出现渐变在图形中突然消失之类的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 绘制红色矩形</span></span><br><span class="line">ctx.fillStyle = <span class="string">&quot;red&quot;</span>;</span><br><span class="line">ctx.fillRect(<span class="number">10</span>, <span class="number">10</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绘制渐变矩形</span></span><br><span class="line">ctx.fillStyle = gradient;</span><br><span class="line">ctx.fillRect(<span class="number">30</span>, <span class="number">30</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h3><p>模式就是重复，可以用来填充或描边图形。首先要用<code>createPattern()</code>创建模式，此方法接收2个参数：一个<code>&lt;img&gt;</code>/<code>&lt;vedio&gt;</code>/<code>&lt;canvas&gt;</code>元素、表示如何重复的字符串(和CSS的<code>background-repeat</code>属性值相同，包括<code>repeat</code>、<code>repeat-x</code>、<code>repeat-y</code>、<code>no-repeat</code>)。<br>这里要注意的是，模式与渐变一样，都是从画布的<code>(0, 0)</code>开始的。将<code>fillStyle</code>设置为模式，只表示在特定的区域内「显示」重复的图像，而不是从特定的区域起点开始「绘制」重复的图像。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> image = <span class="built_in">document</span>.images[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">const</span> pattern = ctx.createPattern(image, <span class="string">&quot;repeat&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绘制矩形</span></span><br><span class="line">ctx.fillStyle = pattern;</span><br><span class="line">ctx.fillRect(<span class="number">10</span>, <span class="number">10</span>, <span class="number">150</span>, <span class="number">150</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="像素操作"><a href="#像素操作" class="headerlink" title="像素操作"></a>像素操作</h3><p>可以通过<code>getImageData()</code>来取得原始图像数据，此方法接收4个参数：欲取数据的区域的<code>x</code>坐标、<code>y</code>坐标、宽度、高度。它会返回<code>ImageData</code>的实例，每个<code>ImageData</code>都有3个属性：<code>width</code>、<code>height</code>、<code>data</code>，其中<code>data</code>是数组，按顺序保存着图像中每个像素的rgba值(<code>0~255</code>)。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> imageData = ctx.getImageData(<span class="number">10</span>, <span class="number">5</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br><span class="line"><span class="keyword">const</span> data = imageData.data;</span><br><span class="line"><span class="keyword">const</span> [red1, green1, blue1, alpha1, </span><br><span class="line">       red2, green2, blue2, alpha2] = data;</span><br></pre></td></tr></table></figure>
+
+<p>还可以通过<code>putImageData()</code>来把图像数据回写，绘制到画布上，此方法接收3个参数：一个<code>ImageData</code>实例、<code>x</code>坐标、<code>y</code>坐标。通常的使用方式是，取得<code>data</code>、对<code>data</code>进行一些操作(比如将某像素点上rgb都设置为rgb的平均值等)、再把<code>data</code>写回<code>ImageData</code>填回去。</p>
+<h3 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h3><ul>
+<li>透明度<code>globalAlpha</code><br>值为<code>0</code>到<code>1</code>之间的一个数字，表示后续操作的全局透明度，默认值为<code>0</code>(即不透明)。下面这个例子中，蓝色矩形位于红色矩形之上，如果没有在画蓝色矩形之前设置透明度，那么重叠的地方就会被蓝色覆盖，而现在蓝色矩形呈现半透明效果，因此可以透过它看到下面的红色矩形。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 绘制红色矩形</span></span><br><span class="line">ctx.fillStyle = <span class="string">&quot;red&quot;</span>;</span><br><span class="line">ctx.fillRect(<span class="number">10</span>, <span class="number">10</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改全局透明度</span></span><br><span class="line">ctx.globalAlpha = <span class="number">0.5</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绘制蓝色矩形</span></span><br><span class="line">ctx.fillStyle = <span class="string">&quot;rgba(0, 0, 255, 1)&quot;</span>;</span><br><span class="line">ctx.fillRect(<span class="number">30</span>, <span class="number">30</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改全局透明度</span></span><br><span class="line">ctx.globalAlpha = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>图形结合方式<code>globalCompositionOperation</code><br>值为字符串，取值如下(后：后画的；先：先画的)，表示后绘制的图形应该怎样与先绘制的图形结合。其实<a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation">文档</a>上好像还不止这么些，可以参考参考。下面的例子中，蓝色矩形位于红色矩形之下。<ul>
+<li><code>source-over</code>：后在先上，为默认值</li>
+<li><code>source-in</code>：后重叠部分可见，其它(指后非重叠+前)都透明</li>
+<li><code>source-out</code>：后非重叠部分可见，其它(指后重叠+前)都透明</li>
+<li><code>source-atop</code>：后重叠部分可见，先非重叠部分可见</li>
+<li><code>destination-over</code>：后在先下</li>
+<li><code>destination-in</code>：先重叠部分可见，其它(指先非重叠+后)都透明</li>
+<li><code>destination-out</code>：先非重叠部分可见，其它(指先重叠+后)都透明</li>
+<li><code>destination-atop</code>：先重叠部分可见，后非重叠部分可见</li>
+<li><code>lighter</code>：重叠部分值相加，使该部分变亮</li>
+<li><code>copy</code>：当有重叠时，只显示后画的</li>
+<li><code>xor</code>：重叠部分异或操作(?)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 绘制红色矩形</span></span><br><span class="line">ctx.fillStyle = <span class="string">&quot;red&quot;</span>;</span><br><span class="line">ctx.fillRect(<span class="number">10</span>, <span class="number">10</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置合成操作</span></span><br><span class="line">ctx.globalCompositionOperation = <span class="string">&quot;destination-over&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绘制蓝色矩形</span></span><br><span class="line">ctx.fillStyle = <span class="string">&quot;rgba(0, 0, 255, 1)&quot;</span>;</span><br><span class="line">ctx.fillRect(<span class="number">30</span>, <span class="number">30</span>, <span class="number">50</span>, <span class="number">50</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="3D上下文"><a href="#3D上下文" class="headerlink" title="3D上下文"></a>3D上下文</h2><p>WebGL是针对Canvas的3D上下文。与其它Web技术不同，WebGL不是W3C制定的标准，而是由Khronos Group制定的。这个group还设计了其它图形处理API，如WebGL基于的OpenGL ES 2.0。</p>
+<p>书从这里就开始讲类型化数组，令人比较一头雾水，遂去看了<a href="https://www.youtube.com/watch?v=bP7_FeP9kU4&list=PL2935W76vRNHFpPUuqmLoGCzwx_8eq5yK">Learn WebGL serials</a>和<a href="https://webglfundamentals.org/">WebGL Fundamentals</a>，稍微理解了一点点点点…感觉要学计算机图形学+项目实践才能比较透彻，这里先鸽一下，把书里的先看完。</p>
+<h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h3><h4 id="ArrayBuffer"><a href="#ArrayBuffer" class="headerlink" title="ArrayBuffer"></a>ArrayBuffer</h4><p>以JavaScript的精度，完全支持不了WebGL涉及的复杂计算需要，因此WebGL引入了类型化数组(typed array)。它其实也是数组，只不过元素被设置为了<code>ArrayBuffer</code>这个类型。<code>ArrayBuffer</code>对象以字节为单位，表示内存中的指定字节数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这个buffer含20字节</span></span><br><span class="line"><span class="keyword">const</span> buffer = <span class="keyword">new</span> <span class="built_in">ArrayBuffer</span>(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以通过byteLength属性获取字节数</span></span><br><span class="line"><span class="keyword">const</span> bytes = buffer.byteLength;</span><br></pre></td></tr></table></figure>
+
+<h4 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h4><p>可以使用<code>ArrayBuffer</code>来创建视图，常见的视图是<code>DataView</code>类型的，它的构造函数接收参数：一个<code>ArrayBuffer</code>、可选的字节偏移量(表示从该字节开始选择)、可选的字节数(表示选择这么多字节)。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用整个buffer创建一个视图</span></span><br><span class="line"><span class="keyword">var</span> view = <span class="keyword">new</span> <span class="built_in">DataView</span>(buffer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个开始于字节9的视图</span></span><br><span class="line"><span class="keyword">var</span> view = <span class="keyword">new</span> <span class="built_in">DataView</span>(buffer, <span class="number">9</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个开始于字节9，结束于字节18的视图</span></span><br><span class="line"><span class="keyword">var</span> view = <span class="keyword">new</span> <span class="built_in">DataView</span>(buffer, <span class="number">9</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可通过属性获取字节偏移量、字节长度</span></span><br><span class="line">alert(view.byteOffset);</span><br><span class="line">alert(view.byteLength);</span><br></pre></td></tr></table></figure>
+
+<p>读取和写入<code>DataView</code>时，要根据实际操作的数据类型，选择相应的<code>getter</code>和<code>setter</code>方法，下面是<code>DataView</code>支持的数据类型及响应的读写方法。其中<code>offset</code>是字节偏移量；<code>littleEndian</code>是一个布尔值，表示读写数值时是否采用小端字节序(即数据的最低有效位保存在低内存地址)，默认为<code>false</code>的大端字节序(即数据的最低有效位保存在高内存地址)。</p>
+<table>
+<thead>
+<tr>
+<th align="center">数据类型</th>
+<th align="center">getter</th>
+<th align="center">setter</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">有符号8位整数</td>
+<td align="center"><code>getInt8(offset)</code></td>
+<td align="center"><code>setInt8(offset, value)</code></td>
+</tr>
+<tr>
+<td align="center">无符号8位整数</td>
+<td align="center"><code>getUint8(offset)</code></td>
+<td align="center"><code>setUint8(offset, value)</code></td>
+</tr>
+<tr>
+<td align="center">有符号16位整数</td>
+<td align="center"><code>getInt16(offset, littleEndian)</code></td>
+<td align="center"><code>setInt16(offset, value, littleEndian)</code></td>
+</tr>
+<tr>
+<td align="center">无符号16位整数</td>
+<td align="center"><code>getUint16(offset, littleEndian)</code></td>
+<td align="center"><code>setUint16(offset, value, littleEndian)</code></td>
+</tr>
+<tr>
+<td align="center">有符号32位整数</td>
+<td align="center"><code>getInt32(offset, littleEndian)</code></td>
+<td align="center"><code>setInt32(offset, value, littleEndian)</code></td>
+</tr>
+<tr>
+<td align="center">无符号32位整数</td>
+<td align="center"><code>getUint32(offset, littleEndian)</code></td>
+<td align="center"><code>setUint32(offset, value, littleEndian)</code></td>
+</tr>
+<tr>
+<td align="center">32位浮点数</td>
+<td align="center"><code>getFloat32(offset, littleEndian)</code></td>
+<td align="center"><code>setFloat32(offset, value, littleEndian)</code></td>
+</tr>
+<tr>
+<td align="center">64位浮点数</td>
+<td align="center"><code>getFloat64(offset, littleEndian)</code></td>
+<td align="center"><code>setFloat64(offset, value, littleEndian)</code></td>
+</tr>
+</tbody></table>
+<p>当使用这样的读写方法，我们需要明确地管理数据细节，举例如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> buffer = <span class="keyword">new</span> <span class="built_in">ArrayBuffer</span>(<span class="number">20</span>);</span><br><span class="line"><span class="keyword">const</span> view = <span class="keyword">new</span> <span class="built_in">DataView</span>(buffer);</span><br><span class="line"></span><br><span class="line">view.setUint16(<span class="number">0</span>, <span class="number">25</span>);</span><br><span class="line">view.setUint16(<span class="number">2</span>, <span class="number">50</span>); <span class="comment">// 不能从字节1开始，因为上面的uint16占了2个字节</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> value = view.getUint16(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>由于这里的<code>offset</code>使用字节偏移量而非数组元素数，因此可以通过不同的方式来访问同一字节，举例如下。在这个例子中，数值<code>25</code>以16位无符号整数形式写入，字节偏移量为<code>0</code>，即<code>0000 0000 0001 1001</code>；再以8位有符号整数形式读取数据，偏移量为<code>0</code>时，读取到的是16位中的前8位，即<code>0000 0000</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> buffer = <span class="keyword">new</span> <span class="built_in">ArrayBuffer</span>(<span class="number">20</span>);</span><br><span class="line"><span class="keyword">const</span> view = <span class="keyword">new</span> <span class="built_in">DataView</span>(buffer);</span><br><span class="line"></span><br><span class="line">view.setUint16(<span class="number">0</span>, <span class="number">25</span>);</span><br><span class="line">alert(view.getInt8(<span class="number">0</span>)); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+
+<p>以字节级别读写需要我们明确记住每个数据的具体保存位置，这会带来很多工作量，因此类型化视图应运而生。</p>
+<h4 id="类型化视图"><a href="#类型化视图" class="headerlink" title="类型化视图"></a>类型化视图</h4><p>一般也被称为类型化数组，分为以下几种<code>Int8Array</code>、<code>Uint8Array</code>、<code>Int16Array</code>、<code>Uint16Array</code>、<code>Int32Array</code>、<code>Uint32Array</code>、<code>Float32Array</code>、<code>Float64Array</code>，它们都继承了<code>DataView</code>。</p>
+<p>它们有三种构造方式，第一种和<code>DataView</code>一样，先创造<code>buffer</code>，再传入相应参数表示占有<code>buffer</code>的特定位置；第二种是传入希望数组保存的元素数，构造函数就会自动创建一个包含足够字节数的<code>buffer</code>；第三种则是把常规数组转换为类型化视图，只需传入常规数组即可。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*--- 构造方式1 ---*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个新数组，使用整个buffer</span></span><br><span class="line"><span class="keyword">const</span> int8s = <span class="keyword">new</span> <span class="built_in">Int8Array</span>(buffer);</span><br><span class="line"><span class="comment">// 只使用从字节9开始的buffer</span></span><br><span class="line"><span class="keyword">const</span> int16s = <span class="keyword">new</span> <span class="built_in">Int16Array</span>(buffer, <span class="number">9</span>);</span><br><span class="line"><span class="comment">// 只使用从字节9到字节18的buffer</span></span><br><span class="line"><span class="keyword">const</span> uint16s = <span class="keyword">new</span> <span class="built_in">Uint16Array</span>(buffer, <span class="number">9</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*--- 构造方式2 ---*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个数组保存10个8位整数(10字节)</span></span><br><span class="line"><span class="keyword">const</span> int8s = <span class="keyword">new</span> <span class="built_in">Int8Array</span>(<span class="number">10</span>);</span><br><span class="line"><span class="comment">// 创建一个数组保存10个16位整数(20字节)</span></span><br><span class="line"><span class="keyword">const</span> int16s = <span class="keyword">new</span> <span class="built_in">Int16Array</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*--- 构造方式3 ---*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个数组保存5个8位整数(5字节)</span></span><br><span class="line"><span class="keyword">const</span> int8s = <span class="keyword">new</span> <span class="built_in">Int8Array</span>([<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>既然可以指定使用哪部分字节段，那很显然，同一个<code>buffer</code>中可以保存不同类型的数值，举例如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用buffer的一部分保存8位整数，另一部分保存16位整数</span></span><br><span class="line"><span class="keyword">const</span> int8s = <span class="keyword">new</span> <span class="built_in">Int8Array</span>(buffer, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">const</span> uint6s = <span class="keyword">new</span> <span class="built_in">Uint16Array</span>(buffer, <span class="number">10</span>, <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在这里，不同的类型，占用不同的字节数，那举个例子，20B的<code>ArrayBuffer</code>可以保存20个<code>Int8Array</code>/<code>Uint8Array</code>，或者10个<code>Int16Array</code>/<code>Uint16Array</code>，或者5个<code>Int32Array</code>/<code>Uint32Array</code>/<code>Float32Array</code>，或者2个<code>Float64Array</code>。</p>
+<p>虽然占的字节数非常显而易见，但是每个视图构造函数都还是有提供一个<code>BYTES_PER_ELEMENT</code>属性，表示类型化数组中每个元素需要多少字节。可以利用它来辅助初始化，就像<code>sizeof</code>那样。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">alert(<span class="built_in">Uint8Array</span>.BYTES_PER_ELEMENT); <span class="comment">// 1</span></span><br><span class="line">alert(<span class="built_in">Float32Array</span>.BYTES_PER_ELEMENT); <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要10个元素空间，耗费空间为10*1字节，从buffer起始处开始</span></span><br><span class="line"><span class="keyword">const</span> int8s = <span class="keyword">new</span> <span class="built_in">Int8Array</span>(</span><br><span class="line">  buffer, </span><br><span class="line">  <span class="number">0</span>, </span><br><span class="line">  <span class="number">10</span> * <span class="built_in">Int8Array</span>.BYTES_PER_ELEMENT);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要5个元素空间，耗费空间为5*2字节，从buffer中int8s结束处开始</span></span><br><span class="line"><span class="keyword">const</span> uint16s = <span class="keyword">new</span> <span class="built_in">Uint16Array</span>(</span><br><span class="line">  buffer, </span><br><span class="line">  int8s.byteOffset + int8s.byteLength, </span><br><span class="line">  <span class="number">5</span> * <span class="built_in">Uint16Array</span>.BYTES_PER_ELEMENT);</span><br></pre></td></tr></table></figure>
+
+<p>创建说完了，那就要说说访问了。类型化数组的访问使用方括号的下标语法，就和普通数组一样。只不过这里要注意数值是否够放的问题，如果相应元素指定的字节数放不下相应的值，那么实际保存的值则为最大可能值的模，譬如无符号16位整数所能表达的最大数值为<code>65535</code>，如果想存<code>65536</code>，那实际存的是<code>0</code>；如果想存<code>65537</code>，那实际存的是<code>1</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> uint16s = <span class="keyword">new</span> <span class="built_in">Uint16Array</span>(<span class="number">10</span>);</span><br><span class="line">uint16s[<span class="number">0</span>] = <span class="number">65537</span>;</span><br><span class="line">alert(uint16s[<span class="number">0</span>]); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p>除了创建、访问，类型化数组还有一个<code>subarray()</code>方法，用它可以基于底层<code>buffer</code>的子集创建一个新的视图。它接收2个参数：开始元素的索引、结束元素的索引。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> uint16s = <span class="keyword">new</span> <span class="built_in">Uint16Array</span>(<span class="number">10</span>);</span><br><span class="line"><span class="keyword">const</span> sub = uint16s.subarray(<span class="number">2</span>, <span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>sub</code>也是<code>Uint16Array</code>的一个实例，且底层与<code>uint6s</code>都基于同一个<code>ArrayBuffer</code>，通过大视图创建小视图的好处是可以避免修改到无关元素。</p>
+<h3 id="获取上下文"><a href="#获取上下文" class="headerlink" title="获取上下文"></a>获取上下文</h3><p>即<code>canvas.getContext(&quot;webgl&quot;)</code>，不过相比2D上下文，这里可以给<code>getContext()</code>传递第二个参数，作为一些配置项。该参数是一个对象，包含下面这些属性：</p>
+<ul>
+<li><code>alpha</code>：默认<code>true</code>，表示为上下文创建Alpha通道缓冲区</li>
+<li><code>depth</code>：默认<code>true</code>，表示可使用16位深缓冲区</li>
+<li><code>stencil</code>：默认<code>false</code>，表示可使用8位模板缓冲区</li>
+<li><code>antialias</code>：默认<code>true</code>，表示将使用默认机制执行抗锯齿操作</li>
+<li><code>premultipliedAlpha</code>：默认<code>true</code>，表示绘图缓冲区有预乘Alpha值</li>
+<li><code>preserveDrawingBuffer</code>：默认<code>false</code>，表示在绘图完成后保留绘图缓冲区</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> drawing = <span class="built_in">document</span>.getElementById(<span class="string">&quot;drawing&quot;</span>);</span><br><span class="line"><span class="keyword">if</span>(drawing.getContext) &#123;</span><br><span class="line">  <span class="comment">// 避免getContext()无法获取WebGL上下文而抛出的错误 </span></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> gl = drawing.getContext(<span class="string">&quot;webgl&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">catch</span>(e) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(!gl) &#123;</span><br><span class="line">    alert(<span class="string">&quot;WebGL context could not be created&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="API特点"><a href="#API特点" class="headerlink" title="API特点"></a>API特点</h3><p>基本上都是OpenGL的命名特点，毕竟基于它嘛。</p>
+<p>对于常量，在OpenGL中一般带前缀<code>GL_</code>，而在WebGL中则去掉了相应的前缀，它以这种方式支持大多数OpenGL常量。比如OpenGL的<code>GL_COLOR_BUFFER_BIT</code>常量在WebGL中是<code>gl.COLOR_BUFFER_BIT</code>。</p>
+<p>对于方法，很多方法名都会传达有关数据类型的信息。比如<code>gl.uniform4f()</code>意味着要接收4个浮点数，<code>gl.uniform3i()</code>意味着要接收3个整数，<code>gl.uniform3iv()</code>意味着要接收一个包含3个值的整数数组(<code>v</code>即<code>vector</code>)。</p>
+<h3 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h3><p>WebGL操作一般不会抛出错误，而是需要我们在可能出错的地方，去手动调用<code>gl.getError()</code>来获取表示错误类型的常量，有下面几个取值：</p>
+<ul>
+<li><code>gl.NO_ERROR</code>：上次操作没发生错误，值为<code>0</code></li>
+<li><code>gl.INVALID_ENUM</code>：应传入WebGL常量时传错了</li>
+<li><code>gl.INVALID_VALUE</code>：应传入无符号数时传了负值</li>
+<li><code>gl.INVALID_OPERATION</code>：在当前状态下不能完成操作</li>
+<li><code>gl.OUT_OF_MEMORY</code>：没有足够的内存去完成操作</li>
+<li><code>gl.CONTEXT_LOST_WEBGL</code>：由于外部事件干扰(如断电)丢失了当前WebGL上下文</li>
+</ul>
+<p>如果发生多个错误，需要反复调用它直到返回<code>gl.NO_ERROR</code>，这时可以使用循环来调用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> errorCode = gl.getError();</span><br><span class="line"><span class="keyword">while</span>(errorCode) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Error occured: <span class="subst">$&#123;errorCode&#125;</span>`</span>);</span><br><span class="line">  errorCode = gl.getError();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="准备绘图"><a href="#准备绘图" class="headerlink" title="准备绘图"></a>准备绘图</h3><p>在操作WebGL上下文之前，需要使用某种颜色清除<code>&lt;canvas&gt;</code>，可通过方法<code>clearColor(r, g, b, a)</code>来进行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gl.clearColor(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>); <span class="comment">// 黑色</span></span><br><span class="line">gl.clear(gl.COLOR_BUFFER_BIT);</span><br></pre></td></tr></table></figure>
+
+<p>上例中，先把清理颜色缓冲区设置为黑色，再调用<code>clear()</code>(与OpenGL的<code>glClear()</code>等价)，传入的参数<code>gl.COLOR_BUFFER_BIT</code>告诉WebGL使用之前定义的颜色来填充相应区域。</p>
+<h3 id="视口与坐标"><a href="#视口与坐标" class="headerlink" title="视口与坐标"></a>视口与坐标</h3><p>默认情况下，视口可以使用整个<code>&lt;canvas&gt;</code>区域，也可以通过<code>viewport()</code>来改变视口大小，只使用部分<code>&lt;canvas&gt;</code>，它接收4个参数：视口相对于<code>&lt;canvas&gt;</code>的<code>x</code>坐标、<code>y</code>坐标、宽度、高度。</p>
+<p>定义视口坐标与常规网页坐标不一样：视口坐标原点<code>(0, 0)</code>在<code>&lt;canvas&gt;</code>左下角，<code>x</code>轴向右，<code>y</code>轴向上。</p>
+<img src="/js-note-15/outside-viewport.png" class="" title="outside-viewport">
+
+<p>视口内部的坐标系与定义视口的坐标系也不一样：在视口内部，坐标原点<code>(0, 0)</code>是视口的中心点，因此视口左下角为<code>(-1, -1)</code>，右上角为<code>(1, 1)</code>。</p>
+<img src="/js-note-15/inside-viewport.png" class="" title="inside-viewport">
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用整个画布</span></span><br><span class="line">gl.viewport(<span class="number">0</span>, <span class="number">0</span>, drawing.width, drawing.height);</span><br><span class="line"><span class="comment">// 用画布左下角1/4区域</span></span><br><span class="line">gl.viewport(<span class="number">0</span>, <span class="number">0</span>, drawing.width / <span class="number">2</span>, drawing.height / <span class="number">2</span>);</span><br><span class="line"><span class="comment">// 用画布左上角1/4区域</span></span><br><span class="line">gl.viewport(<span class="number">0</span>, drawing.height / <span class="number">2</span>, drawing.width / <span class="number">2</span>, drawing.height / <span class="number">2</span>);</span><br><span class="line"><span class="comment">// 用画布右下角1/4区域</span></span><br><span class="line">gl.viewport(drawing.width / <span class="number">2</span>, <span class="number">0</span>, drawing.width / <span class="number">2</span>, drawing.height / <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="缓冲区buffer"><a href="#缓冲区buffer" class="headerlink" title="缓冲区buffer"></a>缓冲区buffer</h3><p>WebGL中呈现的3D图形里，比较重点的决定因素是Vertex(开始还打成了Vortex…奇异人生里那个俱乐部的名字)，即各个平面之间的交点，它们的坐标信息会存储在类型化数组中，而我WebGL如果想用这些数据，那就要将其转换过来，放到我WebGL的缓冲区里。那么我们的操作就是，先创建缓冲区，再将该缓冲区指定给WebGL使用，再把原始数据填进该缓冲区。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建buffer</span></span><br><span class="line"><span class="keyword">const</span> buffer = gl.createBuffer();</span><br><span class="line"><span class="comment">// 将buffer绑定到WebGL上下文</span></span><br><span class="line">gl.bindBuffer(gl.ARRAY_BUFFER, buffer);</span><br><span class="line"><span class="comment">// 向buffer填充数据</span></span><br><span class="line">gl.bufferData(gl.ARRAY_BUFFER, <span class="keyword">new</span> <span class="built_in">Float32Array</span>([<span class="number">0</span>, <span class="number">0.5</span>, <span class="number">1</span>]), gl.STATIC_DRAW);</span><br></pre></td></tr></table></figure>
+
+<p>这里，第二步将<code>buffer</code>绑定到WebGL上下文之后，所有的缓冲区操作都会在<code>buffer</code>对象中执行，因此第三步的填充数据无需明确传入<code>buffer</code>对象。这里的第三步中，第一个参数表示绑定的连接点，如果想用<code>drawElements()</code>输出缓冲区内容，也可以传入<code>gl.ELEMENT_ARRAY_BUFFER</code>；第二个参数处使用Float32Array初始化了<code>buffer</code>，通常都会用这个数据类型来保存顶点信息；第三个参数处则表示使用缓冲区的方式，包括下面几种取值：</p>
+<ul>
+<li><code>gl.STATIC_DRAW</code>：数据只加载一次，在多次绘图中使用</li>
+<li><code>gl.STREAM_DRAW</code>：数据只加载一次，在几次绘图中使用</li>
+<li><code>gl.DYNAMIC_DRAW</code>：数据动态改变，在多次绘图中使用</li>
+</ul>
+<p>在包含缓冲区的页面重载之前，缓冲区始终保留在内存中。如果不想要某个缓冲区了，可以使用<code>gl.deleteBuffer(buffer)</code>来释放内存。</p>
+<h3 id="着色器shader"><a href="#着色器shader" class="headerlink" title="着色器shader"></a>着色器shader</h3><p>搞定了各个顶点的坐标信息，那就要知道这些顶点要以什么样的方式渲染到平面页面上，那就引入了shader。shader是OpenGL中的概念，WebGL里有两种：vertex shader和fragment shader，前者用于将3D顶点转换为需要渲染的2D点，后者用于准确计算要绘制的每个像素的颜色。WebGL的shader并不是用JavaScript写的，而是用GLSL写的(OpenGL Shading Language)。</p>
+<p>每个shader都有一个<code>main()</code>方法，它会在绘图期间重复执行。为shader传递数据的方式有两种：通过<code>attribute</code>可以向vertex shader传入顶点信息，通过<code>uniform</code>可以向任何shader传入常量值。下面是一个简单的vertex shader例子：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">attribute</span>  <span class="type">vec2</span> aVertexPosition;</span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">  <span class="built_in">gl_Position</span> = <span class="type">vec4</span>(aVertexPosition, <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个shader中，我们定义了一个叫<code>aVertexPosition</code>的attibute，它是包含2个元素的数组(<code>vec2</code>)，表示<code>x</code>坐标和<code>y</code>坐标。即使只接收到了2个坐标，vertex shader也必须把一个包含4个方面信息的顶点赋值给特殊变量<code>gl_Position</code>，这里我们就创建了一个包含4个元素的数组(<code>vec4</code>)，填补了缺失的坐标，把2D坐标转换成了3D坐标。</p>
+<p>fragment shader与上面类似，除了只能通过<code>uniform</code>传入数据，举例如下：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uniform</span> <span class="type">vec4</span> uColor;</span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">  <span class="built_in">gl_FragColor</span> = uColor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个shader中，一个包含4方面信息(<code>vec4</code>)的统一颜色<code>uColor</code>被赋给变量<code>gl_FragColor</code>，表示绘图时使用的颜色。值得注意的是，<code>uColor</code>的值在这个shader内部不能改变。</p>
+<h3 id="程序program"><a href="#程序program" class="headerlink" title="程序program"></a>程序program</h3><p>浏览器不能理解GLSL，因此需要经过一系列处理。一般会按照这么个顺序处理：</p>
+<ul>
+<li>把GLSL程序放到<code>&lt;script&gt;</code>里并指定一个自定义的<code>type</code>(这样由于无法识别<code>type</code>，浏览器不会解析其中的内容)</li>
+<li>通过<code>text</code>属性提取文本，即GLSL的代码内容</li>
+<li>通过<code>gl.createShader()</code>创建着色器对象(传入代表着色器类型的<code>gl.VERTEX_SHADER</code>或<code>gl.FRAGMENT_SHADER</code>)</li>
+<li>通过<code>gl.shaderSource()</code>将GLSL代码和着色器对象关联</li>
+<li>通过<code>gl.compileShader()</code>来编译着色器</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;x-webgl/x-vertex-shader&quot;</span> <span class="attr">id</span>=<span class="string">&quot;vertexShader&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">  attribute vec2 aVertexPosition;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">void</span> <span class="function"><span class="title">main</span>(<span class="params"></span>)</span> &#123;</span></span><br><span class="line"><span class="javascript">    gl_Position = vec4(aVertexPosition, <span class="number">0.0</span>, <span class="number">1.0</span>);</span></span><br><span class="line"><span class="javascript">  &#125;</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;x-webgl/x-fragment-shader&quot;</span> <span class="attr">id</span>=<span class="string">&quot;fragmentShader&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">  uniform vec4 uColor;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">void</span> <span class="function"><span class="title">main</span>(<span class="params"></span>)</span> &#123;</span></span><br><span class="line"><span class="javascript">    gl_FragColor = uColor;</span></span><br><span class="line"><span class="javascript">  &#125;</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vertexGLSL = <span class="built_in">document</span>.getElementById(<span class="string">&quot;vertexShader&quot;</span>).text;</span><br><span class="line"><span class="keyword">const</span> vertexShader = gl.createShader(gl.VERTEX_SHADER);</span><br><span class="line">gl.shaderSource(vertexShader, vertexGLSL);</span><br><span class="line">gl.compileShader(vertexShader);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fragmentGLSL = <span class="built_in">document</span>.getElementById(<span class="string">&quot;fragmentShader&quot;</span>).text;</span><br><span class="line"><span class="keyword">const</span> fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);</span><br><span class="line">gl.shaderSource(fragmentShader, fragmentGLSL);</span><br><span class="line">gl.compileShader(fragmentShader);</span><br></pre></td></tr></table></figure>
+
+<p>「着色器」都编写好了之后，就要考虑「着色器程序」了。这里的做法是：</p>
+<ul>
+<li>通过<code>gl.createProgram()</code>创建着色器程序</li>
+<li>通过<code>gl.attachShader()</code>和<code>gl.linkProgram()</code>将两个着色器对象与程序关联(将着色器封装到程序中)</li>
+<li>通过<code>gl.useProgram()</code>将着色器程序与WebGL关联(通知WebGL可以使用这个程序了)</li>
+<li>调用<code>gl.useProgram()</code>后，所有后续的绘图操作都将使用这个程序</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> program = gl.createProgram();</span><br><span class="line">gl.attachShader(program, vertexShader);</span><br><span class="line">gl.attachShader(program, fragmentShader);</span><br><span class="line">gl.linkProgram(program);</span><br></pre></td></tr></table></figure>
+
+<h3 id="为shader传入值"><a href="#为shader传入值" class="headerlink" title="为shader传入值"></a>为shader传入值</h3><p>之前定义的shader都必须接收一个值才能工作，为此需要：</p>
+<ul>
+<li>先找到接收这个值的变量位置</li>
+<li>再基于变量的位置来赋值</li>
+</ul>
+<p>对于uniform变量，赋值过程如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> uColor = gl.getUniformLocation(program, <span class="string">&quot;uColor&quot;</span>);</span><br><span class="line">gl.uniform4fv(uColor, [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>这里，通过<code>gl.getUniformLocation()</code>可以返回一个对象，表示uniform变量<code>uColor</code>在内存中的位置，再通过<code>gl.uniform4fv()</code>给<code>uColor</code>赋值。</p>
+<p>对于attribute变量，也是差不多的赋值过程。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> aVertexPosition = gl.getAttribLocation(program, <span class="string">&quot;aVertexPosition&quot;</span>);</span><br><span class="line">gl.enableVertexAttribArray(aVertexPosition);</span><br><span class="line">al.vertexAttribPointer(aVertexPosition, itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这里，通过<code>gl.getAttribLocation()</code>可以找到attribute变量<code>aVertexPosition</code>在内存中的位置；接着通过<code>gl.enableVertexAttribArray()</code>来启用它；最后创建了指针，指向<code>gl.bindBuffer()</code>指定的缓冲区，并将其保存在<code>aVertexPosition</code>中，以便vertex shader使用。其中<code>vertexAttribPointer()</code>参数分别为：attribute位置、一个顶点的元素数(比如二维坐标为2，三维坐标为3)、顶点坐标类型、坐标是否标准化、表示取得下一值要跳过多少数组元素的步长值、起点偏移量。</p>
+<h3 id="调试shader和program"><a href="#调试shader和program" class="headerlink" title="调试shader和program"></a>调试shader和program</h3><p>和WebGL中其它操作一样，着色器操作也可能失败，而且也是静默失败。如果想知道shader和program执行中是否发生了错误，需要手动查找。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) &#123;</span><br><span class="line">  alert(gl.getShaderInfoLog(vertexShader));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!gl.getProgramParameter(program, gl.LINK_STATUS)) &#123;</span><br><span class="line">  alert(gl.getProgramInfoLog(program));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子中，shader部分通过<code>gl.getShaderParameter()</code>获取了shader的编译状态，当编译成功时，返回<code>true</code>，否则为<code>false</code>，当编译失败时，通过<code>gl.getShaderInfoLog()</code>可以获取错误信息；program部分类似，先获取了program的链接状态(是最常出现错误的地方)，再打印日志。</p>
+<h3 id="绘图"><a href="#绘图" class="headerlink" title="绘图"></a>绘图</h3><p>WebGL只能绘制三种形状：点、线、三角。其它所有形状都是由这三种基本形状合成之后，再绘制到三维空间的。绘制操作由两种：用于数组缓冲区的<code>gl.drawArrays()</code>、用于元素数组缓冲区的<code>gl.drawElements()</code>。它们的第一个参数都是一个常量，表示绘制的形状，如下：</p>
+<ul>
+<li><code>gl.POINTS</code><br>将每个顶点当成点来绘制。</li>
+<li><code>gl.LINES</code><br>将数组当成一系列顶点，并在顶点间画线。每个顶点既是起点又是终点，因此数组长度要为偶数。</li>
+<li><code>gl.LINE_LOOP</code><br>将数组当成一系列顶点，并在顶点间画线。线条依次穿过第一个顶点、第二个顶点…最后一个顶点、再回到第一个顶点，形成一个轮廓。</li>
+<li><code>gl.LINE_STRIP</code><br>与<code>gl.LINE_LOOP</code>类似，除了不把最后一个和第一个连起来。</li>
+<li><code>gl.TRIANGLES</code><br>将数组当成一系列顶点，并在顶点间画三角形。除非明确指定，每个三角形都单独绘制，不与其它三角形共享顶点。</li>
+<li><code>gl.TRIANGLES_STRIP</code><br>与<code>gl.TRIANGLES</code>类似，除了要复用顶点(将前三个顶点后的那个顶点，与它的前两个顶点结合，构成新的三角形)，如数组中包含A、B、C、D，则第一个三角形连接ABC，第二个三角形连接BCD。</li>
+<li><code>gl.TRIANGLES_FAN</code><br>与<code>gl.TRIANGLES</code>类似，除了要复用顶点(将前三个顶点后的那个顶点，与它的前一个顶点和第一个顶点结合，构成新的三角形)，如数组中包含A、B、C、D，则第一个三角形连接ABC，第二个三角形连接ACD。</li>
+</ul>
+<p>下面举一个用<code>gl.drawArrays()</code>画三角形的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假设已经使用前面定义的着色器清除了视口</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义三个顶点及每个顶点的x和y坐标</span></span><br><span class="line"><span class="keyword">let</span> vertices = <span class="keyword">new</span> <span class="built_in">Float32Array</span>([<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>]),</span><br><span class="line">    buffer = gl.createBuffer(),</span><br><span class="line">    vertexSetSize = <span class="number">2</span>,</span><br><span class="line">    vertexSetCount = vertices.length / vertexSetSize,</span><br><span class="line">    uColor,</span><br><span class="line">    aVertexPosition;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*----- 参考`缓冲区buffer` -----*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 把数据放到缓冲区</span></span><br><span class="line">gl.bindBuffer(gl.ARRAY_BUFFER, buffer);</span><br><span class="line">gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*----- 参考`为shader传入值` -----*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 为fragment shader传入颜色值</span></span><br><span class="line">uColor = gl.getUniformLocation(program, <span class="string">&quot;uColor&quot;</span>);</span><br><span class="line">gl.uniform4fv(uColor, [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为shader传入顶点信息</span></span><br><span class="line">aVertexPosition = gl.getAttribLocation(program, <span class="string">&quot;aVertexPosition&quot;</span>);</span><br><span class="line">gl.enableVertexAttribArray(aVertexPosition);</span><br><span class="line">gl.vertexAttribPointer(aVertexPosition, vertexSetSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/*----- 参考`绘图` -----*/</span></span><br><span class="line">gl.drawArrays(gl.TRIANGLES, <span class="number">0</span>, vertexSetCount);</span><br></pre></td></tr></table></figure>
+
+<p>上面绘图的结果就是在<code>(0, 1)</code>、<code>(1, -1)</code>、<code>(-1, -1)</code>三点之间绘制了填充了黑色的三角形。</p>
+<img src="/js-note-15/triangles-result.png" class="" title="triangles-result">
+
+<p>当修改<code>gl.drawArrays()</code>的第一个参数时，绘制三角形的方式会不同，如下：</p>
+<img src="/js-note-15/line-loop-set-result.png" class="" title="line-loop-set-result">
+
+<h3 id="纹理"><a href="#纹理" class="headerlink" title="纹理"></a>纹理</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> image = <span class="keyword">new</span> Image();</span><br><span class="line"><span class="keyword">let</span> texture;</span><br><span class="line">image.src = <span class="string">&quot;smile.gif&quot;</span>;</span><br><span class="line">image.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 创建新纹理</span></span><br><span class="line">  texture = gl.createTexture();</span><br><span class="line">  gl.bindTexture(gl.TEXTURE_2D, texture);</span><br><span class="line">  <span class="comment">// 设置像素存储格式，此常量为WebGL独有的常量，主要是因为GIF、JPEG、PNG图像与WebGL使用的坐标系不一样，如果未设置则会在解析图像时发生混乱</span></span><br><span class="line">  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, <span class="literal">true</span>);</span><br><span class="line">  <span class="comment">// 将图像绑定到纹理</span></span><br><span class="line">  gl.texImage2D(gl.TEXTURE_2D, <span class="number">0</span>, gl.RGBA, gl.UNSIGNED_BYTE, image);</span><br><span class="line">  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);</span><br><span class="line">  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);</span><br><span class="line">  <span class="comment">// 清除当前纹理</span></span><br><span class="line">  gl.bindTexture(gl.TEXTURE_2D, <span class="literal">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要注意的是，用作纹理的图像必须与包含页面来自同一个域，或者存在启用了CORS的服务器上。</p>
+<h3 id="像素操作-1"><a href="#像素操作-1" class="headerlink" title="像素操作"></a>像素操作</h3><p>和2D上下文类似，通过WebGL上下文也能读取像素值，使用方法为<code>readPixels()</code>，参数为：</p>
+<ul>
+<li><code>x</code></li>
+<li><code>y</code></li>
+<li>宽度</li>
+<li>高度</li>
+<li>图像格式(几乎总是<code>gl.RGBA</code>)</li>
+<li>数据类型(用来指定保存在类型化数组中的数据的格式)</li>
+<li>类型化数组(从帧缓冲区读取的像素信息保存处)。</li>
+</ul>
+<p>其中前四个参数表示读取哪个区域内的像素。要注意的是，数据类型和类型化数组的关联有以下限制：</p>
+<ul>
+<li>如果数据类型是<code>gl.UNSIGNED_BYTE</code>，那么类型化数组必须是<code>Uint8Array</code></li>
+<li>如果数据类型是<code>gl.UNSIGNED_SHORT_5_6_5</code>、<code>gl.UNSIGNED_SHORT_4_4_4_4</code>、<code>gl.UNSIGNED_SHORT_5_5_5_1</code>，那么类型化数组必须是<code>Uint16Array</code></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pixels = <span class="keyword">new</span> <span class="built_in">Uint8Array</span>(<span class="number">25</span> * <span class="number">25</span>);</span><br><span class="line">gl.readPixels(<span class="number">0</span>, <span class="number">0</span>, <span class="number">25</span>, <span class="number">25</span>, gl.RGBA, gl.UNSIGNED_BYTE, pixels);</span><br></pre></td></tr></table></figure>
+
+<p>这个例子中，从帧缓冲区读取了25*25像素的区域，将读取到的像素信息保存在<code>pixels</code>数组中，其中每个像素的颜色都由4个数组元素表示，分别为R、G、B、A，都介于0到255之间。</p>
+<p>还要注意的是，在WebGL图像绘制发生前调用此方法，返回的像素数据没问题；而当绘制发生后，帧缓冲区会恢复原始的干净状态，调用此方法返回的像素数据就是清除缓冲区之后的状态。如果想要在绘制后读取像素数据，需要在初始化WebGL上下文时将<code>preserveDrawingBuffer</code>设置为<code>true</code>，这样可以让帧缓冲区在下一次绘制之前保留其最后的状态，不过会造成性能损失。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/canvas/" rel="tag"># canvas</a>
+              <a href="/tags/webgl/" rel="tag"># webgl</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/js-note-14/" rel="prev" title="JavaScript学习笔记(14)">
+      <i class="fa fa-chevron-left"></i> JavaScript学习笔记(14)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/js-note-16/" rel="next" title="JavaScript学习笔记(16)">
+      JavaScript学习笔记(16) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2D%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">2.</span> <span class="nav-text">2D上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A1%AB%E5%85%85%E5%92%8C%E6%8F%8F%E8%BE%B9"><span class="nav-number">2.1.</span> <span class="nav-text">填充和描边</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%BB%E7%9F%A9%E5%BD%A2"><span class="nav-number">2.2.</span> <span class="nav-text">画矩形</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%BB%E8%B7%AF%E5%BE%84"><span class="nav-number">2.3.</span> <span class="nav-text">画路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E6%96%87%E6%9C%AC"><span class="nav-number">2.4.</span> <span class="nav-text">写文本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E6%8D%A2"><span class="nav-number">2.5.</span> <span class="nav-text">变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%9F%E8%B8%AA%E7%8A%B6%E6%80%81"><span class="nav-number">2.6.</span> <span class="nav-text">跟踪状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F"><span class="nav-number">2.7.</span> <span class="nav-text">图像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B4%E5%BD%B1"><span class="nav-number">2.8.</span> <span class="nav-text">阴影</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%90%E5%8F%98"><span class="nav-number">2.9.</span> <span class="nav-text">渐变</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.10.</span> <span class="nav-text">模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%83%8F%E7%B4%A0%E6%93%8D%E4%BD%9C"><span class="nav-number">2.11.</span> <span class="nav-text">像素操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E6%88%90"><span class="nav-number">2.12.</span> <span class="nav-text">合成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3D%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">3.</span> <span class="nav-text">3D上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">3.1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ArrayBuffer"><span class="nav-number">3.1.1.</span> <span class="nav-text">ArrayBuffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%86%E5%9B%BE"><span class="nav-number">3.1.2.</span> <span class="nav-text">视图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E5%8C%96%E8%A7%86%E5%9B%BE"><span class="nav-number">3.1.3.</span> <span class="nav-text">类型化视图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">3.2.</span> <span class="nav-text">获取上下文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API%E7%89%B9%E7%82%B9"><span class="nav-number">3.3.</span> <span class="nav-text">API特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF"><span class="nav-number">3.4.</span> <span class="nav-text">错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E7%BB%98%E5%9B%BE"><span class="nav-number">3.5.</span> <span class="nav-text">准备绘图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%86%E5%8F%A3%E4%B8%8E%E5%9D%90%E6%A0%87"><span class="nav-number">3.6.</span> <span class="nav-text">视口与坐标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%86%B2%E5%8C%BAbuffer"><span class="nav-number">3.7.</span> <span class="nav-text">缓冲区buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9D%80%E8%89%B2%E5%99%A8shader"><span class="nav-number">3.8.</span> <span class="nav-text">着色器shader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8Fprogram"><span class="nav-number">3.9.</span> <span class="nav-text">程序program</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BAshader%E4%BC%A0%E5%85%A5%E5%80%BC"><span class="nav-number">3.10.</span> <span class="nav-text">为shader传入值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E8%AF%95shader%E5%92%8Cprogram"><span class="nav-number">3.11.</span> <span class="nav-text">调试shader和program</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%98%E5%9B%BE"><span class="nav-number">3.12.</span> <span class="nav-text">绘图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%B9%E7%90%86"><span class="nav-number">3.13.</span> <span class="nav-text">纹理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%83%8F%E7%B4%A0%E6%93%8D%E4%BD%9C-1"><span class="nav-number">3.14.</span> <span class="nav-text">像素操作</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

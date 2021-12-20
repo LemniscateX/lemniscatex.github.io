@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="当你玩Flappy Bird的最高分只能达到3分的时候…当然是选择自己写一个啦！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Canvas小游戏初探之Flappy Bird">
+<meta property="og:url" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="当你玩Flappy Bird的最高分只能达到3分的时候…当然是选择自己写一个啦！">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/base-code.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/obstacles-code.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/cube-code.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/score-code.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/hitwith-code.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/hitbottom-code.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/update-when-wait.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/update-when-play.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/update-when-flop.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/update-when-restart.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/init2wait.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/wait2play.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/play2flopORrestart.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/flop2restart.png">
+<meta property="og:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/restart2wait.png">
+<meta property="article:published_time" content="2020-06-08T15:11:02.000Z">
+<meta property="article:modified_time" content="2020-06-13T11:29:05.000Z">
+<meta property="article:tag" content="canvas">
+<meta property="article:tag" content="HTML5">
+<meta property="article:tag" content="game">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lemniscatex.github.io/make-flappy-bird-on-canvas/base-code.png">
+
+<link rel="canonical" href="https://lemniscatex.github.io/make-flappy-bird-on-canvas/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Canvas小游戏初探之Flappy Bird | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/make-flappy-bird-on-canvas/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Canvas小游戏初探之Flappy Bird
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-08 23:11:02" itemprop="dateCreated datePublished" datetime="2020-06-08T23:11:02+08:00">2020-06-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-06-13 19:29:05" itemprop="dateModified" datetime="2020-06-13T19:29:05+08:00">2020-06-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Project/" itemprop="url" rel="index"><span itemprop="name">Project</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>当你玩Flappy Bird的最高分只能达到3分的时候…当然是选择自己写一个啦！</p>
+<span id="more"></span>
+
+<hr>
+<p>故事并没有这么潇洒啦！其实是这样的，我一直觉得，Chrome在断网情况下出现的小恐龙游戏是一个非常不错的设计，对用户断网的不快心情起到了非常好的安慰剂效果。在某次聊天中我顺口提到了这只小恐龙，对方也顺口一提——“你也可以自己写一个”，于是记性很好的我就总惦记着这回事儿。当终于有空的时候，我照着w3schools的<a href="https://www.w3schools.com/graphics/game_intro.asp">Game Tutorial</a>开始学习，学着学着就发现demo和flappy bird更像，于是就在此基础上完成了我的第一个Web小游戏！撒花~至于Chrome的小恐龙么，下次一定！</p>
+<p>在完善代码的过程中，我解决了好几个bug，当然…都是我自己写出来的bug。有些问题的发现和解决不太容易，常常是盯着想了很久才发现问题出在哪儿，所以就把这些心路历程都记录一下，希望对你有帮助。</p>
+<p>对了，项目的地址在<a href="https://github.com/LemniscateX/flappy-bird">这里</a>，也可以在<a href="https://lemniscatex.github.io/projects/flappy-bird/">这里</a>在线玩会儿。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>游戏的核心在于动画的实现，要实现动画就要一帧一帧地将所有需要的内容画上去，因此可以使用<code>setTimeInterval()</code>来一帧帧地刷新，每次刷新都要清除画布、适当地移动一些元素的位置、重新绘制，这样它们就动起来了。</p>
+<p>整个游戏分为四个主要场景：等待时、小鸟飞行时、小鸟下坠时、游戏结束时。不同场景用不同的计时器进行刷新，由于要对场景进行切换，所以需要使用<code>clearInterval()</code>在特定的条件下取消上一场景，再用另一个<code>setInterval()</code>开启新一场景。</p>
+<p>元素的绘制使用canvas的<code>drawImage()</code>，元素的移动则只需修改其<code>x</code>坐标或<code>y</code>坐标即可。</p>
+<h3 id="元素绘制"><a href="#元素绘制" class="headerlink" title="元素绘制"></a>元素绘制</h3><h4 id="地面的移动"><a href="#地面的移动" class="headerlink" title="地面的移动"></a>地面的移动</h4><p>为了让底部图片能够一直向左移动，采用一种特殊方法：绘制时从<code>x=0</code>绘制并排连续的两张图片，当第一张图片完全移出画面时，再从<code>x=0</code>处绘制一遍。</p>
+<img src="/make-flappy-bird-on-canvas/base-code.png" class="" title="base">
+
+<h4 id="柱子的处理"><a href="#柱子的处理" class="headerlink" title="柱子的处理"></a>柱子的处理</h4><p>柱子初始化为数组，每隔一段时间就需要添加靠右的柱子并移除画布外的柱子。上下柱子是两个component，其高度和间隔为一定范围内的随机数。为保持柱子的宽高比，绘制的柱子的实际高度是一样的，只是通过修改<code>y</code>的值来调整可视高度。</p>
+<img src="/make-flappy-bird-on-canvas/obstacles-code.png" class="" title="obstacles">
+
+<h4 id="小鸟的动作和重力模拟"><a href="#小鸟的动作和重力模拟" class="headerlink" title="小鸟的动作和重力模拟"></a>小鸟的动作和重力模拟</h4><p>小鸟的扑棱动作被分解为三部分，按照时序切换图片即可。<br>重力模拟则用物理上学的<code>v=v0+gt</code>公式，设置<code>gravity=0.3</code>，<code>speedGravity=0</code>，分别代表重力和由重力产生的向下的速度。每次刷新都让坐标<code>y</code>加上<code>speedGravity</code>构成新的坐标，而<code>speedGravity</code>则需要加上固定值<code>gravity</code>来加速。<br>有了重力，小鸟就可以借助修改<code>speedGravity</code>来完成向上跳的动作。每次点击，将<code>speedGravity</code>修改为一个负值，则可迅速得到向上的位移。</p>
+<img src="/make-flappy-bird-on-canvas/cube-code.png" class="" title="cube">
+
+<h4 id="分数的计算和展示"><a href="#分数的计算和展示" class="headerlink" title="分数的计算和展示"></a>分数的计算和展示</h4><p>分数为小鸟经过的柱子个数除以2(因为我把上下分开了)，由于在移动过程中画布外的柱子被<code>obstacles</code>给移除了，因此不能直接用所有柱子数减去右方柱子数来计算。一种比较巧妙的做法是，在每一帧查看每个柱子右端是否和小鸟左端在同一竖线上，如果有则将“得分柱子数”加1。这种做法能成功的原因在于，画面一直在刷新，每个柱子至多有一次机会能满足条件，而该条件刚好既能判断小鸟是否经过了该柱子，又能作为计数来使用。<br>分数的展示则要对数字进行分割，使用相应的图片替换即可。</p>
+<img src="/make-flappy-bird-on-canvas/score-code.png" class="" title="score">
+
+
+<h3 id="碰撞检测"><a href="#碰撞检测" class="headerlink" title="碰撞检测"></a>碰撞检测</h3><p>包括碰上柱子和碰上地面的检测。<br>碰柱子的检测要注意除了常规碰撞外，还有小鸟飞到画布外面的碰撞检测。由于柱子不是无限长度的，因此当小鸟飞到画布外的柱子之上时，常规碰撞会失效。我想了挺久，最开始是类似上面分数计算的判断，没用。后来发现一种有用的方法：如果刚好碰上的那一帧无法检测，那我就检测它的下一帧，即此时小鸟的<code>x</code>处于柱子的<code>x</code>和<code>x+width</code>之间，没想到还真的可以。</p>
+<img src="/make-flappy-bird-on-canvas/hitwith-code.png" class="" title="hitwith">
+
+<p>碰上地面的检测则直接判断<code>y+height</code>是否大于阈值即可，不过为了让小鸟最多下降到“地面”而非“地下”，需要一些额外的设置。</p>
+<img src="/make-flappy-bird-on-canvas/hitbottom-code.png" class="" title="hitbottom">
+
+
+<h3 id="场景绘制"><a href="#场景绘制" class="headerlink" title="场景绘制"></a>场景绘制</h3><p>在每个场景下，如果包含需要移动/变化的元素，则所有出现的元素都要<code>update()</code>，因为每一次移动/变化都会进行画布清除和重绘。而需要移动/变化的元素需要在<code>update()</code>的基础上通过坐标修改来进行自己的移动/变化。</p>
+<h4 id="开场等待时"><a href="#开场等待时" class="headerlink" title="开场等待时"></a>开场等待时</h4><p>需展示(<code>update()</code>)的元素有：背景图、地面、小鸟。<br>需要额外变化的元素有：一直左移的地面、循环上下移动的小鸟。</p>
+<img src="/make-flappy-bird-on-canvas/update-when-wait.png" class="" title="update-when-wait">
+
+<h4 id="小鸟飞行时"><a href="#小鸟飞行时" class="headerlink" title="小鸟飞行时"></a>小鸟飞行时</h4><p>需展示(<code>update()</code>)的元素有：背景图、柱子、地面、小鸟、分数。<br>需要额外变化的元素有：一直左移的柱子和地面、受重力下降的小鸟、不断变化的分数。</p>
+<img src="/make-flappy-bird-on-canvas/update-when-play.png" class="" title="update-when-play">
+
+<h4 id="小鸟下坠时"><a href="#小鸟下坠时" class="headerlink" title="小鸟下坠时"></a>小鸟下坠时</h4><p>需展示(<code>update()</code>)的元素有：背景图、柱子、地面、小鸟、分数。<br>需要额外变化的元素有：一直下坠的小鸟。</p>
+<img src="/make-flappy-bird-on-canvas/update-when-flop.png" class="" title="update-when-flop">
+
+<h4 id="游戏结束时"><a href="#游戏结束时" class="headerlink" title="游戏结束时"></a>游戏结束时</h4><p>由于没有需要移动/变化的元素，因此所有需要展示的元素都不需要<code>update()</code>，只需新增一个重新开始按钮即可。</p>
+<img src="/make-flappy-bird-on-canvas/update-when-restart.png" class="" title="update-when-restart">
+
+<h3 id="场景切换"><a href="#场景切换" class="headerlink" title="场景切换"></a>场景切换</h3><h4 id="初始化-gt-开场等待"><a href="#初始化-gt-开场等待" class="headerlink" title="初始化 -&gt; 开场等待"></a>初始化 -&gt; 开场等待</h4><ul>
+<li>触发条件：load</li>
+<li>需要做的工作：<ul>
+<li>修改鼠标点击事件触发的函数</li>
+<li>开始开场等待场景</li>
+</ul>
+</li>
+</ul>
+<img src="/make-flappy-bird-on-canvas/init2wait.png" class="" title="init2wait">
+
+<h4 id="开场等待-gt-小鸟飞行"><a href="#开场等待-gt-小鸟飞行" class="headerlink" title="开场等待 -&gt; 小鸟飞行"></a>开场等待 -&gt; 小鸟飞行</h4><ul>
+<li>触发条件：鼠标点击</li>
+<li>需要做的工作：<ul>
+<li>停止等待场景</li>
+<li>修改鼠标点击事件触发的函数</li>
+<li>开始小鸟飞行场景</li>
+</ul>
+</li>
+</ul>
+<img src="/make-flappy-bird-on-canvas/wait2play.png" class="" title="wait2play">
+
+<h4 id="小鸟飞行-gt-小鸟下坠-游戏结束"><a href="#小鸟飞行-gt-小鸟下坠-游戏结束" class="headerlink" title="小鸟飞行 -&gt; 小鸟下坠/游戏结束"></a>小鸟飞行 -&gt; 小鸟下坠/游戏结束</h4><ul>
+<li>触发条件：撞到柱子/地面</li>
+<li>需要做的工作：<ul>
+<li>停止小鸟飞行场景</li>
+<li>当撞到柱子时，开始小鸟下坠场景；当撞到地面时，开始游戏结束场景</li>
+</ul>
+</li>
+</ul>
+<img src="/make-flappy-bird-on-canvas/play2flopORrestart.png" class="" title="play2flopORrestart">
+
+<h4 id="小鸟下坠-gt-游戏结束"><a href="#小鸟下坠-gt-游戏结束" class="headerlink" title="小鸟下坠 -&gt; 游戏结束"></a>小鸟下坠 -&gt; 游戏结束</h4><ul>
+<li>触发条件：撞到地面</li>
+<li>需要做的工作：<ul>
+<li>停止小鸟下坠场景</li>
+<li>开始游戏结束场景</li>
+<li>修改鼠标点击事件触发的函数</li>
+</ul>
+</li>
+</ul>
+<img src="/make-flappy-bird-on-canvas/flop2restart.png" class="" title="flop2restart">
+
+<h4 id="游戏结束-gt-开场等待"><a href="#游戏结束-gt-开场等待" class="headerlink" title="游戏结束 -&gt; 开场等待"></a>游戏结束 -&gt; 开场等待</h4><ul>
+<li>触发条件：点击按钮</li>
+<li>需要做的工作：<ul>
+<li>停止游戏结束场景</li>
+<li>修改鼠标点击事件触发的函数</li>
+<li>开始开场等待场景</li>
+</ul>
+</li>
+</ul>
+<img src="/make-flappy-bird-on-canvas/restart2wait.png" class="" title="restart2wait">
+
+
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="错误1"><a href="#错误1" class="headerlink" title="错误1"></a>错误1</h3><ul>
+<li><p>现象<br>撞到柱子后背景和柱子还是在移动。</p>
+</li>
+<li><p>不解之处<br>取消<code>updatePlay()</code>的定时器并开启<code>updateFlop()</code>的定时器，前者会将元素重绘并移动，但后者只是纯粹的重绘，为什么<code>x</code>坐标还会左移？</p>
+</li>
+<li><p>如何找到bug<br>在<code>component</code>里加了个<code>draw()</code>方法，当位置无需变化的情况下调用<code>draw()</code>而非<code>update()</code>居然可以了。</p>
+</li>
+<li><p>原因<br><code>updatePlay()</code>里面的<code>moveLeft()</code>不是<code>x--</code>而是<code>speedX=-1</code>，因此即使停了<code>updatePlay()</code>定时器，这些元素的<code>speedX</code>还是-1。</p>
+</li>
+<li><p>解决办法<br>要么让<code>moveLeft()</code>不要有副作用，要么就记得及时修改状态！</p>
+</li>
+</ul>
+<h3 id="错误2"><a href="#错误2" class="headerlink" title="错误2"></a>错误2</h3><ul>
+<li><p>现象<br>触底的小鸟不是停在地面而是更往下了一些，导致小鸟显示不完整。</p>
+</li>
+<li><p>不解之处<br><code>hitBottom()</code>的判断并没有错误，为什么它的<code>y</code>会比阈值<code>y</code>来得更大呢？</p>
+</li>
+<li><p>如何找到bug<br>调整<code>gravity</code>大小或<code>flop</code>的下降数值，有时候会让小鸟在底部的位置发生变化，居然还不一样的吗？</p>
+</li>
+<li><p>原因<br>当hitBottom时，小鸟的<code>y</code>可能是不同的值。比如说阈值是300，触发hitBottom的值可能是301、310等等，所以就会出现结束的<code>y</code>的值不一样的效果。</p>
+</li>
+<li><p>解决办法<br>在<code>y</code>值大于阈值的时候直接将<code>y</code>设定为阈值。</p>
+</li>
+</ul>
+<h3 id="错误3"><a href="#错误3" class="headerlink" title="错误3"></a>错误3</h3><ul>
+<li>现象<br>想让过柱子得分的阈值<code>x</code>和消除冗余障碍的阈值<code>x</code>不一样，改成如下写法后，当跳过一个柱子后就卡住了…而且电脑风扇一直猛转…</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 之前让小鸟在最左边，刚好可以在x&lt;0的时候把两个事情都做了</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="built_in">this</span>.obstacles.length; i++) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">this</span>.obstacles[i].x + <span class="built_in">this</span>.obstacles[i].width &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">this</span>.count += <span class="number">0.5</span>;</span><br><span class="line">    i--;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.obstacles[i].update();</span><br><span class="line">    <span class="built_in">this</span>.obstacles[i].moveLeft();</span><br><span class="line">  &#125;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="comment">// 改写成这样</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="built_in">this</span>.obstacles.length; i++) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">this</span>.obstacles[i].x + <span class="built_in">this</span>.obstacles[i].width &lt;= <span class="built_in">this</span>.cube.x) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.obstacles[i].x + <span class="built_in">this</span>.obstacles[i].width &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="built_in">this</span>.obstacles.shift();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">this</span>.count += <span class="number">0.5</span>;</span><br><span class="line">    i--;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.obstacles[i].update();</span><br><span class="line">    <span class="built_in">this</span>.obstacles[i].moveLeft();</span><br><span class="line">  &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>不解之处<br>我就多加了个判断条件，怎么就卡住不动了？</p>
+</li>
+<li><p>如何找到bug<br>换了几种遍历的写法以及得分计算的写法后，发现得分显示错误，得分并没有在每经过一个障碍物的时候+1，而是随着每一帧画面一直快速增加…不过直到这时我还不清楚为什么…直到我看了别人的代码中关于得分的判断条件是等于某个值，我才意识到应该是得分计算出错了。</p>
+</li>
+<li><p>原因<br>之前的判断是——因为小鸟的位置和画布左端相近，所以我直接在删除冗余<code>obstacles</code>处顺便更新<code>score</code>，<code>obstacles</code>每<code>shift</code>走两个就说明他们已经出画面了，那我的<code>score</code>就+1。但一旦把二者位置分开并多加一个判断就不行了，原因在于<code>score</code>的计算方法出错了，不能用“柱子右边小于小鸟左边”这个条件来累计，因为我们是每一帧都要去判断一下，所以在柱子一旦开始往小鸟左边走的时候，该柱子一直都是满足条件的，如果这么加的话，每个左边儿的柱子的每一帧都会加上去，自然就会一直增加了。</p>
+</li>
+<li><p>解决办法<br>正确的判断经过的方法是“柱子的右边等于小鸟的左边”…不过可能还是要考虑向左移动速度和刷新频率能否让二者刚好相等的问题。 </p>
+</li>
+</ul>
+<h3 id="错误4"><a href="#错误4" class="headerlink" title="错误4"></a>错误4</h3><ul>
+<li><p>现象<br>在判断hitBottom后的<code>stopPlaying()</code>后<code>drawRestart()</code>，但是画面上并没有出现restart图片。</p>
+</li>
+<li><p>不解之处<br>为啥不行？</p>
+</li>
+<li><p>如何找到bug<br>直觉告诉我，画的restart可能被别的覆盖了，于是加了两个log测试一下。当小鸟下降时一直在打印<code>222</code>(一帧一帧地)，在碰地瞬间打印111后又打印了<code>222</code>，那就破案了。</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">update</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; myGameArea.obstacles.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (myGameArea.cube.hitWith(myGameArea.obstacles[i])) &#123;</span><br><span class="line">      myGameArea.stopPlaying();</span><br><span class="line">      myGameArea.startFlopping();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (myGameArea.cube.hitBottom(myGameArea.canvas)) &#123;</span><br><span class="line">    myGameArea.stopPlaying();</span><br><span class="line">    myGameArea.drawRestart();</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">111</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  myGameArea.clearCanvas();</span><br><span class="line">  myGameArea.updateBackground();</span><br><span class="line">  myGameArea.updateCube();</span><br><span class="line">  myGameArea.updateObstacles();</span><br><span class="line">  myGameArea.updateBase();</span><br><span class="line">  myGameArea.updateScore();</span><br><span class="line">  myGameArea.frameno++;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">222</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>原因<br>说明<code>stopPlaying()</code>之后下面的代码继续跑直到跑完(这很正常！)，还是把其他元素update了一遍，因此覆盖了画上去的restart。</p>
+</li>
+<li><p>解决办法<br><code>stopPlaying()</code>后return，让它后面的代码不跑就行了。</p>
+</li>
+</ul>
+<h3 id="错误5"><a href="#错误5" class="headerlink" title="错误5"></a>错误5</h3><ul>
+<li><p>现象<br>restart是出现了，但是小鸟没有掉到最下端，而是有点悬停在上面。</p>
+</li>
+<li><p>不解之处<br>和错误3的现象差不多，但是通过错误3的解决方案已经解决了，咋还有呢？</p>
+</li>
+<li><p>如何找到bug<br>再去看了看<code>hitBottom()</code>代码。</p>
+</li>
+<li><p>原因<br><code>hitBottom()</code>只是修改了<code>y</code>等于阈值，但是并没有去刷新帧，而之前之所以能成功，是因为在解决错误4之前那里没有return，它检测到hitBottom并修改<code>y</code>值后会再刷新一次所有的内容！巧了吧！</p>
+</li>
+<li><p>解决办法<br>要在hitBottom之后再刷新一次小鸟，但由于canvas不能单独刷新一个元素，而应该将canvas清零再重新画(否则就会拖影)，因此做了如下改动：</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updatePlay</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; myGameArea.obstacles.length; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (myGameArea.cube.hitWith(myGameArea.obstacles[i])) &#123;</span><br><span class="line">      myGameArea.stopPlaying();</span><br><span class="line">      myGameArea.startFlopping();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (myGameArea.cube.hitBottom(myGameArea.canvas)) &#123;     <span class="comment">// 这里判断了</span></span><br><span class="line">    myGameArea.stopPlaying();</span><br><span class="line">  &#125;</span><br><span class="line">  myGameArea.clearCanvas();</span><br><span class="line">  myGameArea.updateBackground();</span><br><span class="line">  myGameArea.updateCube();</span><br><span class="line">  myGameArea.updateObstacles();</span><br><span class="line">  myGameArea.updateBase();</span><br><span class="line">  myGameArea.updateScore();</span><br><span class="line">  myGameArea.frameno++;</span><br><span class="line">  <span class="keyword">if</span> (myGameArea.cube.hitBottom(myGameArea.canvas)) &#123;     <span class="comment">// 这里才开始画restart</span></span><br><span class="line">    myGameArea.drawRestart();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateFlop</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (myGameArea.cube.hitBottom(myGameArea.canvas)) &#123;     <span class="comment">// 这里判断了</span></span><br><span class="line">    myGameArea.stopFlopping();</span><br><span class="line">  &#125;</span><br><span class="line">  myGameArea.clearCanvas();</span><br><span class="line">  myGameArea.updateWhenFlop();</span><br><span class="line">  <span class="keyword">if</span> (myGameArea.cube.hitBottom(myGameArea.canvas)) &#123;     <span class="comment">// 这里才开始画restart</span></span><br><span class="line">    myGameArea.drawRestart();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="错误6"><a href="#错误6" class="headerlink" title="错误6"></a>错误6</h3><ul>
+<li><p>现象<br>由于柱子不是无限长度的，所以有一个bug——当一直点鼠标直到小鸟飞到非常上面，也就是说小鸟在所有上柱子的上面时，不会触发<code>hitWith()</code>，游戏仍然会继续。为解决bug，在<code>hitWith()</code>中新增了一个判断。在测试中，小鸟一直飞到上面后会如预期地掉下来并出现restart按钮(非常完美)，但是一旦点击restart按钮后，画面就会一闪一闪地，交替出现两个画面：游戏结束绘制restart的画面和waiting的画面。</p>
+</li>
+<li><p>不解之处<br>这个bug我解决了一天…感觉所有触发的机制都对，逻辑也对，但就是不行。</p>
+</li>
+<li><p>如何找到bug</p>
+<ul>
+<li>首先是怀疑<code>drawRestart()</code>地方是不是有变量没有还原回初始化的状态。</li>
+<li>然后怀疑是不是不该用错误5的那种解决办法。</li>
+<li>然后在<code>updateFlop()</code>里加了个log，发现鸟飞上天的情况下，即使已经画面中停止下坠了，console仍然一直在log东西，wth？？</li>
+<li>然后在<code>updateFlop()</code>的hitBottom语句里面加了个log，和上面一样，即使画面中已经停止下坠了，console仍然一直在log东西，这就更令人迷惑了，你既然一直在hitBottom，那<code>stopFlopping()</code>就会一直执行啊，咋还在刷新flop画面呢？？</li>
+<li>然后在<code>stopFlopping()</code>里加了个log，和上面一样，即使画面中已经停止下坠了，console仍然一直在log东西，what？？你确实一直在<code>stopFlopping()</code>，怎么就停不下来呢？？</li>
+<li>后来去放缓flop速度，在正常情况下测试<code>startFlopping()</code>和<code>stopFlopping()</code>功能，都没问题。</li>
+<li>契机在于，我在<code>hitWith()</code>内的飞上天的情况下写了个<code>console.log(&quot;whoops&quot;)</code>，在飞上天情况下碰撞了，它输出了两次<code>&quot;whoops&quot;</code>；而如果在<code>hitWith()</code>内的另一种正常碰撞返回true的情况下，它只会输出一次。</li>
+</ul>
+</li>
+<li><p>原因<br>正常的碰撞情况会触发一次<code>hitWith()</code>就结束了，飞上天的碰撞情况下会触发两次<code>hitWith()</code>才结束，再去看<code>updatePlay()</code>代码的hitWith判断内的内容：<code>stopPlaying()</code>和<code>startFlopping()</code>，在里面log会发现会输出两次。那么bug就找到了，由于<code>hitWith()</code>会在飞上天情况下被触发两次，所以就会进行两次<code>stopPlaying()</code>和<code>startFlopping()</code>，第二次的<code>startFlopping()</code>返回的<code>flopTimer</code>会覆盖第一次的<code>flopTimer</code>，导致即使<code>clearInterval(flopTimer)</code>也只能停掉第二个计时器，停不了第一个计时器。</p>
+</li>
+<li><p>解决办法</p>
+<ul>
+<li>最开始想，那我的<code>hitWith()</code>就在飞天的情况下第一次不返回true，第二次才返回true，用一个外部变量来判断是第一次还是第二次。不过这样不好。</li>
+<li>后来想到，既然是设置了两次计时器，那事实上应该只设置一次的，所以最好就是，在设置计时器的时候先判断一下。不过还得注意，restart的时候，计时器还得初始化一下，不然restart后就设置不了计时器了。</li>
+</ul>
+</li>
+</ul>
+<h2 id="一些其他方面的收获"><a href="#一些其他方面的收获" class="headerlink" title="一些其他方面的收获"></a>一些其他方面的收获</h2><h3 id="hexo部署方法"><a href="#hexo部署方法" class="headerlink" title="hexo部署方法"></a>hexo部署方法</h3><p>因为想让我的Flappy Bird可以有在线玩耍的地址，于是想到把它部署到博客上，因此学了下如何新建一个菜单项&amp;让博客特定页不被所选主题给渲染。</p>
+<p>新建菜单项：</p>
+<ul>
+<li>在主题内的<code>_config.yml</code>中找到<code>menu</code>并按照格式添加菜单项</li>
+<li>在source下新建同名文件夹，使用命令<code>hexo new page &quot;name&quot;</code></li>
+<li>如果切换成了别的语言模式，记得去<code>themes/next/languages/xx.yml</code>添加对应的菜单项显示名称</li>
+</ul>
+<p>让特定内容无需渲染：</p>
+<ul>
+<li>在主题外的<code>_config.yml</code>中找到<code>skip_render</code>并按照格式添加需要忽略的路径</li>
+</ul>
+<h3 id="移动端适配方法"><a href="#移动端适配方法" class="headerlink" title="移动端适配方法"></a>移动端适配方法</h3><p>在博客部署完小游戏，睡前临时起意用手机访问了该地址，发现触碰屏幕并不能触发<code>click</code>事件，遂在第二天去研究了移动端适配。发现一些小技巧，也发现各端不统一真是一个很麻烦的问题。</p>
+<ul>
+<li>触碰屏幕并不是不会触发<code>click</code>事件，而是不会触发<code>xxx.onclick = xxx</code>这种写法的<code>click</code>，如果写成<code>xxx.addEventListener(&quot;click&quot;, xxx)</code>就可以了</li>
+<li>但是移动端的<code>click</code>事件会有300ms延迟的问题，目前已有一些解决办法：用诸如zepto/FastClick之类的库封装好的click、禁止缩放(包括官方的<code>touch-action: manipulation</code>/<code>user-scalable=no</code>和一些hack)</li>
+<li>iOS和Android有许多不同的地方，大多数情况下iOS都是比较难搞定的一方</li>
+</ul>
+<h3 id="移动端测试方法"><a href="#移动端测试方法" class="headerlink" title="移动端测试方法"></a>移动端测试方法</h3><p>查到了一些<a href="https://www.zhihu.com/question/37361845">方法</a>，不过我发现了另一个方便的工具！可以用VScode的<a href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer">Live Server</a>插件，只要电脑和手机处在同一个局域网，就可以访问它给的地址来进行Web端和移动端的调试了，而且还有热部署功能！用来调试一些简单的页面时用它就可以了。</p>
+<h3 id="域名绑定方法"><a href="#域名绑定方法" class="headerlink" title="域名绑定方法"></a>域名绑定方法</h3><p>想捣鼓一个个人域名，加上前段时间申请了Github的Student Pack，先是去namecheap找域名申请未成功，遂去<a href="https://www.name.com/partner/github-students">name</a>找了个域名，如愿地获得(白嫖)了一年的域名使用权嘿嘿！有一些需要完成的操作：</p>
+<ul>
+<li>为域名添加几条解析内容<ul>
+<li>对于name上来说，页面在<code>MYDOMAINS</code> -&gt; <code>Domain Details</code> -&gt; <code>Manage DNS Records</code></li>
+<li>添加解析1：TYPE=<code>CNAME</code>，HOST=<code>@</code>，ANSWER=<code>xxx.github.io</code></li>
+<li>添加解析2：TYPE=<code>CNAME</code>，HOST=<code>www</code>，ANSWER=<code>xxx.github.io</code></li>
+</ul>
+</li>
+<li>设置<code>CNAME</code><ul>
+<li>在<code>xxx.github.io</code>的仓库内根目录下添加<code>CNAME</code>文件，内容为域名</li>
+</ul>
+</li>
+<li>设置个人域名<ul>
+<li>在<code>xxx.github.io</code>的仓库的<code>Setting</code> -&gt; <code>Custom Domain</code>内填入域名</li>
+</ul>
+</li>
+</ul>
+<p>用Safari访问时出现了反复redirect导致无法访问的问题，大概是由于安全方面的原因，我将<code>Setting</code>内的<code>Enforce HTTPS</code>勾选上就可以正常访问了。<br>现在你就可以通过 <a href="https://chenyang.works/">https://chenyang.works</a> 来找我啦！</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/canvas/" rel="tag"># canvas</a>
+              <a href="/tags/HTML5/" rel="tag"># HTML5</a>
+              <a href="/tags/game/" rel="tag"># game</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/how-to-install-nodejieba/" rel="prev" title="nodejieba安装记">
+      <i class="fa fa-chevron-left"></i> nodejieba安装记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/tips-of-t-rex/" rel="next" title="Chrome小恐龙的实现小技巧">
+      Chrome小恐龙的实现小技巧 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E7%B4%A0%E7%BB%98%E5%88%B6"><span class="nav-number">1.2.</span> <span class="nav-text">元素绘制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%B0%E9%9D%A2%E7%9A%84%E7%A7%BB%E5%8A%A8"><span class="nav-number">1.2.1.</span> <span class="nav-text">地面的移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%B1%E5%AD%90%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">1.2.2.</span> <span class="nav-text">柱子的处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E9%B8%9F%E7%9A%84%E5%8A%A8%E4%BD%9C%E5%92%8C%E9%87%8D%E5%8A%9B%E6%A8%A1%E6%8B%9F"><span class="nav-number">1.2.3.</span> <span class="nav-text">小鸟的动作和重力模拟</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%95%B0%E7%9A%84%E8%AE%A1%E7%AE%97%E5%92%8C%E5%B1%95%E7%A4%BA"><span class="nav-number">1.2.4.</span> <span class="nav-text">分数的计算和展示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B"><span class="nav-number">1.3.</span> <span class="nav-text">碰撞检测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E7%BB%98%E5%88%B6"><span class="nav-number">1.4.</span> <span class="nav-text">场景绘制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%9C%BA%E7%AD%89%E5%BE%85%E6%97%B6"><span class="nav-number">1.4.1.</span> <span class="nav-text">开场等待时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E9%B8%9F%E9%A3%9E%E8%A1%8C%E6%97%B6"><span class="nav-number">1.4.2.</span> <span class="nav-text">小鸟飞行时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E9%B8%9F%E4%B8%8B%E5%9D%A0%E6%97%B6"><span class="nav-number">1.4.3.</span> <span class="nav-text">小鸟下坠时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%B8%E6%88%8F%E7%BB%93%E6%9D%9F%E6%97%B6"><span class="nav-number">1.4.4.</span> <span class="nav-text">游戏结束时</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E5%88%87%E6%8D%A2"><span class="nav-number">1.5.</span> <span class="nav-text">场景切换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96-gt-%E5%BC%80%E5%9C%BA%E7%AD%89%E5%BE%85"><span class="nav-number">1.5.1.</span> <span class="nav-text">初始化 -&gt; 开场等待</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%9C%BA%E7%AD%89%E5%BE%85-gt-%E5%B0%8F%E9%B8%9F%E9%A3%9E%E8%A1%8C"><span class="nav-number">1.5.2.</span> <span class="nav-text">开场等待 -&gt; 小鸟飞行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E9%B8%9F%E9%A3%9E%E8%A1%8C-gt-%E5%B0%8F%E9%B8%9F%E4%B8%8B%E5%9D%A0-%E6%B8%B8%E6%88%8F%E7%BB%93%E6%9D%9F"><span class="nav-number">1.5.3.</span> <span class="nav-text">小鸟飞行 -&gt; 小鸟下坠&#x2F;游戏结束</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E9%B8%9F%E4%B8%8B%E5%9D%A0-gt-%E6%B8%B8%E6%88%8F%E7%BB%93%E6%9D%9F"><span class="nav-number">1.5.4.</span> <span class="nav-text">小鸟下坠 -&gt; 游戏结束</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%B8%E6%88%8F%E7%BB%93%E6%9D%9F-gt-%E5%BC%80%E5%9C%BA%E7%AD%89%E5%BE%85"><span class="nav-number">1.5.5.</span> <span class="nav-text">游戏结束 -&gt; 开场等待</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF1"><span class="nav-number">2.1.</span> <span class="nav-text">错误1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF2"><span class="nav-number">2.2.</span> <span class="nav-text">错误2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF3"><span class="nav-number">2.3.</span> <span class="nav-text">错误3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF4"><span class="nav-number">2.4.</span> <span class="nav-text">错误4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF5"><span class="nav-number">2.5.</span> <span class="nav-text">错误5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF6"><span class="nav-number">2.6.</span> <span class="nav-text">错误6</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%85%B6%E4%BB%96%E6%96%B9%E9%9D%A2%E7%9A%84%E6%94%B6%E8%8E%B7"><span class="nav-number">3.</span> <span class="nav-text">一些其他方面的收获</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">hexo部署方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">移动端适配方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">移动端测试方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%BB%91%E5%AE%9A%E6%96%B9%E6%B3%95"><span class="nav-number">3.4.</span> <span class="nav-text">域名绑定方法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

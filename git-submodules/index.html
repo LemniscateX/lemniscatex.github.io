@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="纸上谈兵式的 Git 子模块学习记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git子模块">
+<meta property="og:url" content="https://lemniscatex.github.io/git-submodules/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="纸上谈兵式的 Git 子模块学习记录。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-04-20T08:24:40.000Z">
+<meta property="article:modified_time" content="2021-04-20T09:01:06.000Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lemniscatex.github.io/git-submodules/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Git子模块 | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/git-submodules/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Git子模块
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-04-20 16:24:40 / Modified: 17:01:06" itemprop="dateCreated datePublished" datetime="2021-04-20T16:24:40+08:00">2021-04-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>纸上谈兵式的 Git 子模块学习记录。</p>
+<span id="more"></span>
+
+<hr>
+<p>参考<a href="https://medium.com/@porteneuve/mastering-git-submodules-34c65e940407">这里</a>和<a href="https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97">这里</a>。</p>
+<h2 id="为项目添加子模块"><a href="#为项目添加子模块" class="headerlink" title="为项目添加子模块"></a>为项目添加子模块</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule add https://github.com/chaconinc/DbConnector</span></span><br></pre></td></tr></table></figure>
+
+<p>它会修改本地配置，并在当前仓库下添加一个 <code>.gitmodules</code> 文件以及一个和子模块仓库同名的目录。</p>
+<p>本地配置修改如下，它保存了项目 url 和本地目录之间的映射。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat .git/config</span></span><br><span class="line">...</span><br><span class="line">[submodule &quot;DbConnector&quot;]</span><br><span class="line">	path = DbConnector</span><br><span class="line">	url = https://github.com/chaconinc/DbConnector</span><br></pre></td></tr></table></figure>
+
+<p>新添加的 <code>.gitmodules</code> 文件做了同样的事情。我们可能会想，这不是重复了吗？其实主要是因为，本地配置是本地的，无法被其它项目合作者看到的呀！因此需要一种机制来让他们知道，项目里需要设置哪些子模块，这就是 <code>.gitmodules</code> 的作用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat .gitmodules</span></span><br><span class="line">[submodule &quot;DbConnector&quot;]</span><br><span class="line">	path = DbConnector</span><br><span class="line">	url = https://github.com/chaconinc/DbConnector</span><br></pre></td></tr></table></figure>
+
+<p>新添加的 <code>DbConnector</code> 目录里已经获取到了 <code>https://github.com/chaconinc/DbConnector</code> 里的所有内容。</p>
+<p>使用 status 或 diff 就能查看到这些宏观的区别：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">...</span><br><span class="line">Changes to be committed:</span><br><span class="line">	new file:   .gitmodules</span><br><span class="line">	new file:   DbConnector</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git diff</span></span><br><span class="line">diff --git a/DbConnector b/DbConnector</span><br><span class="line"><span class="meta">#</span><span class="bash"> 这里的 160000 是 git 中的特殊模式，它本质上意味着我们是将一次提交记作一项“目录”记录的，而非将它记录成一个“子目录”或者一个“文件”</span></span><br><span class="line">new file mode 160000</span><br><span class="line">index 0000000..fe64799</span><br><span class="line">--- a/DbConnector</span><br><span class="line">+++ b/DbConnector</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Subproject commit fe6479991d214f4d95ac2ae959d7252a866e01a3</span><br></pre></td></tr></table></figure>
+
+<p>但是我们会发现，上面的 <code>git status</code> 和 <code>git diff</code> 完全没有体现出子模块内部的变化。这是因为像 log、diff 这种命令，只会关注当前的 git 仓库(目前是外层的仓库)。我们可以附加一些选项来显示子模块信息，或者直接进入子模块目录去查看 status 和 diff。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 方法一</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config --global status.submoduleSummary <span class="literal">true</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">...</span><br><span class="line">Changes to be committed:</span><br><span class="line">	new file:   .gitmodules</span><br><span class="line">	new file:   DbConnector</span><br><span class="line">Submodule changes to be committed:</span><br><span class="line">* DbConnector 0000000...fe64799 (3): # 表明子模块仓库里已有 3 个提交</span><br><span class="line"><span class="meta">  &gt;</span><span class="bash"> fix: xxx                         <span class="comment"># 会显式地展示引入的提交</span></span></span><br><span class="line"><span class="meta">  &gt;</span><span class="bash"> feat: xxx</span></span><br><span class="line"><span class="meta">  &gt;</span><span class="bash"> Initial commit</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方法二</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule status</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方法三</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> DbConnector</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 方法一</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config --global diff.submodule <span class="built_in">log</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff</span></span><br><span class="line">Submodule DbConnector 0000000..fe64799:</span><br><span class="line"><span class="meta">  &gt;</span><span class="bash"> fix: xxx</span></span><br><span class="line"><span class="meta">  &gt;</span><span class="bash"> feat: xxx</span></span><br><span class="line"><span class="meta">  &gt;</span><span class="bash"> Initial commit</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方法二</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff --submodule</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方法三</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> DbConnector</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff</span></span><br></pre></td></tr></table></figure>
+
+<p>那现在我们已经弄好了子模块(它会自动被暂存的)，就可以在外层的仓库去提交和推送了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">&quot;Adding DbConnector submodule&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin master</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="克隆含子模块的项目"><a href="#克隆含子模块的项目" class="headerlink" title="克隆含子模块的项目"></a>克隆含子模块的项目</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> https://github.com/chaconinc/MainProject</span></span><br></pre></td></tr></table></figure>
+
+<p>当我们用这种常规的方法 clone 时，默认会包含该子模块目录，但是其中是没有任何文件的。因为新仓库的 <code>.git/config</code> 里是没有子模块相关信息的，那它就无法意识到有 submodule。我们就需要把 <code>.gitmodules</code> 里的内容填充过去，使用的命令如下。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule init</span></span><br></pre></td></tr></table></figure>
+
+<p>现在我们的子模块还是空的，所以我们需要把子模块仓库里的内容都抓取过来，使用命令如下。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule update</span></span><br></pre></td></tr></table></figure>
+
+<p>这下子模块就 ok 了。</p>
+<p>如果不想分步进行，我们可以使用下面的命令来简化这个过程。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> update + init</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --init</span></span><br></pre></td></tr></table></figure>
+
+<p>有时候这种手动一个个初始化 submodule 会遇到问题，比如当 submodules 里有自己的 submodules。解决办法是使用 <code>--recursive</code> 选项。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> update + init (recursively)</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --init --recursive</span></span><br></pre></td></tr></table></figure>
+
+<p>如果想直接在克隆的时候就立刻 update + init  (recursively)，可以使用下面的指令，这个和上面是等价的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> --recurse-submodules https://github.com/chaconinc/MainProject</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="当子模块的-remote-repo-有更新"><a href="#当子模块的-remote-repo-有更新" class="headerlink" title="当子模块的 remote  repo 有更新"></a>当子模块的 remote  repo 有更新</h2><p>当子模块的 remote  repo 有更新，且项目的另一个副本仓库内已经有了这份更新时，我们可以有两种选择。一是从子模块的远端拉取上游修改，二是从项目远端拉取上游更改。我们下面分开讲。</p>
+<p>假设子模块的 remote repo 里新增了两个 commit，按顺序分别为 <code>Pseudo-commit #1</code>(<code>e6f5bb6</code>) 和 <code>Pseudo-commit #2</code>(<code>0e90143</code>)，原先的 <code>HEAD</code> 是 <code>fix: xxx</code>(<code>fe64799</code>)。</p>
+<h3 id="从子模块远端拉取上游更改"><a href="#从子模块远端拉取上游更改" class="headerlink" title="从子模块远端拉取上游更改"></a>从子模块远端拉取上游更改</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> DbConnector</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git fetch</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git rebase origin/master</span></span><br></pre></td></tr></table></figure>
+
+<p>上面就是常规操作了，进入子模块目录，执行 <code>fetch</code> + <code>rebase</code>。</p>
+<p>如果不想在子目录中手动抓取与合并/变基，可以用下面的命令更新并检出子模块的 <code>master</code> 分支。(如果想设置为别的分支，可以用 <code>git config -f .gitmodules submodule.DbConnector.branch dev</code>)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --remote --rebase DbConnector</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 这里用 rebase 和 merge 都可以；子模块名是可选的，不填是更新所有子模块</span></span><br></pre></td></tr></table></figure>
+
+<p>那我们回到项目跟目录看看状态。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 当我们将 status.submoduleSummary 设置为 <span class="literal">true</span> 时</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">...</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">	modified: DbConnector (new commits)</span><br><span class="line"></span><br><span class="line">Submodules changed but not updated:</span><br><span class="line">* DbConnector fe64799...0e90143 (2): # 可以看到新增的 2 个提交</span><br><span class="line"><span class="meta">  &gt;</span><span class="bash"> Pseudo-commit <span class="comment">#2</span></span></span><br><span class="line"><span class="meta">  &gt;</span><span class="bash"> Pseudo-commit <span class="comment">#1</span></span></span><br><span class="line"><span class="meta">  </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 当我们将 diff.submodule 设置为 <span class="built_in">log</span> 时</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff</span></span><br><span class="line">Submodule DbConnector fe64799..0e90143:</span><br><span class="line"><span class="meta">  &gt;</span><span class="bash"> Pseudo-commit <span class="comment">#2</span></span></span><br><span class="line"><span class="meta">  &gt;</span><span class="bash"> Pseudo-commit <span class="comment">#1</span></span></span><br></pre></td></tr></table></figure>
+
+<p>那现在我们只需要到 container 里去提交和推送了。一般来说，不建议把子模块的修改和不相关非子模块的修改混到一个提交里面，因为分开的话，后续的代码重用迁移等会更加方便。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">&quot;Updating submodule to v2&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="从项目远端拉取上游更改"><a href="#从项目远端拉取上游更改" class="headerlink" title="从项目远端拉取上游更改"></a>从项目远端拉取上游更改</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git pull</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 从这里开始，是子模块外的抓取</span></span><br><span class="line">...</span><br><span class="line">From https://github.com/chaconinc/MainProject</span><br><span class="line">   fb9093c..0a24cfc  master     -&gt; origin/master</span><br><span class="line"><span class="meta">#</span><span class="bash"> 从这里开始，是子模块的抓取</span></span><br><span class="line">Fetching submodule DbConnector</span><br><span class="line">From https://github.com/chaconinc/DbConnector</span><br><span class="line">   fe64799..0e90143  master     -&gt; origin/master</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>项目的 fetch 会同时自动递归抓取子模块，要注意的是，它自动 fetch 却不自动 update(<strong>坑点1</strong>)。也就是它会显示 container 有新提交，但尚未在本地的 <code>DbConnector</code> 检出。我们的工作目录没有和暂存区同步，后者意识到了新引入的子模块提交。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">Changes not staged for commit:</span><br><span class="line">	modified: DbConnector (new commits)</span><br><span class="line">Submodules changed but not updated:</span><br><span class="line">* DbConnector 0e90143...fe64799 (2): # 注意这里的尖括号向左指了，而不是向右指</span><br><span class="line">  &lt; Pseudo-commit #2</span><br><span class="line">  &lt; Pseudo-commit #1</span><br></pre></td></tr></table></figure>
+
+<p>这里如果我们不 update 子模块，那么后面的提交就会倒退子模块(我理解应该是忽视它的更新)。为了完成更新，我们需要先 update 一下子模块。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule update</span></span><br></pre></td></tr></table></figure>
+
+<p>为了安全起见，我们最好在 update 时添加 <code>--init</code> 和 <code>--recursive</code> 来自动初始化新子模块，并且在需要的时候递归地 update 它们。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --init --recursive</span></span><br></pre></td></tr></table></figure>
+
+<p>如果想在 pull 后自动 update 子模块，可以在使用 <code>git pull --recurse-submodules</code> ；如果想让 git 总是以 <code>--recurse-submodules</code> 拉取，可以将 <code>submodule.recurse</code> 设置为 <code>true</code>。</p>
+<p>还要注意的一点是，有可能出现一种特殊情况(<strong>坑点2</strong>)：在我们拉取的提交中，<code>.gitmodules</code> 文件中的 url 有变化，比如子模块改变了托管平台。此时，本地配置 <code>.git/config</code> 和新拉取的 <code>.gitmodules</code> 就不一致了，执行 <code>git pull --recurse-submodules</code> 或 <code>git submodule update</code> 就会失败。下面是解决办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule sync --recursive          <span class="comment"># 将新的 URL 复制到本地配置中</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --init --recursive <span class="comment"># 从新 URL 更新子模块</span></span></span><br></pre></td></tr></table></figure>
+
+<p>综上所述，最万无一失的做法是：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git pull</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule sync --recursive</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --init --recursive</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="当子模块的-local-repo-有更新"><a href="#当子模块的-local-repo-有更新" class="headerlink" title="当子模块的 local  repo 有更新"></a>当子模块的 local  repo 有更新</h2><p>当子模块的 local  repo 有更新，也就是我们在本地的子模块中进行了一些工作，并且想要提交推送时，需要注意的是，项目和子模块都要推。这里还是有个建议，不要让子模块和外部耦合过于紧密，也就是要让更新最小化。</p>
+<p>假设子模块的 local repo 里新增了一个 commit 叫<code>Pseudo-commit #3</code>(<code>12e3a52</code>) ，项目的 local repo 里也新增了一个 commit 叫 <code>Updating submodule to v3</code>(<code>ad9da82</code>)。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> DbConnector</span></span><br><span class="line">... # do some work</span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -am <span class="string">&quot;Pseudo-commit #3&quot;</span></span></span><br><span class="line">[master 12e3a52] Pseudo-commit #3</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"><span class="meta"> </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ..</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -am <span class="string">&quot;Updating submodule to v3&quot;</span></span></span><br><span class="line">[master ad9da82] Updating submodule to v3</span><br><span class="line"> 1 file changed, 1 insertion(+), 1 deletion(-)</span><br></pre></td></tr></table></figure>
+
+<p>现在我们既要 push 外层项目，也要 push 内层子模块。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> DbConnector</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ..</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push</span></span><br></pre></td></tr></table></figure>
+
+<p>一切 ok！不过有时候我们容易遇到一些问题，下面分别讨论一下。</p>
+<h3 id="忘记在子模块-push"><a href="#忘记在子模块-push" class="headerlink" title="忘记在子模块 push"></a>忘记在子模块 push</h3><p>也就是在内层和外层都 commit 了，但是只在外层 push 而没在内层 push，这是一个很容易犯的错误(<strong>坑点3</strong>)。这将导致其它尝试检出我们修改的人遇到麻烦，因为他们无法得到依赖的子模块改动，那些改动只存在于我们本地的拷贝中。</p>
+<p>比如我们现在是同事 A，在另一个工作区，想要拉取新的项目代码。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git pull</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 子模块外的抓取</span></span><br><span class="line">...</span><br><span class="line">From https://github.com/chaconinc/MainProject</span><br><span class="line">   766cd47..ad9da82 master -&gt; origin/master</span><br><span class="line"><span class="meta">#</span><span class="bash"> 子模块的抓取</span></span><br><span class="line">Fetching submodule DbConnector</span><br><span class="line">Successfully rebased and updated refs/heads/master.</span><br></pre></td></tr></table></figure>
+
+<p>在这里，没有任何迹象表明 git 没有办法拿到远程的引用提交，同事 A 无法在这个时刻意识到问题，这也是比较迷惑人的地方。只有更加深入看，才能发现问题。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">...</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">	modified: DbConnector (new commits)</span><br><span class="line"></span><br><span class="line">Submodules changed but not updated:</span><br><span class="line">* DbConnector 12e3a52...0e90143:</span><br><span class="line">  Warn: DbConnector doesn&#x27;t contain commit 12e3a529698c519b2fab790630f71bd531c45727</span><br></pre></td></tr></table></figure>
+
+<p>当同事 A 运行 status 命令时，就会发现这里有 <code>Warn</code>，它告诉我们无法找到子模块的新提交。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule update</span></span><br><span class="line">fatal: reference is not a tree: 12e3a529698c519b2fab790630f71bd531c45727</span><br><span class="line">Unable to checkout &#x27;12e3a529698c519b2fab790630f71bd531c45727&#x27; in submodule path &#x27;DbConnector&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>当同事 A 运行 update 命令时，同样也会出现 <code>fatal</code> 警告，告诉我们找不到这个新提交。</p>
+<p>所以当修改完子模块时，一定要记得要内外都要 push。有一个选项可以在 push 的时候监督这一行为，命令如下，它可以有多种取值。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 当任何提交了的子模块改动没有被推送时，push 失败</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push --recurse-submodules=check</span></span><br><span class="line"></span><br><span class="line">The following submodule paths contain changes that can</span><br><span class="line">not be found on any remote:</span><br><span class="line">  DbConnector</span><br><span class="line">Please try</span><br><span class="line">	git push --recurse-submodules=on-demand</span><br><span class="line">or cd to the path and use</span><br><span class="line">	git push</span><br><span class="line">to push them to a remote.</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 当任何提交了的子模块改动没有被推送时，会尝试进入相应子模块去推送</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push --recurse-submodules=on-demand</span></span><br><span class="line"></span><br><span class="line">Pushing submodule &#x27;DbConnector&#x27;</span><br><span class="line">Counting objects: ...</span><br><span class="line">Delta compression using up to ... threads.</span><br><span class="line">Compressing objects: ...</span><br><span class="line">Writing objects: ...</span><br><span class="line">Total 9 (delta 3), reused 0 (delta 0)</span><br><span class="line">To https://github.com/chaconinc/DbConnector</span><br><span class="line">   0e90143..12e3a52  master -&gt; master</span><br></pre></td></tr></table></figure>
+
+<p>上面的选项还有等效的配置，如下。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config push.recurseSubmodules check</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config push.recurseSubmodules on-demand</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="抓取的远端改动未被跟踪"><a href="#抓取的远端改动未被跟踪" class="headerlink" title="抓取的远端改动未被跟踪"></a>抓取的远端改动未被跟踪</h3><p>到目前为止，当我们运行 <code>git submodule update</code> 从子模块仓库中抓取修改时， git 将会获得这些改动并更新子目录中的文件，但是会将子仓库留在一个称作“游离的 <code>HEAD</code>”的状态。 这意味着没有本地工作分支(例如 <code>master</code> )跟踪改动。 如果没有工作分支跟踪更改，也就意味着即便我们将更改提交到了子模块，这些更改也很可能会在下次运行 <code>git submodule update</code> 时丢失。</p>
+<p>需要做的事情就是安置好 <code>HEAD</code>，也就是显式地切换到一个分支即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> DbConnector</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout master</span></span><br></pre></td></tr></table></figure>
+
+<p>在这之后，我们再去拉取 remote 再 rebase 或 merge 地跟新到本地就可以了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ..</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --remote --rebase</span></span><br></pre></td></tr></table></figure>
+
+<p>如果忘记 <code>--rebase</code> 或 <code>--merge</code>，git 会将子模块更新为服务器上的状态。并且会将项目重置为一个游离的 <code>HEAD</code> 状态。不过没关系，我们只要回到目录、切到某分支、再手动 rebase 或 merge 到 <code>origin/master</code> 即可。</p>
+<h3 id="local-和-remote-常规冲突"><a href="#local-和-remote-常规冲突" class="headerlink" title="local 和 remote 常规冲突"></a>local 和 remote 常规冲突</h3><p>进入子模块目录中然后就像平时那样修复冲突即可。</p>
+<h3 id="local-和-remote-非常规冲突"><a href="#local-和-remote-非常规冲突" class="headerlink" title="local 和 remote 非常规冲突"></a>local 和 remote 非常规冲突</h3><p>这里我其实没看懂。参考 <a href="https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97">pro git book</a> 这一章的的“合并子模块改动”部分。</p>
+<h2 id="当想要删除子模块"><a href="#当想要删除子模块" class="headerlink" title="当想要删除子模块"></a>当想要删除子模块</h2><p>分两种情况，一是清理掉子模块的工作区(将它从<code>.git/config</code> 删去)，但保留以后恢复它的可能性(将它保留在 <code>.gitmodules</code> 和 <code>.git/modules</code> 中)；二是彻底从当前分支删去。</p>
+<h3 id="暂时删去"><a href="#暂时删去" class="headerlink" title="暂时删去"></a>暂时删去</h3><p>对于前一种情况，如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule deinit DbConnector</span></span><br><span class="line">Cleared directory &#x27;DbConnector&#x27;</span><br><span class="line">Submodule &#x27;DbConnector&#x27; (https://github.com/chaconinc/DbConnector) unregistered for path &#x27;DbConnector&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>它对外层项目完全没有影响。由于 <code>.git/config</code> 中没有保存它，本地不再存有它的信息、它被从工作区删去、目录还在但是内容已空。后续的 subcommand (如 update、foreach、sync)都会忽略这个子模块直到它重新被 init。</p>
+<p>不过它还可以重新被恢复，如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --init</span></span><br><span class="line">Submodule &#x27;DbConnector&#x27; (https://github.com/chaconinc/DbConnector) registered for path &#x27;DbConnector&#x27;</span><br><span class="line">Submodule path &#x27;DbConnector&#x27;: checked out &#x27;12e3a529698c519b2fab790630f71bd531c45727&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="永久删去"><a href="#永久删去" class="headerlink" title="永久删去"></a>永久删去</h3><p>对于后一种情况，如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git rm DbConnector</span></span><br><span class="line">rm &#x27;DbConnector&#x27;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">...</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)</span><br><span class="line">	modified: .gitmodules                       # .gitmodules 被更新</span><br><span class="line">  	deleted: DbConnector                        # 子模块目录整个被删除</span><br><span class="line">fatal: Not a git repository: &#x27;DbConnector/.git&#x27; # 子模块 status 出错因为已无 .git</span><br><span class="line">Submodule changes to be committed:</span><br><span class="line">* DbConnector 12e3a52...0000000:</span><br></pre></td></tr></table></figure>
+
+<p>它不仅会将其从工作区删除，还会更新 <code>.gitmodules</code> 文件来删去其中对该子模块的引用。</p>
+<p>不过本地的配置文件(<code>.git/config</code>)还会保存子模块信息，所以如果想彻底删除，最好按顺序执行这两个命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule deinit path/to/module <span class="comment"># 清除 local config</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git rm path/to/module               <span class="comment"># 清除 working directory 和 .gitmodules</span></span></span><br></pre></td></tr></table></figure>
+
+<p>不管执行怎样的命令，子模块的信息都还会存在于 <code>.git/modules</code> 中，不过随时都可以去修改它。</p>
+<h2 id="使用技巧"><a href="#使用技巧" class="headerlink" title="使用技巧"></a>使用技巧</h2><h3 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h3><p>使用 <code>foreach</code> 可以在每个子模块中运行任何命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 比如用来保存所有子模块的工作进度</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule foreach <span class="string">&#x27;git stash&#x27;</span></span></span><br><span class="line">Entering &#x27;CryptoLibrary&#x27; # 子模块 1</span><br><span class="line">No local changes to save</span><br><span class="line">Entering &#x27;DbConnector&#x27;   # 子模块 2</span><br><span class="line">Saved working directory and index state WIP on stable: 82d2ad3 Merge from origin/stable</span><br><span class="line">HEAD is now at 82d2ad3 Merge from origin/stable</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 比如创建新分支，让所有子模块都切换过去</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule foreach <span class="string">&#x27;git checkout -b featureA&#x27;</span></span></span><br><span class="line">Entering &#x27;CryptoLibrary&#x27; # 子模块 1</span><br><span class="line">Switched to a new branch &#x27;featureA&#x27;</span><br><span class="line">Entering &#x27;DbConnector&#x27;   # 子模块 2</span><br><span class="line">Switched to a new branch &#x27;featureA&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="别名"><a href="#别名" class="headerlink" title="别名"></a>别名</h3><p>有些命令很长，或者有很多步骤，设置别名会方便一点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config alias.sdiff <span class="string">&#x27;!&#x27;</span><span class="string">&quot;git diff &amp;&amp; git submodule foreach &#x27;git diff&#x27;&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config alias.spush <span class="string">&#x27;push --recurse-submodules=on-demand&#x27;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config alias.supdate <span class="string">&#x27;submodule update --remote --merge&#x27;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这样想要更新子模块时，可以使用 <code>git supdate</code>；想要检查子模块依赖后推送时，可以使用 <code>git spush</code>。</p>
+<h3 id="切换分支"><a href="#切换分支" class="headerlink" title="切换分支"></a>切换分支</h3><p>如果你创建一个新分支，在其中添加一个子模块，之后切换到没有该子模块的分支上时，你仍然会有一个还未跟踪的子模块目录。</p>
+<p>这种情况，我们通常会在没有该子模块的分支移除那个目录。不过当我们再切回有该子模块的分支后，我们需要运行 <code>git submodule update --init</code> 来重新建立和填充，因为子模块的默认状态不会在切换分支时保留。</p>
+<p>为了简化这个操作，git 提供了两种方法，可以让子模块处于正确的状态(也就是该有子模块的分支有子模块，该没有子模块的分支没有子模块)。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 方法一，checkout 时使用 --recurse-submodules 选项</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout --recurse-submodules</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方法二，告诉 git 总是使用 --recurse-submodules 选项</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config submodule.recurse <span class="literal">true</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><h3 id="Configuration-settings"><a href="#Configuration-settings" class="headerlink" title="Configuration settings"></a>Configuration settings</h3><ul>
+<li><code>status.submoduleSummary=true</code>：在内部更新时可以在外部得到内部细节的 status</li>
+<li><code>diff.submodule=log</code>：在内部更新时可以在外部得到内部细节的 diff</li>
+<li><code>fetch.recurseSubmodules=on-demand</code>：在外部更新时可以抓取到内部更新</li>
+</ul>
+<h3 id="Adding-or-cloning"><a href="#Adding-or-cloning" class="headerlink" title="Adding or cloning"></a>Adding or cloning</h3><ul>
+<li>初始 add：<code>git submodule add &lt;url&gt; &lt;path&gt;</code></li>
+<li>初始 container clone：<code>git clone --recursive &lt;url&gt; &lt;path&gt;</code></li>
+</ul>
+<h3 id="Grabbing-updates-inside-a-submodule"><a href="#Grabbing-updates-inside-a-submodule" class="headerlink" title="Grabbing updates inside a submodule"></a>Grabbing updates inside a submodule</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> path/to/module</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git fetch</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -q &lt;commit-sha1&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ..</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -am <span class="string">&quot;Updated submodule X to: xxx&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Grabbing-container-updates"><a href="#Grabbing-container-updates" class="headerlink" title="Grabbing container updates"></a>Grabbing container updates</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git pull</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule sync --recursive</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --init --recursive</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Updating-a-submodule-inside-container-code"><a href="#Updating-a-submodule-inside-container-code" class="headerlink" title="Updating a submodule inside container code"></a>Updating a submodule inside container code</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule update --remote --rebase -- path/to/module</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> path/to/module</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">local</span> work, testing, eventually staging</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -am <span class="string">&quot;Update to central submodule: xxx&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ..</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -am <span class="string">&quot;Updated submodule X to:xxx&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Permanently-removing-a-submodule"><a href="#Permanently-removing-a-submodule" class="headerlink" title="Permanently removing a submodule"></a>Permanently removing a submodule</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git submodule deinit path/to/module</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git rm path/to/module</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -am <span class="string">&quot;Removed submodule X&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/git-internals/" rel="prev" title="Git内部原理">
+      <i class="fa fa-chevron-left"></i> Git内部原理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/git-notes/" rel="next" title="Git便签">
+      Git便签 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E9%A1%B9%E7%9B%AE%E6%B7%BB%E5%8A%A0%E5%AD%90%E6%A8%A1%E5%9D%97"><span class="nav-number">1.</span> <span class="nav-text">为项目添加子模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%8B%E9%9A%86%E5%90%AB%E5%AD%90%E6%A8%A1%E5%9D%97%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.</span> <span class="nav-text">克隆含子模块的项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%93%E5%AD%90%E6%A8%A1%E5%9D%97%E7%9A%84-remote-repo-%E6%9C%89%E6%9B%B4%E6%96%B0"><span class="nav-number">3.</span> <span class="nav-text">当子模块的 remote  repo 有更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%AD%90%E6%A8%A1%E5%9D%97%E8%BF%9C%E7%AB%AF%E6%8B%89%E5%8F%96%E4%B8%8A%E6%B8%B8%E6%9B%B4%E6%94%B9"><span class="nav-number">3.1.</span> <span class="nav-text">从子模块远端拉取上游更改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E9%A1%B9%E7%9B%AE%E8%BF%9C%E7%AB%AF%E6%8B%89%E5%8F%96%E4%B8%8A%E6%B8%B8%E6%9B%B4%E6%94%B9"><span class="nav-number">3.2.</span> <span class="nav-text">从项目远端拉取上游更改</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%93%E5%AD%90%E6%A8%A1%E5%9D%97%E7%9A%84-local-repo-%E6%9C%89%E6%9B%B4%E6%96%B0"><span class="nav-number">4.</span> <span class="nav-text">当子模块的 local  repo 有更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%98%E8%AE%B0%E5%9C%A8%E5%AD%90%E6%A8%A1%E5%9D%97-push"><span class="nav-number">4.1.</span> <span class="nav-text">忘记在子模块 push</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%93%E5%8F%96%E7%9A%84%E8%BF%9C%E7%AB%AF%E6%94%B9%E5%8A%A8%E6%9C%AA%E8%A2%AB%E8%B7%9F%E8%B8%AA"><span class="nav-number">4.2.</span> <span class="nav-text">抓取的远端改动未被跟踪</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#local-%E5%92%8C-remote-%E5%B8%B8%E8%A7%84%E5%86%B2%E7%AA%81"><span class="nav-number">4.3.</span> <span class="nav-text">local 和 remote 常规冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#local-%E5%92%8C-remote-%E9%9D%9E%E5%B8%B8%E8%A7%84%E5%86%B2%E7%AA%81"><span class="nav-number">4.4.</span> <span class="nav-text">local 和 remote 非常规冲突</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%93%E6%83%B3%E8%A6%81%E5%88%A0%E9%99%A4%E5%AD%90%E6%A8%A1%E5%9D%97"><span class="nav-number">5.</span> <span class="nav-text">当想要删除子模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%82%E6%97%B6%E5%88%A0%E5%8E%BB"><span class="nav-number">5.1.</span> <span class="nav-text">暂时删去</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B0%B8%E4%B9%85%E5%88%A0%E5%8E%BB"><span class="nav-number">5.2.</span> <span class="nav-text">永久删去</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7"><span class="nav-number">6.</span> <span class="nav-text">使用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86"><span class="nav-number">6.1.</span> <span class="nav-text">遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%AB%E5%90%8D"><span class="nav-number">6.2.</span> <span class="nav-text">别名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%87%E6%8D%A2%E5%88%86%E6%94%AF"><span class="nav-number">6.3.</span> <span class="nav-text">切换分支</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TL-DR"><span class="nav-number">7.</span> <span class="nav-text">TL;DR</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration-settings"><span class="nav-number">7.1.</span> <span class="nav-text">Configuration settings</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adding-or-cloning"><span class="nav-number">7.2.</span> <span class="nav-text">Adding or cloning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Grabbing-updates-inside-a-submodule"><span class="nav-number">7.3.</span> <span class="nav-text">Grabbing updates inside a submodule</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Grabbing-container-updates"><span class="nav-number">7.4.</span> <span class="nav-text">Grabbing container updates</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Updating-a-submodule-inside-container-code"><span class="nav-number">7.5.</span> <span class="nav-text">Updating a submodule inside container code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Permanently-removing-a-submodule"><span class="nav-number">7.6.</span> <span class="nav-text">Permanently removing a submodule</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="在思考文章名称的时候敲下了“两周实习考核记”，灵光一动想到了初中那篇《核舟记》，于是借用。本文就来记录一下我在小企鹅的两周。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="核周记">
+<meta property="og:url" content="https://lemniscatex.github.io/gains-during-tencent-assessment/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="在思考文章名称的时候敲下了“两周实习考核记”，灵光一动想到了初中那篇《核舟记》，于是借用。本文就来记录一下我在小企鹅的两周。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-08T07:58:39.000Z">
+<meta property="article:modified_time" content="2021-02-09T07:52:53.000Z">
+<meta property="article:tag" content="React.js">
+<meta property="article:tag" content="AntDesign">
+<meta property="article:tag" content="Dashboard">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lemniscatex.github.io/gains-during-tencent-assessment/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>核周记 | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/gains-during-tencent-assessment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          核周记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-07-08 15:58:39" itemprop="dateCreated datePublished" datetime="2020-07-08T15:58:39+08:00">2020-07-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-09 15:52:53" itemprop="dateModified" datetime="2021-02-09T15:52:53+08:00">2021-02-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Project/" itemprop="url" rel="index"><span itemprop="name">Project</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在思考文章名称的时候敲下了“两周实习考核记”，灵光一动想到了初中那篇《核舟记》，于是借用。<br>本文就来记录一下我在小企鹅的两周。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>从6月22日坐着晃悠悠的船来到深圳，到现在完成考核答辩也已经有两周了。然而即使是刚待上两周，在这段时间内也体会和收获到了许多。那就趁着等待考核结果的这个稍微悠闲的下午，来记录记录吧。</p>
+<h3 id="关于生活"><a href="#关于生活" class="headerlink" title="关于生活"></a>关于生活</h3><p>在生活上，这是我第一次实习、第一次去以一个大人的角色去安顿自己，虽然还是免不了学生气，但也感受到了众人所谓之“成长”的东西。不同人生阶段真的会有非常不一样的感受，初高中的时候总是很向往大人的世界，总觉得到那个时候就可以享受到各种独立，然而随着时间流逝自己终于需要去考虑未来的时候，却又免不了感慨一下当小孩儿真好。</p>
+<p>来到公司的第一天就见到了导师eraser，跟着他参加了组里的晨会，在迷迷糊糊地拒绝了组长jero提出的自我介绍之后进行了简单的自我介绍(禁止套娃)，也算是和大家打了个照面。之后就是每天跟着我们的饭群去吃饭，一来二去也熟悉了组里的其它小伙伴(elena、theo、vince、eto、luxing)。虽然由于封闭考核，还没有和他们进行工作上的交流，但是感觉都是比较稳的前端高手！以后就得多向你们请教啦！说回到吃饭，很神奇的是，自从我入职之后，组里的饭局频率达到了空前的高度，我也因此跟着前辈们吃了好多顿饭饭，不知道来的这几天有没有长胖呢。</p>
+<h3 id="关于工作"><a href="#关于工作" class="headerlink" title="关于工作"></a>关于工作</h3><p>考核内容上，我们需要在两周的时间内从零开始学习React.js并配合Ant Design组件库完成一个管理后台系统。听到这个消息的我，内心已经波澜不惊了，因为从大三下开始我们就在被各种系统缠身：软件工程实验的家电销售管理系统、软件工程课设的在线聊天系统…现在又来了一个系统！感觉有点逃不出系统的魔爪了Orz</p>
+<p>在两周的时间内，自己作为前端小组长，带领另外两位小伙伴去实现这个系统，感觉在很多维度上都收获了很多。</p>
+<p>首先是建立了对前后端分离这个开发模式的整体观。因为之前的项目经历中，要么是前后端比较耦合的<a href="https://github.com/LemniscateX/se-project">家电销售系统</a>，要么是主要负责样式的<a href="https://github.com/zcl1115/chat-online-demo">咕咕报</a>，总之都没有去从宏观的角度一步步推进系统的构建，这次则担起了小组长角色去构建框架、组织结构、完善细节，了解了分离开发的全部过程，构建了一个整体观。我个人觉得这种整体了解是非常有必要的，也是我现阶段比较欠缺的，这次学到了，很开心！</p>
+<p>除此之外，对前后端对接的细节也有了比较全面的体会。譬如在对接前的部署时去配置路由转发，可以引申到对nginx的学习；遇到跨域问题时可以去深挖HTTP协议的细节内容；前后端联调过程中去调整API数据格式，可以引申到对接口层新技术如GraphQL等的学习…遇上的这些问题也是一个学习的契机，而且我觉得基于实际问题导向的学习，相比纯阅读书籍，对我来说是能记得更加牢的(参考之前我学了一暑假Haskell最后忘光光，FP也只摸了下门槛的例子)。</p>
+<p>再就是，可以明显感受到，自己能力也在慢慢提升，人也更加机灵了！具体来说就是，能够比较好地把握住代码逻辑和思路，对出现的问题也能比较科学地分析出思路、思考出问题可能出在哪里，代码结构和审美也在逐渐提升上来了，感觉太棒啦！不过话说回来，我还是有好多好多要学的，希望能够成长为一名合格的前端空城师。</p>
+<h2 id="小问题"><a href="#小问题" class="headerlink" title="小问题"></a>小问题</h2><p>这段时间有意识地去记录遇到的问题、场景和解决办法，虽然万事均可STFG，但是记录一下也未尝不可。</p>
+<h3 id="VSCode中JSX体验不好"><a href="#VSCode中JSX体验不好" class="headerlink" title="VSCode中JSX体验不好"></a>VSCode中JSX体验不好</h3><ul>
+<li><p>现象<br>JSX内的HTML需要手动打<code>&lt;</code>，没法自动补全。</p>
+</li>
+<li><p>问题<br>缺少插件或配置。</p>
+</li>
+<li><p>解决<br>Preference -&gt; Emmet -&gt; Include Language中添加如下内容，<a href="https://stackoverflow.com/questions/39320393/jsx-or-html-autocompletion-in-visual-studio-code">参考</a>。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;emmet.includeLanguages&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;javascript&quot;</span>: <span class="string">&quot;html&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="JetBrains-Toolbox登录失败"><a href="#JetBrains-Toolbox登录失败" class="headerlink" title="JetBrains Toolbox登录失败"></a>JetBrains Toolbox登录失败</h3><ul>
+<li><p>现象<br>授权登录后Toolbox显示登录错误信息：<code>Fail to update</code>和<code>Fail to fetch user details: Host oauth.account.jetbrains.com not found</code>。</p>
+</li>
+<li><p>问题<br>proxy未设置。</p>
+</li>
+<li><p>解决<br>先在Windows Setting -&gt; Proxy找proxy设置，再根据其找到对应的address和port。</p>
+</li>
+</ul>
+<h3 id="Node-js里解析query参数"><a href="#Node-js里解析query参数" class="headerlink" title="Node.js里解析query参数"></a>Node.js里解析query参数</h3><ul>
+<li><p>现象<br>写完in接口后新加了几条数据后竟然显示出错，第二页显示不对，即使<code>page=2&amp;limit=5</code>，但返回列表的竟然比五条多。报错显示<code>dataSource length is less than pagination.total but large than pagination.pageSize</code>。</p>
+</li>
+<li><p>问题<br>开始觉得要么是fetch时候传错参数了，要么是我的in写错了，后来在后台API处log了一下截取列表的范围，发现当<code>page=2&amp;limit=5</code>的时候log出的是<code>splice(5, 55)</code>而不是<code>splice(5, 10)</code>，那问题就清楚了，因为在<code>slice(page * limit, page * limit + limit)</code>处page和limit都是字符串。</p>
+</li>
+<li><p>解决<br>在Node.js里解析query parameters需要注意类型问题，避免将string类型误认为是number。</p>
+</li>
+</ul>
+<h3 id="Git多人协作"><a href="#Git多人协作" class="headerlink" title="Git多人协作"></a>Git多人协作</h3><ul>
+<li><p>现象<br>git stash后工作目录空了，一时不知如何找到那部分内容。</p>
+</li>
+<li><p>问题<br>不太熟悉git，乱用命令。</p>
+</li>
+<li><p>解决<br>其实不太记得了，大概是<code>git stash apply</code>。<br>以后要先fetch再commit的话，就按照如下方式：</p>
+<ul>
+<li>先<code>git add .</code>，但是如果只add是没用的</li>
+<li>再<code>git commit -m &quot;message&quot;</code>，保存好现场</li>
+<li>再<code>git fetch</code>，它是安全的</li>
+<li>再<code>git rebase</code>，它会提示我有冲突</li>
+<li>再去修冲突，过程中也要记得仔细检查，防止修错</li>
+<li>修完冲突就<code>git rebase --continue</code></li>
+<li>然后就可以<code>git add</code>、<code>git commit</code>、<code>git push</code>了</li>
+</ul>
+</li>
+</ul>
+<h3 id="npm-run-build"><a href="#npm-run-build" class="headerlink" title="npm run build"></a>npm run build</h3><ul>
+<li><p>现象<br>build出来的静态页面的静态资源无法获取到。</p>
+</li>
+<li><p>问题<br>路径问题，build出来的东西的路径是直接在C盘上的。</p>
+</li>
+<li><p>解决<br>在package.json文件中添加一行<code>&quot;homepage&quot;: &quot;./&quot;</code>，<a href="https://stackoverflow.com/questions/41495658/use-custom-build-output-folder-when-using-create-react-app">参考</a>。</p>
+</li>
+</ul>
+<h3 id="修改react项目的默认启动端口"><a href="#修改react项目的默认启动端口" class="headerlink" title="修改react项目的默认启动端口"></a>修改react项目的默认启动端口</h3><ul>
+<li>解决<br>在package.json中将这个：<br><code>&quot;start&quot;: &quot;react-scripts start&quot;</code><br>改为这个：<br><code>&quot;start&quot;: &quot;PORT=3006 react-scripts start&quot;</code></li>
+</ul>
+<h3 id="nginx配置路由"><a href="#nginx配置路由" class="headerlink" title="nginx配置路由"></a>nginx配置路由</h3><ul>
+<li><p>背景<br>ip和域名的映射并不能将端口也映射上去(好像是)，也就是说当<code>x.xxx.xx.xx</code>和<code>domain.com</code>映射上的时候，如<code>x.xxx.xx.xx:port</code>是没法映射上<code>domain.com:port</code>的，而nginx就是一种解决映射的办法(这里理解不太深入，之后补)。</p>
+</li>
+<li><p>解决</p>
+<ul>
+<li>在conf/nginx.conf上修改配置，参考：<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> port;</span><br><span class="line">    <span class="attribute">server_name</span> domain.com;</span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://xxx.x.x.x:port;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>重启nginx<br>使用命令<code>nginx -s refresh</code>。</li>
+<li>检查配置是否正确<br>看看访问<code>x.xxx.xx.xx:port</code>和<code>domain.com:port</code>是不是同一个内容。</li>
+</ul>
+</li>
+</ul>
+<h3 id="CORS跨域"><a href="#CORS跨域" class="headerlink" title="CORS跨域"></a>CORS跨域</h3><ul>
+<li><p>解决<br>前后端要协商一些特定的用于CORS的头部字段，这次前端带上了<code>withCredentials=true</code>，具体实现是在fetch的init中加入<code>credentials: &#39;include&#39;</code>。</p>
+</li>
+<li><p>注意事项<br>如果是本地文件/localhost用CORS解决跨域，是没有办法拿到<code>Access-Control-Allow-Origin</code>头的，或者浏览器会将请求头的Origin设置成null，<a href="https://stackoverflow.com/questions/10883211/deadly-cors-when-http-localhost-is-the-origin">参考</a>、<a href="https://stackoverflow.com/questions/22397072/are-there-any-browsers-that-set-the-origin-header-to-null-for-privacy-sensitiv">参考</a>。</p>
+</li>
+</ul>
+<h3 id="OPTIONS预请求"><a href="#OPTIONS预请求" class="headerlink" title="OPTIONS预请求"></a>OPTIONS预请求</h3><ul>
+<li><p>问题<br>浏览器会在每次发送请求的时候预先发送一个OPTIONS请求头，用于验证后端是否支持跨域，如果支持则继续发送实际请求，否则返回错误信息。之前以为这样的话我就会通过接口拿到两次响应，不过实际上的fetch接口或axios的接口都会对它做出一定的处理，这样的话应用其实是感知不到的。不过在性能上会存在一些问题，因为每次需要法请求的话都会额外多发一个。</p>
+</li>
+<li><p>解决</p>
+<ul>
+<li>使用简单请求而不是非简单请求来避免发送OPTIONS，不过有很多首部字段的限制。</li>
+<li>使用<code>Access-Control-Max-Age</code>缓存住OPTIONS的响应来避免发送OPTIONS，不过也很局限，每个不同的URL都没法共享这个缓存。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Object的key"><a href="#Object的key" class="headerlink" title="Object的key"></a>Object的key</h3><ul>
+<li>注意事项<br>避免用String以外的类型作为Object的key，以免碰到预料外的类型转换。一些忽视的细节在邮件里被其他小伙伴提醒：for in遍历对象属性并修改可能会污染原型链，应使用Object.keys(obj)；如果希望用Number作为key，就不要偷懒用Object来存，而是直接使用Map。</li>
+</ul>
+<h3 id="判断对象是否为空"><a href="#判断对象是否为空" class="headerlink" title="判断对象是否为空"></a>判断对象是否为空</h3><ul>
+<li>解决<br><code>Object.keys(obj).length === 0 &amp;&amp; obj.constructor === Object</code>，<a href="https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object">参考</a>。</li>
+</ul>
+<h3 id="设置父元素高度随子元素变化"><a href="#设置父元素高度随子元素变化" class="headerlink" title="设置父元素高度随子元素变化"></a>设置父元素高度随子元素变化</h3><ul>
+<li>解决<br>设置<code>overflow: auto</code>，应该还有很多其他方法，<a href="https://stackoverflow.com/questions/1709442/make-divs-height-expand-with-its-content">参考</a>。</li>
+</ul>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>还有很多学习的地方，要开一开Todo List了。还有就是现在除了技术书其它都读得很少，写文章也有点写不出来了…视线停在屏幕上久久不知道怎么下笔…什么时候才有空去看看课外书呢？</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React-js/" rel="tag"># React.js</a>
+              <a href="/tags/AntDesign/" rel="tag"># AntDesign</a>
+              <a href="/tags/Dashboard/" rel="tag"># Dashboard</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/tips-of-t-rex/" rel="prev" title="Chrome小恐龙的实现小技巧">
+      <i class="fa fa-chevron-left"></i> Chrome小恐龙的实现小技巧
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/do-androids-dream-of-electric-sheep/" rel="next" title="仿生人会梦见电子羊吗？">
+      仿生人会梦见电子羊吗？ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E7%94%9F%E6%B4%BB"><span class="nav-number">1.1.</span> <span class="nav-text">关于生活</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.2.</span> <span class="nav-text">关于工作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">小问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#VSCode%E4%B8%ADJSX%E4%BD%93%E9%AA%8C%E4%B8%8D%E5%A5%BD"><span class="nav-number">2.1.</span> <span class="nav-text">VSCode中JSX体验不好</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JetBrains-Toolbox%E7%99%BB%E5%BD%95%E5%A4%B1%E8%B4%A5"><span class="nav-number">2.2.</span> <span class="nav-text">JetBrains Toolbox登录失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-js%E9%87%8C%E8%A7%A3%E6%9E%90query%E5%8F%82%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">Node.js里解析query参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git%E5%A4%9A%E4%BA%BA%E5%8D%8F%E4%BD%9C"><span class="nav-number">2.4.</span> <span class="nav-text">Git多人协作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#npm-run-build"><span class="nav-number">2.5.</span> <span class="nav-text">npm run build</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9react%E9%A1%B9%E7%9B%AE%E7%9A%84%E9%BB%98%E8%AE%A4%E5%90%AF%E5%8A%A8%E7%AB%AF%E5%8F%A3"><span class="nav-number">2.6.</span> <span class="nav-text">修改react项目的默认启动端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx%E9%85%8D%E7%BD%AE%E8%B7%AF%E7%94%B1"><span class="nav-number">2.7.</span> <span class="nav-text">nginx配置路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CORS%E8%B7%A8%E5%9F%9F"><span class="nav-number">2.8.</span> <span class="nav-text">CORS跨域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OPTIONS%E9%A2%84%E8%AF%B7%E6%B1%82"><span class="nav-number">2.9.</span> <span class="nav-text">OPTIONS预请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Object%E7%9A%84key"><span class="nav-number">2.10.</span> <span class="nav-text">Object的key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E4%B8%BA%E7%A9%BA"><span class="nav-number">2.11.</span> <span class="nav-text">判断对象是否为空</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%88%B6%E5%85%83%E7%B4%A0%E9%AB%98%E5%BA%A6%E9%9A%8F%E5%AD%90%E5%85%83%E7%B4%A0%E5%8F%98%E5%8C%96"><span class="nav-number">2.12.</span> <span class="nav-text">设置父元素高度随子元素变化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">3.</span> <span class="nav-text">后记</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

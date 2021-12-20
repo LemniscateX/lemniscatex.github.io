@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="最近把《深入浅出React和Redux》这本书给差不多看完了，依稀记得还是在大三考试月间隙小钟迅速过掉的一本书，当时我还在玩泥巴。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些 React + Redux 的基础知识">
+<meta property="og:url" content="https://lemniscatex.github.io/react-redux-basics/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="最近把《深入浅出React和Redux》这本书给差不多看完了，依稀记得还是在大三考试月间隙小钟迅速过掉的一本书，当时我还在玩泥巴。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lemniscatex.github.io/react-redux-basics/shortcut-of-props-and-state.png">
+<meta property="og:image" content="https://lemniscatex.github.io/react-redux-basics/shortcut-of-mvc.png">
+<meta property="og:image" content="https://lemniscatex.github.io/react-redux-basics/dataflow-of-flux.png">
+<meta property="article:published_time" content="2021-12-19T08:38:22.000Z">
+<meta property="article:modified_time" content="2021-12-19T15:29:15.712Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lemniscatex.github.io/react-redux-basics/shortcut-of-props-and-state.png">
+
+<link rel="canonical" href="https://lemniscatex.github.io/react-redux-basics/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>一些 React + Redux 的基础知识 | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/react-redux-basics/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一些 React + Redux 的基础知识
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-12-19 16:38:22 / Modified: 23:29:15" itemprop="dateCreated datePublished" datetime="2021-12-19T16:38:22+08:00">2021-12-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/Redux/" itemprop="url" rel="index"><span itemprop="name">Redux</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近把《深入浅出React和Redux》这本书给差不多看完了，依稀记得还是在大三考试月间隙小钟迅速过掉的一本书，当时我还在玩泥巴。</p>
+<span id="more"></span>
+
+<hr>
+<p>虽然豆瓣评分不算高，但我感觉这本书通篇看下来还是蛮有收获的，除了中间件那块儿有些没理解到，其他都还蛮娓娓道来的，对现阶段只会用却不求甚解(此处贬义)的我来说也算是加深了一些原理上的理解。<br>再者，浓厚的 peer pressure 令人想要逃离，但并不能因此就转头跑向另一个极端，纯粹的学习还是很快乐的，感谢 mentor 及时的纠正。（不过这本书确实是略过时了，且内容很基础，所以就当图一乐吧，真学技术还得看官网。）</p>
+<h2 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h2><h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p>或许是 React15 那会儿的。</p>
+<h4 id="装载-mount"><a href="#装载-mount" class="headerlink" title="装载(mount)"></a>装载(mount)</h4><p>组件第一次渲染的过程就是装载，依次会调用下面几个函数，也称生命周期函数：<code>constructor</code>、<code>getInitialState</code>、<code>getDefaultProps</code>、<code>componentWillMount</code>、<code>render</code>、<code>componentDidMount</code>。</p>
+<ul>
+<li>constructor</li>
+</ul>
+<p>创造一个类的实例自然会调用这个方法啦，一般会在构造函数里做这么些事情：初始化 state（毕竟其他生命周期函数都有可能有 state，那就在第一个生命周期函数里初始化，合理）；给成员函数绑定 this（毕竟类的成员函数在执行时 this 并不绑定实例，constructor 中的 this 则一定是当前实例）。</p>
+<ul>
+<li>getInitialState / getDefaultProps</li>
+</ul>
+<p>仅当在 React.createClass() 创造的类中这两个函数才有用，它们的返回值分别可以作为 state 和 props 的初始值，函数只会在装载期被调用一次。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 旧语法</span><br><span class="line">const Sample = React.createClass(&#123;</span><br><span class="line">	getInitialState: function() &#123;</span><br><span class="line">		return &#123; sampleState: &#x27;init&#x27; &#125;;</span><br><span class="line">	&#125;,</span><br><span class="line">	getDefaultProps: function() &#123;</span><br><span class="line">		return &#123; sampleProp: 0 &#125;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// 新语法</span><br><span class="line">class Sample extends React.Component &#123;</span><br><span class="line">	constructor(props) &#123;</span><br><span class="line">		super(props);</span><br><span class="line">		this.state = &#123; sampleState: &#x27;init&#x27; &#125;;</span><br><span class="line">	&#125;</span><br><span class="line">	Sample.defaultProps = &#123; sampleProp: 0 &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>render</li>
+</ul>
+<p>一个 React 组件可以不实现其他的函数，但一定要有 render 的实现，因为 React.Component 对其他都有默认的实现。render 函数需要返回 JSX，React 来操作渲染过程，如果什么都不需要那就返回 null / false，React 就知道这次不需要渲染任何 DOM 元素。我们应该让 render 函数是一个无副作用的纯函数，完全根据 state 和 props 展示内容。</p>
+<ul>
+<li>componentWillMount / componentDidMount</li>
+</ul>
+<p>这俩函数分别在 render 前后被调用，一般不怎么用 will，因为这个时候即将装载了，即使调用 setState 也不会引发重新绘制，一切都迟了。也就是说，所有需要在 componentWillMount 中做的事情都可以放在 constructor 中做。其实它的存在主要是为了和 did 对称。</p>
+<p>did 函数被调用的时候，不仅 render 函数已经被执行完毕，render 返回的 JSX 也引发了渲染并被挂载到 DOM 树上了，这个时候可以放心地获取渲染出来的任何 DOM。值的一提的是，did 和 render 并不是紧挨着的，render 只是返回 JSX，什么时候渲染则是由 React 库决定的。举个例子，一个父组件内含三个子组件，那么整个父组件的装载时机是这样的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">constructor called: child 1</span><br><span class="line">componentWillMount called: child 1</span><br><span class="line">render called: child 1 </span><br><span class="line">constructor called: child 2</span><br><span class="line">componentWillMount called: child 2</span><br><span class="line">render called: child 2</span><br><span class="line">constructor called: child 3</span><br><span class="line">componentWillMount called: child 3</span><br><span class="line">render called: child 3</span><br><span class="line">componentDidMount called: child 1</span><br><span class="line">componentDidMount called: child 2</span><br><span class="line">componentDidMount called: child 3</span><br></pre></td></tr></table></figure>
+
+<p>因为只有知道了每个子组件的渲染内容并把它组合起来，才能知道如何产生对应的 DOM 修改。</p>
+<p>俩函数还有个区别：will 可以在服务器端和浏览器中被调用，did 则只能在浏览器中被调用。有一种解释是，服务器端渲染产生的是字符串，不会产生 DOM 树，即不可能发生“装载”过程，那自然就不会有 didMount 了。</p>
+<h4 id="更新-update"><a href="#更新-update" class="headerlink" title="更新(update)"></a>更新(update)</h4><p>组件装载后一般并不是一成不变的，而是会随用户操作而变化。当 props 或 state 变化时，就会引发组件更新，依次调用下面的函数：<code>componentWillReceiveProps</code>、<code>shouldComponentUpdate</code>、<code>componentWillUpdate</code>、<code>render</code>、<code>componentDidUpdate</code>。</p>
+<ul>
+<li>componentWillReceiveProps(nextProps)</li>
+</ul>
+<p>这个函数被调用的时机有：自己 props 改变时、父组件 render 被调用时(无论传给子元素的 props 是否改变)。</p>
+<p>像下面的例子，当我们点击按钮后，会强行引发重新绘制，即使传给子组件的 props 完全没有变化，也会调用子组件的 componentWillReceiveProps。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">class Parent extends React.Component &#123;</span><br><span class="line">	// ...</span><br><span class="line"></span><br><span class="line">	render() &#123;</span><br><span class="line">		console.log(&#x27;enter Parent render&#x27;);</span><br><span class="line">		return (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;Child caption=&quot;First&quot;&gt;</span><br><span class="line">				&lt;Child caption=&quot;Second&quot;&gt;</span><br><span class="line">				&lt;Child caption=&quot;Third&quot;&gt;</span><br><span class="line">				&lt;button onClick=&#123;() =&gt; this.forceUpdate()&#125;&gt;</span><br><span class="line">					Click me to repaint!</span><br><span class="line">				&lt;/button&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Child extends React.Component &#123;</span><br><span class="line">	// ...</span><br><span class="line">	componentWillReceiveProps() &#123;</span><br><span class="line">		console.log(`enter componentWillReceiveProps $&#123;this.props.caption&#125;`);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	render() &#123;</span><br><span class="line">		console.log(`enter render $&#123;this.props.caption&#125;`);</span><br><span class="line">		return (</span><br><span class="line">			// ...</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">enter Parent render</span><br><span class="line">enter componentWillReceiveProps First</span><br><span class="line">enter render First</span><br><span class="line">enter componentWillReceiveProps Second</span><br><span class="line">enter render Second</span><br><span class="line">enter componentWillReceiveProps Third</span><br><span class="line">enter render Third</span><br></pre></td></tr></table></figure>
+
+<p>通过 setState 触发更新时并不会调用此函数，因为此函数适用于根据 props 来计算是否要更新 state，也就是 willReceiveProps -&gt; setState，如果 setState 也会触发 willRecieveProps，那就死循环了。</p>
+<p>像下面的例子，点击按钮后，子元素自己 setState，并不会调用 willRecieveProps。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Child extends React.Component &#123;</span><br><span class="line">	// ...</span><br><span class="line">	constructor(props) &#123;</span><br><span class="line">		super(props);</span><br><span class="line">		this.state = &#123; count: 0 &#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	componentWillReceiveProps() &#123;</span><br><span class="line">		console.log(`enter componentWillReceiveProps $&#123;this.props.caption&#125;`);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	render() &#123;</span><br><span class="line">		console.log(`enter render $&#123;this.props.caption&#125;`);</span><br><span class="line">		return (</span><br><span class="line">			&lt;button onClick=&#123;() =&gt; this.setState(this.state.count + 1)&#125;&gt;&lt;/button&gt;</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enter render First</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>shouldComponentUpdate(nextProps, nextState)</li>
+</ul>
+<p>render 用来决定渲染什么，这个函数则决定组件什么时候不需要渲染(通过返回不同布尔值)。更新过程中，React 库首先会调用此函数，如果返回 <code>true</code>，则接着调用 render 继续更新过程；如果返回 <code>false</code>，则立刻停止更新过程。此函数方便我们自定义重新渲染的条件，使用得当的话可以有效地减少额外渲染、提升性能。</p>
+<p>比如我们给子组件复写一下这个方法，只有当自身的 props 或 state 变化时才 render，这时点击父组件的按钮进行 forceUpdate，就不会触发子组件的 render 了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class Child extends React.Component &#123;</span><br><span class="line">	// ...</span><br><span class="line">	shouldComponentUpdate(nextProps, nextState) &#123;</span><br><span class="line">		// 对于通过 setState() 触发的更新来说，由于是异步的</span><br><span class="line">		// 因此执行到这个函数的时候，此时的 this.state 还是 setState() 先前的值 </span><br><span class="line">		return (nextProps.caption !== this.props.caption) || (nextState.count !== this.state.count);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">enter Parent render</span><br><span class="line">enter componentWillReceiveProps First</span><br><span class="line">enter componentWillReceiveProps Second</span><br><span class="line">enter componentWillReceiveProps Third</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>componentWillUpdate / componentDidUpdate</li>
+</ul>
+<p>如果 shouldUpdate 返回 true，就会依次调用 willUpdate、render、didUpdate。和 mount 那边不同，update 的 will 和 did 俩函数都可以在服务器端和浏览器端的更新过程中被调用。不过呢，一般服务端渲染不会经历更新过程，因为它只需要产出 HTML 字符串，一个装载过程足够返回 HTML 字符串了。</p>
+<h4 id="卸载-unmount"><a href="#卸载-unmount" class="headerlink" title="卸载(unmount)"></a>卸载(unmount)</h4><p>卸载过程只涉及一个函数！componentWillUnmount，这边就没有诸如 didUnmount 的函数了，毕竟卸载完就结束了，没有什么需要卸载完再做的事情。此函数处理的事情会和 componentDidMount 相对应，比如 didMount 中如果用非 React 的方法创造了什么 DOM 元素，可以在 willUnmount 中清理，防止内存泄漏。</p>
+<h3 id="Props-和-State-局限性"><a href="#Props-和-State-局限性" class="headerlink" title="Props 和 State 局限性"></a>Props 和 State 局限性</h3><p>React 最基础的用法相信所有人都不陌生，<code>UI=render(data)</code>，一个组件需要做的就是拿到数据、进行渲染。state 和 props 就组成了数据这部分，props 是组件对外的不可改变的接口，state 是组件对内的可变的内部状态。</p>
+<p>父组件向子组件传递信息，可以通过 props，那么子组件向父组件传递信息呢？其实也可以用 props，通过调用父组件传来的方法，改变父组件的 state 等。</p>
+<p>比如我们要实现下面这个计数器。</p>
+<p><img src="./shortcut-of-props-and-state.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// 父组件</span><br><span class="line">import Counter from &#x27;./Counter.js&#x27;;</span><br><span class="line"></span><br><span class="line">class ControlPanel extends Component &#123;</span><br><span class="line">  constructor(props) &#123;</span><br><span class="line">    super(props);</span><br><span class="line"></span><br><span class="line">    this.onCounterUpdate = this.onCounterUpdate.bind(this);</span><br><span class="line"></span><br><span class="line">    this.initValues = [0, 10, 20];</span><br><span class="line">    const initSum = this.initValues.reduce((a, b) =&gt; a+b, 0);</span><br><span class="line">    this.state = &#123;</span><br><span class="line">      sum: initSum</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  onCounterUpdate(newValue, previousValue) &#123;</span><br><span class="line">    const valueChange = newValue - previousValue;</span><br><span class="line">    this.setState(&#123; sum: this.state.sum + valueChange&#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;Counter onUpdate=&#123;this.onCounterUpdate&#125; caption=&quot;First&quot; initValue=&#123;this.initValues[0]&#125;/&gt;</span><br><span class="line">        &lt;Counter onUpdate=&#123;this.onCounterUpdate&#125; caption=&quot;Second&quot; initValue=&#123;this.initValues[1]&#125; /&gt;</span><br><span class="line">        &lt;Counter onUpdate=&#123;this.onCounterUpdate&#125; caption=&quot;Third&quot; initValue=&#123;this.initValues[2]&#125; /&gt;</span><br><span class="line">        &lt;hr/&gt;</span><br><span class="line">        &lt;div&gt;Total Count: &#123;this.state.sum&#125;&lt;/div&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default ControlPanel;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">// 子组件</span><br><span class="line">class Counter extends Component &#123;</span><br><span class="line">  constructor(props) &#123;</span><br><span class="line">    super(props);</span><br><span class="line"></span><br><span class="line">    this.onClickIncrementButton = this.onClickIncrementButton.bind(this);</span><br><span class="line">    this.onClickDecrementButton = this.onClickDecrementButton.bind(this);</span><br><span class="line"></span><br><span class="line">    this.state = &#123;</span><br><span class="line">      count: props.initValue</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  onClickIncrementButton() &#123;</span><br><span class="line">    this.updateCount(true);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  onClickDecrementButton() &#123;</span><br><span class="line">    this.updateCount(false);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  updateCount(isIncrement) &#123;</span><br><span class="line">    const previousValue = this.state.count;</span><br><span class="line">    const newValue = isIncrement ? previousValue + 1 : previousValue - 1;</span><br><span class="line"></span><br><span class="line">    this.setState(&#123;count: newValue&#125;)</span><br><span class="line">    this.props.onUpdate(newValue, previousValue)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    const &#123;caption&#125; = this.props;</span><br><span class="line">    return (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;button onClick=&#123;this.onClickIncrementButton&#125;&gt;+&lt;/button&gt;</span><br><span class="line">        &lt;button onClick=&#123;this.onClickDecrementButton&#125;&gt;-&lt;/button&gt;</span><br><span class="line">        &lt;span&gt;&#123;caption&#125; count: &#123;this.state.count&#125;&lt;/span&gt;</span><br><span class="line">      &lt;/div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Counter.propTypes = &#123;</span><br><span class="line">  caption: PropTypes.string.isRequired,</span><br><span class="line">  initValue: PropTypes.number,</span><br><span class="line">  onUpdate: PropTypes.func</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Counter.defaultProps = &#123;</span><br><span class="line">  initValue: 0,</span><br><span class="line">  onUpdate: f =&gt; f //什么都不做的函数</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export default Counter;</span><br></pre></td></tr></table></figure>
+
+<p>这里功能实现上没问题，但仔细想想会觉得存在可以改进的地方。</p>
+<p>首先很明显，每个子组件有自己的 count state，父组件也有自己的 sum state，这里出现了数据重复，会存在数据不一致的问题。比如某个子组件的修改没有通知到父组件，count 和 sum 就不一致了，应该相信谁呢？</p>
+<p>其次，使用 props 来沟通的方式会造成多层级的传递。比如我只是最内层子组件需要和最外层父组件沟通，那所有中间层级都要传递这个 props，尽管中间组件完全不需要它。</p>
+<p>之所以产生这个情况，其实就是高内聚、低耦合的追求带来的副作用。每个组件自己维护自己的状态，没有一个共享的空间去存放共享的状态。那为了解决这个问题，我们可以使用 context 或 redux，下面讲。</p>
+<h2 id="Flux"><a href="#Flux" class="headerlink" title="Flux"></a>Flux</h2><p>Flux 在 2013 年和 React 同时被推出，推翻了 MVC 框架，提出了一种新的数据流转管理方式，也就是单向数据流。直接看图吧。</p>
+<p><img src="./shortcut-of-mvc.png"></p>
+<p><img src="./dataflow-of-flux.png"></p>
+<p>MVC 感觉我自己也接触过，类似基础的 Spring Boot 应用？服务端的 MVC 还算是比较单向的数据流：请求到达 controller、路由控制修改对应 model、数据库的新数据产生新 view、返回给浏览器新 view，此时这个请求生命周期里的 controller、model、view 就可以销毁了。</p>
+<p>不过书里表示，浏览器端的 MVC 框架中，model 和 view 还会继续存在于浏览器中，引诱开发者贪图方便而让现存的 model 和 view 直接对话，而不通过 controller。理论上 controller 应该是核心，model 要更新 view 时应该通过 controller，view 要传递消息给 model 时也应该通过 controller。这下数据流就混乱起来了，这不好。</p>
+<p>Flux 则类似一个更严格的数据流控制。action 是负责驱动 dispatcher 的 JavaScript 对象；dispatcher 负责处理动作分发，维持 store 之间的依赖关系(可能是指旧 store 和新 store 之间的关系?)；store 负责存储数据和处理数据相关逻辑；view 就是视图啦。</p>
+<p>如果要对照着看的话，dispatcher ≈ controller、store ≈ model、view ≈ view、action ≈ 请求。如果我想要多支持一种能够处理的请求，在 MVC 里，我就会多写一个 controller；在 Flux 里，则是多定义一个 action。</p>
+<h3 id="flux-使用例子"><a href="#flux-使用例子" class="headerlink" title="flux 使用例子"></a>flux 使用例子</h3><p>用之前那个计数器的例子。对于用惯了 Redux 的选手来说，应该还蛮有新意的！</p>
+<h4 id="dispatcher"><a href="#dispatcher" class="headerlink" title="dispatcher"></a>dispatcher</h4><p>几乎所有应用都只需要一个 dispatcher，所以我们用一个全局的就可以了，它负责派发 action。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// src/AppDispatcher.js</span><br><span class="line">import &#123; Dispatcher &#125; from &#x27;flux&#x27;;</span><br><span class="line">export default new Dispatcher();</span><br></pre></td></tr></table></figure>
+
+<h4 id="action"><a href="#action" class="headerlink" title="action"></a>action</h4><p>action 是一个普通的 JavaScript 对象，表示一个动作，它必须带有 type 字段。应用中一般会有两种相关文件，一种纯定义这个 action 对象有几种 type，一种则是 action creator，可以理解为返回 action 的一个 helper function。不过在实际实践中，后者通常并不是返回纯 action，而是产生并派发 action。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// src/ActionTypes.js</span><br><span class="line">export const INCREMENT = &#x27;increment&#x27;;</span><br><span class="line">export const DECREMENT = &#x27;decrement&#x27;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// src/Actions.js</span><br><span class="line">import * as ActionTypes from &#x27;./ActionTypes.js&#x27;;</span><br><span class="line">import AppDispatcher from &#x27;./AppDispatcher.js&#x27;;</span><br><span class="line"></span><br><span class="line">export const increment = (counterCaption) =&gt; &#123;</span><br><span class="line">	// 产生 action 并 dispatch</span><br><span class="line">	AppDispatcher.dispatch(&#123;</span><br><span class="line">		type: ActionTypes.INCREMENT,</span><br><span class="line">		counterCaption</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export const decrement = (counterCaption) =&gt; &#123;</span><br><span class="line">	AppDispatcher.dispatch(&#123;</span><br><span class="line">		type: ActionTypes.DECREMENT,</span><br><span class="line">		counterCaption</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="store"><a href="#store" class="headerlink" title="store"></a>store</h4><p>store 存 state，同时还要接受 dispatcher 派发的 action，根据 action 看要不要更新 state。这里我们定义两个 store，一个负责各个计数器，一个负责总计数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// src/stores/CounterStore.js</span><br><span class="line">const counterValues = &#123;</span><br><span class="line">	&#x27;First&#x27;: 0,</span><br><span class="line">	&#x27;Second&#x27;: 10,</span><br><span class="line">	&#x27;Third&#x27;: 30</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">const CounterStore = Object.assign(&#123;&#125;, EventEmitter.prototype, &#123;</span><br><span class="line">	getCounterValues = () =&gt; &#123;</span><br><span class="line">		return counterValues</span><br><span class="line">	&#125;,</span><br><span class="line">	emitChange = () =&gt; &#123;</span><br><span class="line">		this.emit(CHANGE_EVENT);</span><br><span class="line">	&#125;,</span><br><span class="line">	addChangeListener = (callback) =&gt; &#123;</span><br><span class="line">		this.on(CHANGE_EVENT, callback);</span><br><span class="line">	&#125;,</span><br><span class="line">	removeChangeListener = (callback) =&gt; &#123;</span><br><span class="line">		this.removeListener(CHANGE_EVENT, callback);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>为了建立 store 和 view 的联系，这里用了消息的方式，因此这里的 store 是一个 eventEmitter。它的 emit 可以广播事件，on 可以定义特定事件的处理函数，removeListener 可以删除事件处理函数。这里封装了下，不过效果都一样。</p>
+<p>store 还需要「注册」到 dispatcher 实例上才能真正发挥作用，不然就没有办法改 store 了，所以有如下代码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// src/stores/CounterStore.js</span><br><span class="line">import AppDispatcher from &#x27;./AppDispatcher.js&#x27;;</span><br><span class="line"></span><br><span class="line">// 这个 token 可以用于 store 之间的同步</span><br><span class="line">CounterStore.dispatchToken = AppDispatcher.register((action) =&gt; &#123;</span><br><span class="line">	if (action.type === ActionTypes.INCREMENT) &#123;</span><br><span class="line">		// 先根据 action 修改 store 中的值</span><br><span class="line">		counterValues[action.counterCaption]++;</span><br><span class="line"></span><br><span class="line">		// 再广播这个修改事件</span><br><span class="line">		counterStore.emit(CHANGE_EVENT);</span><br><span class="line">	&#125; else if (action.type === ActionTypes.DECREMENT) &#123;</span><br><span class="line">		counterValues[action.counterCaption]--;</span><br><span class="line">		counterStore.emit(CHANGE_EVENT);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>当通过 register 将一个回调注册到 dispatcher 上时，所有派发给 dispatcher 的 action 都会传递到这个回调中，这个回调就会被调用。</p>
+<p>另一个 SummaryStore 也类似(emit、on、remove 等属性)，不同点在于，summary 最好不要存储数据(数据不一致问题，还记得吗~)，这里用一个 get 方法，可以让使用者在调用的时候再去计算值，保证能够用到最新的求和。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">function computeSummary(counterValues) &#123;</span><br><span class="line">	let summary = 0;</span><br><span class="line">	for (const key in counterValues) &#123;</span><br><span class="line">		if (counterValues.hasOwnProperty(key)) &#123;</span><br><span class="line">			summary += counterValues[key];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return summary;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const SummaryStore = Object.assign(&#123;&#125;, EventEmitter.prototype, &#123;</span><br><span class="line">	getSummary: () =&gt; &#123;</span><br><span class="line">		// 原来这里要用 CounterStore 的值，而不是外部传 CounterStore 进来</span><br><span class="line">		return computeSummary(CounterStore.getCounterValues());</span><br><span class="line">	&#125;</span><br><span class="line">	// ... 其他的属性如 emitChange、addChangeListener、removeChangeListener</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，此处虽然叫做 store，但它不是真正的 store，只是提供获取数据的方法，去获取另一个 store 的值。那就有依赖关系啦，这也可以体现在 SummaryStore 的 dispatcher 上。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SummaryStore.dispatchToken = AppDispatcher.register((action) =&gt; &#123;</span><br><span class="line">	if (action.type === ActionTypes.INCREMENT || action.type === ActionTypes.DECREMENT) &#123;</span><br><span class="line">		AppDispatcher.waitFor([CounterStore.dispatcher]); // dispatchToken 的数组</span><br><span class="line">		SummaryStore.emitChange();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里 waitFor 用来干嘛的呢？因为 action 会被派发给所有回调函数，而且这个顺序是不确定的，因此需要显式考虑先后顺序问题。比如一个 INCREMENT action 被派发了，假如 SummaryStore 的回调先被调用，那就会先 emit 这个变化，getSummary 被调用，但此时 getSummary 中使用的 CounterStore 中保存的数据还是之前的数据，因为 INCREMENT action 还没被派发到 CounterStore。waitFor 就是解决这个问题的，waitFor 告诉 dispatcher，当前的处理必须要暂停，直到 dispatchToken 代表的那些已注册的回调函数执行结束才可以继续。</p>
+<p>也可以看到这种模式有个缺点，那就是 dispatcher 没法让调用者在 register 的时候选择只监听特定的 action，在自己内部再去处理是否关心这个 action 的问题。</p>
+<h4 id="view"><a href="#view" class="headerlink" title="view"></a>view</h4><p>这里需要关注三个部分的内容，用 store 初始化、store 变化时跟着变、view 变化时改变 store(只能通过派发 action 的方式来改哦!)。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// src/views/ControlPanel.js</span><br><span class="line">// ...</span><br><span class="line">render() &#123;</span><br><span class="line">	return (</span><br><span class="line">		&lt;div&gt;</span><br><span class="line">			&lt;Counter caption=&quot;First&quot;/&gt;</span><br><span class="line">			&lt;Counter caption=&quot;Second&quot;/&gt;</span><br><span class="line">			&lt;Counter caption=&quot;Third&quot;/&gt;</span><br><span class="line">			&lt;hr/&gt;</span><br><span class="line">			&lt;Summary/&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这里没有给 Counter 通过 props 传递初始值了，因为我们的初始值都在 CounterStore 里。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">// src/views/Counter.js</span><br><span class="line">// ...</span><br><span class="line"></span><br><span class="line">// 初始值</span><br><span class="line">constructor(props) &#123;</span><br><span class="line">	super(props);</span><br><span class="line">	this.onChange = this.onChange.bind(this);</span><br><span class="line">	this.onClickIncrementButton = this.onClickIncrementButton.bind(this);</span><br><span class="line">	this.onClickDecrementButton = this.onClickDecrementButton.bind(this);</span><br><span class="line">	this.state = &#123; count: CounterStore.getCounterValues()[this.props.caption] &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// view 应对 store 变化</span><br><span class="line">componentDidMount() &#123;</span><br><span class="line">	CounterStore.addChangeListener(this.onChange);</span><br><span class="line">&#125;</span><br><span class="line">componentWillUnmount() &#123;</span><br><span class="line">	CounterStore.removeChangeListener(this.onChange);</span><br><span class="line">&#125;</span><br><span class="line">onChange() &#123;</span><br><span class="line">	const newCount = CounterStore.getCounterValues()[this.props.caption];</span><br><span class="line">	this.setState(&#123; count: newCount &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// view 通知 store 改变</span><br><span class="line">onClickIncrementButton() &#123;</span><br><span class="line">	Actions.increment(this.props.caption);</span><br><span class="line">&#125;</span><br><span class="line">onClickDecrementButton() &#123;</span><br><span class="line">	Actions.decrement(this.props.caption);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// render</span><br><span class="line">render() &#123;</span><br><span class="line">	return (</span><br><span class="line">		&lt;div&gt;</span><br><span class="line">			&lt;button onClick=&#123;this.onClickIncrementButton&#125;&gt; + &lt;/button&gt;</span><br><span class="line">			&lt;button onClick=&#123;this.onClickDecrementButton&#125;&gt; - &lt;/button&gt;</span><br><span class="line">			&lt;span&gt;&#123; this.props.caption &#125; count: &#123; this.state.count &#125;&lt;/span&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Summary 组件类似，只不过上面没有任何 view 的交互功能，因此不需要派发 action，那 Flux 的例子就到此为止！相比起来，用了 Flux 后，View 就是完全由 Store 驱动的了，数据是单向流动的，即使是通过 view 去改变 store，也是走了正规的一条路径，这种约束是一种很好的限制，避免了数据流混乱的问题。</p>
+<p>不过 Flux 依然有它自己的缺点，下次再写吧，该休息了。暂时没检查过一遍，估计有 typo。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/git-notes/" rel="prev" title="Git便签">
+      <i class="fa fa-chevron-left"></i> Git便签
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">基础使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.1.</span> <span class="nav-text">生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A3%85%E8%BD%BD-mount"><span class="nav-number">1.1.1.</span> <span class="nav-text">装载(mount)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0-update"><span class="nav-number">1.1.2.</span> <span class="nav-text">更新(update)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BD-unmount"><span class="nav-number">1.1.3.</span> <span class="nav-text">卸载(unmount)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Props-%E5%92%8C-State-%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">Props 和 State 局限性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flux"><span class="nav-number">2.</span> <span class="nav-text">Flux</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#flux-%E4%BD%BF%E7%94%A8%E4%BE%8B%E5%AD%90"><span class="nav-number">2.1.</span> <span class="nav-text">flux 使用例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatcher"><span class="nav-number">2.1.1.</span> <span class="nav-text">dispatcher</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#action"><span class="nav-number">2.1.2.</span> <span class="nav-text">action</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#store"><span class="nav-number">2.1.3.</span> <span class="nav-text">store</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#view"><span class="nav-number">2.1.4.</span> <span class="nav-text">view</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

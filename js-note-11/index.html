@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="《JavaScript高级程序设计》第十一章，DOM扩展。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript学习笔记(11)">
+<meta property="og:url" content="https://lemniscatex.github.io/js-note-11/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="《JavaScript高级程序设计》第十一章，DOM扩展。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-30T07:11:45.000Z">
+<meta property="article:modified_time" content="2020-12-03T01:34:44.000Z">
+<meta property="article:tag" content="DOM">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lemniscatex.github.io/js-note-11/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>JavaScript学习笔记(11) | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/js-note-11/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript学习笔记(11)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-11-30 15:11:45" itemprop="dateCreated datePublished" datetime="2020-11-30T15:11:45+08:00">2020-11-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-12-03 09:34:44" itemprop="dateModified" datetime="2020-12-03T09:34:44+08:00">2020-12-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>《JavaScript高级程序设计》第十一章，DOM扩展。</p>
+<span id="more"></span>
+
+<hr>
+<p>标准的DOM API有时候满足不了大家的需求，于是便衍生了一些扩展API，最主要的两个扩展：<code>Selectors API</code>、<code>HTML5</code>。</p>
+<h2 id="选择符API"><a href="#选择符API" class="headerlink" title="选择符API"></a>选择符API</h2><h3 id="querySelector"><a href="#querySelector" class="headerlink" title="querySelector()"></a><code>querySelector()</code></h3><p>接收CSS选择符，返回匹配的第一个元素，无则返回<code>null</code>。当使用<code>Document</code>调用此方法时，会在整个文档元素范围内查找；当使用<code>Element</code>调用此方法时，只会在该元素后代元素范围内查找。</p>
+<h3 id="querySelectorAll"><a href="#querySelectorAll" class="headerlink" title="querySelectorAll()"></a><code>querySelectorAll()</code></h3><p>接收CSS选择符，返回匹配的所有元素(一个<code>NodeList</code>)，无则返回空的<code>NodeList</code>。其它与上一致。访问<code>NodeList</code>里的元素有两种语法：<code>list[i]</code>、<code>list.item(i)</code>。</p>
+<h3 id="matchesSelector"><a href="#matchesSelector" class="headerlink" title="matchesSelector()"></a><code>matchesSelector()</code></h3><p>用<code>Element</code>调用此方法，接收CSS选择符，如果调用元素与该选择符匹配则返回<code>true</code>，否则返回<code>false</code>。不过目前这个方法在各个浏览器上暂未统一，比如我用Chrome发现它的该方法是<code>webkitMatchesSelector()</code>。</p>
+<h2 id="元素遍历"><a href="#元素遍历" class="headerlink" title="元素遍历"></a>元素遍历</h2><p>问题源于，对于元素之间的空格，IE9之前的版本不会返回文本节点，而其它所有浏览器都会将将其作为一个文本节点。这样的话，用诸如<code>childNodes</code>、<code>firstChild</code>的属性时候，浏览器行为不一致。因此为了在DOM规范不变的情况下弥补差异，Element Traversal API为DOM元素添加了5个新属性。</p>
+<ul>
+<li><code>childElementCount</code>：子元素个数(不含文本节点和注释)</li>
+<li><code>firstElementChild</code>：第一个元素(<code>firstChild</code>的元素版)</li>
+<li><code>lastElementChild</code>：最后一个元素(<code>lastChild</code>的元素版)</li>
+<li><code>previousElementSibling</code>：前一个兄弟元素(<code>previousSibling</code>的元素版)</li>
+<li><code>nextElementSibling</code>：后一个兄弟元素(<code>nextSibling</code>的元素版)</li>
+</ul>
+<h2 id="HTML5"><a href="#HTML5" class="headerlink" title="HTML5"></a>HTML5</h2><p>为什么会在这里突然谈到HTML5呢？因为之前的HTML版本里对JavaScript的接口描述很少，与JavaScript相关的都放到DOM规范里去了；而HTML5规范里新增了很多标记，也围绕这些标记定义了很多JavaScript API。有些API与DOM重叠，因此这里介绍一下和DOM相关的内容。</p>
+<h3 id="类相关"><a href="#类相关" class="headerlink" title="类相关"></a>类相关</h3><p>HTML4之后<code>class</code>属性用得越来越多，为了方便，HTML5新增了一些和类相关的API。</p>
+<ul>
+<li><p><code>getElementByClassName()</code><br>之前只有<code>byId</code>和<code>byTagName</code>。此方法接收包含一个或多个类名的字符串(用空格隔开)，返回调用者后代范围内匹配到的<code>NodeList</code>，类名的先后顺序不重要。如果是多个类名，则是<code>AND</code>的关系而不是<code>OR</code>的关系。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AND</span></span><br><span class="line"><span class="keyword">let</span> classAandB = <span class="built_in">document</span>.getElementByClassName(<span class="string">&quot;a b&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> classAandB = <span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;.a.b&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// OR</span></span><br><span class="line"><span class="keyword">let</span> classAorB = <span class="built_in">document</span>.querySelectorAll(<span class="string">&quot;.a, .b&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+<li><p><code>classList</code><br>之前是用<code>className</code>字符串表示所有的类名的，对类的增删查改就是字符串操作，比较麻烦。此属性属于新的<code>DOMTokenList</code>类型，有如下的方法：</p>
+<ul>
+<li><code>add(value)</code></li>
+<li><code>remove(value)</code></li>
+<li><code>contains(value)</code></li>
+<li><code>toggle(value)</code>：切换，如果列表中存在该类则删除它；如果列表中不存在该类则添加它</li>
+</ul>
+</li>
+</ul>
+<h3 id="焦点相关"><a href="#焦点相关" class="headerlink" title="焦点相关"></a>焦点相关</h3><p>HTML5添加了辅助管理DOM焦点的功能。</p>
+<ul>
+<li><p><code>document.activeElement</code><br>此属性始终为DOM中当前获得了焦点的元素。有几种获得焦点的方式：页面加载、用户输入(通常通过按<code>Tab</code>)、代码中调用<code>focus()</code>。默认情况下，文档加载期间该值为<code>null</code>，加载完成时为<code>document.body</code>；</p>
+</li>
+<li><p><code>element.focus()</code><br>聚焦某个元素。</p>
+</li>
+<li><p><code>document.hasFocus()</code><br>判断文档是否获得了焦点。</p>
+</li>
+</ul>
+<h3 id="HTMLDocument相关"><a href="#HTMLDocument相关" class="headerlink" title="HTMLDocument相关"></a><code>HTMLDocument</code>相关</h3><p>HTML5扩展了<code>HTMLDocument</code>，增加了新功能。以下内容均可通过<code>document.xxx</code>访问。</p>
+<ul>
+<li><p><code>readyState</code><br>之前想判断文档是否加载完成的话，得借助<code>onload</code>事件处理程序来设置<code>flag</code>，现在可以直接用这个属性了。此属性有两个取值：<code>&quot;loading&quot;</code>表示正在加载文档，<code>&quot;complete&quot;</code>表示已加载完文档。</p>
+</li>
+<li><p><code>compatMode</code><br>此属性用来区分页面的兼容模式，有两个取值：<code>&quot;CSS1Compat&quot;</code>表示标准模式，<code>&quot;BackCompat&quot;</code>表示混杂模式。</p>
+</li>
+<li><p><code>head</code><br>之前只有<code>document.body</code>，现在添加一下<code>document.head</code>，来引用文档里的<code>&lt;head&gt;</code>元素。</p>
+</li>
+</ul>
+<h3 id="字符集相关"><a href="#字符集相关" class="headerlink" title="字符集相关"></a>字符集相关</h3><p>HTML5新增了几个与文档字符集相关的属性。</p>
+<ul>
+<li><p><code>charset</code><br>表示文档使用的字符集，可读可写，默认值为<code>&quot;UTF-16&quot;</code>，修改方式有几种：通过<code>&lt;meta&gt;</code>元素、响应头部、直接设置<code>charset</code>属性。</p>
+</li>
+<li><p><code>defaultCharset</code><br>表示根据默认浏览器及操作系统的设置得到的字符集。</p>
+</li>
+</ul>
+<h3 id="自定义数据属性相关"><a href="#自定义数据属性相关" class="headerlink" title="自定义数据属性相关"></a>自定义数据属性相关</h3><p>HTML5规定可以给元素添加自定义属性，使用方法如下。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;myDiv&quot;</span> <span class="attr">data-appId</span>=<span class="string">&quot;12345&quot;</span> <span class="attr">data-appName</span>=<span class="string">&quot;helloworld&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> div = <span class="built_in">document</span>.getElementById(<span class="string">&quot;myDiv&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// get</span></span><br><span class="line"><span class="keyword">let</span> appId = div.dataset.appId; </span><br><span class="line"><span class="keyword">let</span> appName = div.dataset.appName;</span><br><span class="line"></span><br><span class="line"><span class="comment">// set</span></span><br><span class="line">div.dataset.appId = <span class="number">23456</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// check if exists</span></span><br><span class="line"><span class="keyword">if</span>(div.dataset.appName) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="插入标记相关"><a href="#插入标记相关" class="headerlink" title="插入标记相关"></a>插入标记相关</h3><p>虽然DOM为操作节点提供了很多API，但插入比较麻烦，一是要创建一系列节点，二是要小心地按照顺序插入。相对而言，插入标记的话会比较简单方便。</p>
+<ul>
+<li><code>innerHTML</code></li>
+</ul>
+<p>读模式下，返回调用元素的所有后代元素(不包括它本身)。要注意的是不同浏览器返回的文本格式会有所不同，譬如IE和Opera会把标签转为大写，Safari、Chrome和Firefox则返回原本的格式。<br>写模式下，要注意的是<code>innerHTML</code>的值会被解析为DOM子树，中间会经历字符串的序列化(比如<code>&quot;</code>会变成<code>&amp;quot;</code>)，因此设置后获取到的字符串可能和设置的字符串是不一样的。<br>这个属性也有一些限制：对于IE，如果通过<code>innerHTML</code>插入的字符串开头就是一个“无作用域的元素”(如<code>&lt;script&gt;</code>、<code>&lt;style&gt;</code>)，那这个字符串会在解析之前被删除；对于大多数浏览器，通过<code>innerHTML</code>插入<code>&lt;script&gt;</code>元素不起作用，只有IE在一定条件下(需指定<code>defer</code>属性且<code>&lt;script&gt;</code>元素要位于有作用域元素之后)可以。有几种解决办法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">div.innerHTML = <span class="string">&quot;_&lt;script defer&gt;alert(&#x27;hi&#x27;);&lt;\/script&gt;&quot;</span></span><br><span class="line">div.innerHTML = <span class="string">&quot;&lt;div&gt;&amp;nbsp;&lt;\/div&gt;&lt;script defer&gt;alert(&#x27;hi&#x27;);&lt;\/script&gt;&quot;</span></span><br><span class="line">div.innerHTML = <span class="string">&quot;&lt;input type=\&quot;hidden\&quot;&gt;&lt;script defer&gt;alert(&#x27;hi&#x27;);&lt;\/script&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>除此之外，并不是所有元素都支持<code>innerHTML</code>属性，如<code>&lt;col&gt;</code>、<code>&lt;colgroup&gt;</code>、<code>&lt;frameset&gt;</code>、<code>&lt;head&gt;</code>、<code>&lt;html&gt;</code>、<code>&lt;style&gt;</code>、<code>&lt;table&gt;</code>、<code>&lt;tbody&gt;</code>、<code>&lt;thead&gt;</code>、<code>&lt;tfoot&gt;</code>、<code>&lt;tr&gt;</code>。</p>
+<p>通过<code>innerHTML</code>插入的内容需要保证无害，IE8为此提供了一个方法<code>window.toStaticHTML()</code>，用来将传入的HTML字符串转为安全无害版本，即删除所有脚本节点和事件处理程序属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> text = <span class="string">&quot;&lt;a href=\&quot;#\&quot; onclick=\&quot;alert(&#x27;hi&#x27;)\&quot;&gt;Click Me&lt;/a&gt;&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> sanitized = <span class="built_in">window</span>.toStaticHTML(text);</span><br><span class="line"><span class="built_in">console</span>.log(sanitized); <span class="comment">// &quot;&lt;a href=\&quot;#\&quot;&gt;Click Me&lt;/a&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>outerHTML</code><br>读模式下，返回调用它的元素及其所有子节点的HTML标签。<br>写模式下，会创建新的DOM子树，并用这个DOM子树完全替换掉调用元素。</p>
+</li>
+<li><p><code>insertAdjacentHTML()</code><br>接收两个参数：插入位置和需要插入的HTML文本。<br>前者有以下选择：</p>
+<ul>
+<li><code>&quot;beforebegin&quot;</code>：在当前元素之前插入一个紧邻的同辈元素</li>
+<li><code>&quot;afterbegin&quot;</code>：在当前元素下插入一个新的子元素/在第一个子元素之前插入新的子元素</li>
+<li><code>&quot;beforeend&quot;</code>：在当前元素下插入一个新的子元素/在最后一个子元素之后插入新的子元素</li>
+<li><code>&quot;afterend&quot;</code>：在当前元素之后插入一个紧邻的同辈元素</li>
+</ul>
+</li>
+</ul>
+<p>* 内存与性能问题</p>
+<p>性能问题一，用以上方法会删除一些带有事件处理程序或引用其他JavaScript对象子树，但删除该元素的同时并不会删除元素与事件处理程序或JavaScript对象之间的绑定关系。因此在使用以上方法时候最好手动鉴别删除一下。<br>性能问题二，使用<code>innerHTML</code>或<code>outerHTML</code>时，会创建一个HTML解析器，它是浏览器级别的代码(通常用C++写的)基础上运行的，因此比执行JavaScript快。带来的好处是，使用这些方法比通过DOM创建节点再指定它们之间的关系来得快；缺点则是，创建和销毁HTML解析器有性能损失。因此最好能限制一下调用以上方法的次数。</p>
+<h3 id="scrollIntoView"><a href="#scrollIntoView" class="headerlink" title="scrollIntoView()"></a><code>scrollIntoView()</code></h3><p>此方法可以在所有HTML元素上调用，通过滚动浏览器窗口或某个容器元素，使得调用元素出现在视口。当传入<code>true</code>或不传参数时，会让调用元素顶部与视口顶部尽量平齐；当传入<code>false</code>时，会让调用元素尽量全部出现在视口(可能的话会让底部平齐)。</p>
+<h2 id="专用扩展"><a href="#专用扩展" class="headerlink" title="专用扩展"></a>专用扩展</h2><p>也就是不同浏览器自己往DOM中添加的非标准扩展，有些写进标准了，有些没有写进标准成为了自己浏览器专用的内容。这里不太想看，还是略去好了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/DOM/" rel="tag"># DOM</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/ts-note-7/" rel="prev" title="Learning TypeScript From Scratch(7)">
+      <i class="fa fa-chevron-left"></i> Learning TypeScript From Scratch(7)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/interviews-during-2020/" rel="next" title="小羊上岸记">
+      小羊上岸记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E7%AC%A6API"><span class="nav-number">1.</span> <span class="nav-text">选择符API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#querySelector"><span class="nav-number">1.1.</span> <span class="nav-text">querySelector()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#querySelectorAll"><span class="nav-number">1.2.</span> <span class="nav-text">querySelectorAll()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#matchesSelector"><span class="nav-number">1.3.</span> <span class="nav-text">matchesSelector()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%83%E7%B4%A0%E9%81%8D%E5%8E%86"><span class="nav-number">2.</span> <span class="nav-text">元素遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML5"><span class="nav-number">3.</span> <span class="nav-text">HTML5</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E7%9B%B8%E5%85%B3"><span class="nav-number">3.1.</span> <span class="nav-text">类相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%84%A6%E7%82%B9%E7%9B%B8%E5%85%B3"><span class="nav-number">3.2.</span> <span class="nav-text">焦点相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTMLDocument%E7%9B%B8%E5%85%B3"><span class="nav-number">3.3.</span> <span class="nav-text">HTMLDocument相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E9%9B%86%E7%9B%B8%E5%85%B3"><span class="nav-number">3.4.</span> <span class="nav-text">字符集相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E5%B1%9E%E6%80%A7%E7%9B%B8%E5%85%B3"><span class="nav-number">3.5.</span> <span class="nav-text">自定义数据属性相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%A0%87%E8%AE%B0%E7%9B%B8%E5%85%B3"><span class="nav-number">3.6.</span> <span class="nav-text">插入标记相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scrollIntoView"><span class="nav-number">3.7.</span> <span class="nav-text">scrollIntoView()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%93%E7%94%A8%E6%89%A9%E5%B1%95"><span class="nav-number">4.</span> <span class="nav-text">专用扩展</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

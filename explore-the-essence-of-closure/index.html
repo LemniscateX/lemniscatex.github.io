@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="来听我讲讲关于闭包的故事吧！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探寻闭包本质">
+<meta property="og:url" content="https://lemniscatex.github.io/explore-the-essence-of-closure/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="来听我讲讲关于闭包的故事吧！">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-20T08:13:57.000Z">
+<meta property="article:modified_time" content="2020-05-21T09:58:55.000Z">
+<meta property="article:tag" content="essence">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lemniscatex.github.io/explore-the-essence-of-closure/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>探寻闭包本质 | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/explore-the-essence-of-closure/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          探寻闭包本质
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-20 16:13:57" itemprop="dateCreated datePublished" datetime="2020-05-20T16:13:57+08:00">2020-05-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-21 17:58:55" itemprop="dateModified" datetime="2020-05-21T17:58:55+08:00">2020-05-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>来听我讲讲关于闭包的故事吧！</p>
+<span id="more"></span>
+
+<hr>
+<p>前段时间读红宝书，边读边写读书笔记。在读到第七章关于函数表达式部分时，我总觉得书里的引入和讲解都让人有点摸不着头脑，倒也不是因为先入为主地认为它难，就是感觉它在把所有内容混杂在一起，没有一以贯之的主线和条理，因此当时写的读书笔记也有点混乱。</p>
+<p>这样混乱的理解对于爱钻牛角尖的我来说，完全是心里过不去的一道坎儿。在多方探寻之后，我去读了读《你不知道的JavaScript》中的相关部分，发现它引入的点竟然和我的想法不谋而合！于是反复读了几遍，感觉收获很多，我喜欢这样说人话的书！</p>
+<p>既然有所理解，那就记下来吧。Here we go~</p>
+<h2 id="不说闭包"><a href="#不说闭包" class="headerlink" title="不说闭包"></a>不说闭包</h2><p>我们先从JavaScript的作用域链开始讲起。<br>我们知道，JavaScript中有一种叫做作用域链的机制。所谓作用域链，就是程序在执行并需要获取一个变量时，在代码中寻找该变量值的一条路径：先从当前作用域找值，无果则去最近的父作用域找值，无果再向上一层找值…直到到达范围最大的全局作用域为止。因此很容易理解下面的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">father</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">son</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>内层<code>son()</code>的内部没有去定义<code>a</code>，但是却可以拿到外层<code>father()</code>的<code>a</code>。但仅有函数和变量的声明并不能log出<code>a</code>的值(那是当然！)，因此我们需要执行一下<code>son()</code>函数。那么问题来了，怎么执行呢？<br>笨蛋，当然是直接调用呀！但是很快我们发现，外部无法直接调用<code>son()</code>，它只能在 <code>father()</code>内被访问到，所以我们可以在<code>father()</code>内调用<code>son()</code>，再在全局作用域上调用<code>father()</code>，这样就能完美地log出<code>a</code>了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">father</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">son</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">  &#125;</span><br><span class="line">  son();</span><br><span class="line">&#125;</span><br><span class="line">father();</span><br></pre></td></tr></table></figure>
+
+<p>此处<code>son</code>受限于<code>father</code>，只能在<code>father</code>的视线范围(词法作用域)内被允许执行，并在被执行的过程中透露<code>father</code>的信息，那么我们在想，有什么方法可以让<code>son</code>逃脱<code>father</code>的视线去被执行呢？<br>…brainstorming…<br>公布答案！这里的核心思想在于把<code>son</code>给送到外面，怎么送呢？</p>
+<ul>
+<li>把内部函数return出去</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">father</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">son</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> son;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> outerson = father();</span><br><span class="line">outerson();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>把内部函数作为其他函数的参数传出去</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">father</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">son</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">  &#125;</span><br><span class="line">  deliver(son);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deliver</span>(<span class="params">func</span>) </span>&#123;</span><br><span class="line">  func();</span><br><span class="line">&#125;</span><br><span class="line">father();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>把内部函数赋值给全局变量来共享出去</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> outerson;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">father</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">son</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">  &#125;</span><br><span class="line">  outerson = son;</span><br><span class="line">&#125;</span><br><span class="line">father();</span><br><span class="line">outerson();</span><br></pre></td></tr></table></figure>
+
+<p>上面所有方法都是在通过内部函数来泄露外部函数的信息，不同的是，第一个情况下，内部函数是在当前词法作用域内执行的，而后面三个情况下，内部函数则是在当前词法作用域之外执行的。<br>好了，上面的道理我都懂，但是闭包到底是什么呢？</p>
+<h2 id="闭包是什么？"><a href="#闭包是什么？" class="headerlink" title="闭包是什么？"></a>闭包是什么？</h2><blockquote>
+<p>当函数可以记住并访问所在的词法作用域时，就产生了闭包，即使函数是在当前词法作用域之外执行。</p>
+</blockquote>
+<p>多读几遍，不知道你会不会恍然大悟。闭包就是基于词法作用域书写代码时所产生的自然结果，我们甚至不需要为了利用它们而有意地创建闭包，我们要做的是去识别、了解闭包的工作原理以及规避一些潜在的副作用。<br>通常人们并不把第一种情况视为闭包，因为它没什么特殊之处，但后面几种就有意思多了，譬如可以找到它们的特性：</p>
+<ul>
+<li>闭包可以使其外部作用域一直存活而不被垃圾回收</li>
+<li>闭包使得函数可以继续访问定义时的词法作用域</li>
+</ul>
+<h2 id="常用闭包举例"><a href="#常用闭包举例" class="headerlink" title="常用闭包举例"></a>常用闭包举例</h2><p>闭包在代码里很常见，我们不妨来识别识别。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">wait</span>(<span class="params">message</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(message);</span><br><span class="line">  &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line">wait(<span class="string">&quot;Hello closure!&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>在这里，内部函数<code>timer()</code>具有涵盖外部函数<code>wait()</code>作用域的闭包，因此还保有对变量<code>message</code>的引用。<br>执行<code>wait()</code>函数时，<code>setTimeout()</code>会在1s后将<code>timer()</code>添加到任务队列。<br>当<code>timer()</code>要执行时，也就是<code>wait()</code>执行1s后，它的内部作用域并不会消失，<code>timer()</code>依然保有<code>wait()</code>作用域的闭包。<br>在整个过程中，词法作用域都是保持完整的，而这就是闭包。<br>再举一个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setupBot</span>(<span class="params">name, selector</span>) </span>&#123;</span><br><span class="line">  $(selector).click(<span class="function"><span class="keyword">function</span> <span class="title">activator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;Activating: &quot;</span> + name);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line">setupBot(<span class="string">&quot;Closure Bot 1&quot;</span>, <span class="string">&quot;#bot_1&quot;</span>);</span><br><span class="line">setupBot(<span class="string">&quot;Closure Bot 2&quot;</span>, <span class="string">&quot;#bot_2&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>这也是闭包噢！内部的<code>activator()</code>获取了外部<code>setupBot()</code>的<code>name</code>。<br>引用一下书里的总结吧：如果将函数当作一等公民并到处传递，你就会看到闭包在这些函数中的应用。在定时器、事件监听器、Ajax请求、跨窗口通信、Web Workers或者其他的异步或同步任务中，只要使用了回调函数，实际上就是在使用闭包。</p>
+<h2 id="常见闭包错误"><a href="#常见闭包错误" class="headerlink" title="常见闭包错误"></a>常见闭包错误</h2><p>闭包之所以会被觉得难懂，是因为它时常和其他东西混杂在一起，譬如延迟执行的setTimeout和立即执行的IIFE、块级作用域和函数作用域、for循环等。</p>
+<h3 id="立即执行函数"><a href="#立即执行函数" class="headerlink" title="立即执行函数"></a>立即执行函数</h3><p>对于立即执行的函数来说，for循环和闭包的杂糅是不会造成歧义的，譬如以下的两种写法，都会输出相同的内容：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">shout</span>(<span class="params">arg</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg);</span><br><span class="line">  &#125;</span><br><span class="line">  shout(i); <span class="comment">// 0 1 2 3 4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">shout</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i);</span><br><span class="line">  &#125;</span><br><span class="line">  shout(); <span class="comment">// 0 1 2 3 4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在第一种写法中，循环中的每次迭代都会给自己捕获一个<code>i</code>的副本，因为每次的<code>shout()</code>都是有参数传进去的，所以相当于<code>shout(0)</code>、<code>shout(1)</code>…<code>shout(4)</code>。<br>在第二种写法中，循环中的每次迭代都会指向同一个<code>i</code>，也就是外部的<code>i</code>，相当于<code>shout(i)</code>、<code>shout(i)</code>…<code>shout(i)</code>。不过由于是立即执行而非延迟执行，几个<code>shout(i)</code>处在<code>i</code>为不同值的不同时刻，因此也能得到和第一种写法一样的效果。</p>
+<h3 id="延迟执行函数"><a href="#延迟执行函数" class="headerlink" title="延迟执行函数"></a>延迟执行函数</h3><p>但对于延迟执行的函数来说，for循环和闭包的杂糅就让事情变得复杂了些。<br>举一个最为常见的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i);</span><br><span class="line">  &#125;, i * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>猜猜它会怎样输出？它会以每秒一次的频率输出五次5。<br>首先要明确，这里循环中的每次迭代都会指向同一个<code>i</code>，也就是外部的<code>i</code>，不过对于立即执行和延迟执行是有区别的。<br><code>setTimeout()</code>本身是立即执行的，所以参照上面的第二种写法，相当于<code>setTimeout(timer, i*1000)</code>、<code>setTimeout(timer, i*1000)</code>…<code>setTimeout(timer, i*1000)</code>，几个<code>setTimeout(timer, i*1000)</code>处在<code>i</code>为不同值的不同时刻，相当于<code>setTimeout(timer, 0*1000)</code>、<code>setTimeout(timer, 1*1000)</code>…<code>setTimeout(timer, 4*1000)</code>，因此它会在0s、1s…4s后分别执行<code>timer()</code>，共5次。<br>而<code>timer()</code>就是延迟执行了，延迟函数的回调会在循环结束时才执行，(即使是延迟0s，回调函数依然是在循环结束后才被执行)，这个时候的<code>i</code>就已经是5了，所以<code>timer()</code>内部log到的就是从外面获取到的<code>i</code>，也就是5了。<br>如果想要达到预期的每隔一秒按顺序log出0-4的效果，我们需要让每个<code>timer()</code>有自己的<code>i</code>的副本。做法的话，要么就直接作为参数传进去，要么就在内外作用域之间再加一层作用域并把每轮迭代的<code>i</code>放进去。</p>
+<ul>
+<li>直接传参</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params">arg</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">setTimeout</span>(timer(i), i * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然，把函数的定义放到外面也是一样的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params">arg</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(arg);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(timer(i), i * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>加一层作用域并传参</li>
+</ul>
+<p>可以使用IIFE来新增作用域：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> arg = i;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(arg);</span><br><span class="line">    &#125;, arg * <span class="number">1000</span>);</span><br><span class="line">  &#125;)();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，每次迭代的时候，<code>arg</code>都会取到<code>i</code>的副本。当然，还可以把<code>i</code>作为新作用域的参数传进来。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  (<span class="function"><span class="keyword">function</span> (<span class="params">arg</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(arg);</span><br><span class="line">    &#125;, arg * <span class="number">1000</span>);</span><br><span class="line">  &#125;)(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除了使用IIFE新增一层函数作用域，还可以使用ES6的<code>let</code>来新增一层块级作用域。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">let</span> arg = i;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg);</span><br><span class="line">  &#125;, arg * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，<code>let</code>声明的<code>arg</code>拥有块级作用域，每次迭代都会有自己专属的块，块内的<code>arg</code>也都会取到<code>i</code>的副本。当然还可以对它进行改写，for循环头部的<code>let</code>声明还会有一个特殊的行为，该行为指出变量在循环过程中不止被声明一次，每次迭代都会声明。随后的每次迭代都会使用上一个迭代结束时的值来初始化这个变量。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i);</span><br><span class="line">  &#125;, i * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>*发现小问题<br>在控制台跑上面六段代码时，我发现<code>直接传参</code>的两段代码都会直接log出0、1、2、3、4，也就是虽然输出结果对了，但是并没有延迟执行，而<code>加一层作用域并传参</code>的四段代码都能正确地每间隔1s按顺序log出0、1、2、3、4。<br>查了下，<code>setTimeout()</code>没有延迟执行的原因是：如果第一个参数直接传入一个可执行代码，那它就会立即执行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 立即执行</span></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="built_in">console</span>.log(<span class="string">&quot;hello&quot;</span>), <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 延迟执行</span></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="string">&#x27;console.log(&quot;hello&quot;)&#x27;</span>, <span class="number">1000</span>);</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(<span class="string">&quot;hello&quot;</span>)&#125;, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实就我的理解来看，闭包就是函数对其外部作用域的引用，而使用闭包容易出错的原因就在于引用。我们可以控制引用的指向，但是我们不能控制引用的内容，因为同一个引用可能是被多方共享操纵的，可能会在不同阶段呈现出不同的值。因此，想要明确自己通过引用获得什么值，要做的就是厘清一系列的操作时间线。而如果想要摆脱引用，那就得自己创建一个副本，这样就可以把需要的内容给定格住了。<br>闭包其实有好多应用，譬如模块化就是基于闭包的。不过讲到应用，就需要另起一篇啦。<br>至此，故事就讲完啦，希望能有所收获！</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/essence/" rel="tag"># essence</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/dont-be-fragile/" rel="prev" title="Stop crying your heart out">
+      <i class="fa fa-chevron-left"></i> Stop crying your heart out
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/how-to-install-nodejieba/" rel="next" title="nodejieba安装记">
+      nodejieba安装记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E8%AF%B4%E9%97%AD%E5%8C%85"><span class="nav-number">1.</span> <span class="nav-text">不说闭包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">闭包是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E9%97%AD%E5%8C%85%E4%B8%BE%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">常用闭包举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AD%E5%8C%85%E9%94%99%E8%AF%AF"><span class="nav-number">4.</span> <span class="nav-text">常见闭包错误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AB%8B%E5%8D%B3%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0"><span class="nav-number">4.1.</span> <span class="nav-text">立即执行函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%B6%E8%BF%9F%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0"><span class="nav-number">4.2.</span> <span class="nav-text">延迟执行函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
