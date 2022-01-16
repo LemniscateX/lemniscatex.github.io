@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="很多时候，用是知道怎么用的，但其中的逻辑和原理却不甚了解，多看，多理解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些 Redux + react-redux 的基础知识">
+<meta property="og:url" content="https://lemniscatex.github.io/redux-basics/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="很多时候，用是知道怎么用的，但其中的逻辑和原理却不甚了解，多看，多理解。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-01-07T02:24:08.000Z">
+<meta property="article:modified_time" content="2022-01-16T15:35:30.526Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lemniscatex.github.io/redux-basics/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>一些 Redux + react-redux 的基础知识 | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/redux-basics/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一些 Redux + react-redux 的基础知识
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-07 10:24:08" itemprop="dateCreated datePublished" datetime="2022-01-07T10:24:08+08:00">2022-01-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-16 23:35:30" itemprop="dateModified" datetime="2022-01-16T23:35:30+08:00">2022-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redux/" itemprop="url" rel="index"><span itemprop="name">Redux</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>很多时候，用是知道怎么用的，但其中的逻辑和原理却不甚了解，多看，多理解。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="Redux-基本原则"><a href="#Redux-基本原则" class="headerlink" title="Redux 基本原则"></a>Redux 基本原则</h2><p>针对 Flux 这种框架理念，有很多种实现，比如 Redux、Reflux、Fluxible 等(redux 只是其中之一哦!)，不过 Redux 有许多优势以及针对 flux 不足作出的优化。Flux 的基本原则是「单向数据流」，Redux 在此基础上强调了三个原则，介绍如下。</p>
+<h3 id="数据源唯一"><a href="#数据源唯一" class="headerlink" title="数据源唯一"></a>数据源唯一</h3><p>其实就是指把所有状态数据放到唯一的一个 store 上。为什么呢？因为多个 store 首先会有潜在的数据冗余的问题，难以保证数据一致性；其次多个 store 的存在容易产生依赖问题，虽然最终能有解决方案(eg. Flux 的 waitFor)，但依赖关系的存在增加了应用的复杂度，容易带来新问题。</p>
+<p>Redux 中这个唯一的 store 上的状态是一个树形的对象，每个组件只是其中一部分的数据，后面再讲如何设计。</p>
+<h3 id="状态只读"><a href="#状态只读" class="headerlink" title="状态只读"></a>状态只读</h3><p>状态只读并不意味着状态不能改(要是不能改的话，UI=render(state)就完全不会变了)，只是说我状态的修改不是直接改状态上的值，而是创建新的状态对象给 Redux，由 Redux 完成新状态的组装。</p>
+<h3 id="数据改变只能通过纯函数完成"><a href="#数据改变只能通过纯函数完成" class="headerlink" title="数据改变只能通过纯函数完成"></a>数据改变只能通过纯函数完成</h3><p>这个「改变数据」的「纯函数」就是规约函数 Reducer 啦，Redux 的起名也正代表了 Reducer + Flux。普通函数的使用举例如下，iterator 类型数据有 reduce 函数，它可以对元素依次进行规约，得到一个目标。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//                                   ⬇上次规约结果  ⬇本次规约元素</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].reduce(<span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">accumulation, item</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> accumulation + item;</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Redux 中对 Reducer 的使用也类似，参数中上次规约的结果就是上个状态 state，本次规约的元素则是此时接收到的 action 对象，函数要做的就是无副作用(纯函数)地根据它俩返回新的状态，可以对比下 Flux 中的处理，就能理解「副作用」。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Flux 中的处理</span></span><br><span class="line">CounterStore.dispatchToken = AppDispatcher.register(<span class="function">(<span class="params">action</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> (action.type === ActionTypes.INCREMENT) &#123;</span><br><span class="line">		<span class="comment">// 副作用</span></span><br><span class="line">		counterValues[action.counterCaption]++;</span><br><span class="line">		counterStore.emit(CHANGE_EVENT);</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (action.type === ActionTypes.DECREMENT) &#123;</span><br><span class="line">		counterValues[action.counterCaption]--;</span><br><span class="line">		counterStore.emit(CHANGE_EVENT);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Redux</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span> = (<span class="params">state, action</span>) =&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; counterCaption &#125; = action;</span><br><span class="line">  <span class="keyword">switch</span>(action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> ActionTypes.INCREMENT:</span><br><span class="line">      <span class="keyword">return</span> &#123;...state, [counterCaption]: state[counterCaption] + <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> ActionTypes.DECREMENT:</span><br><span class="line">      <span class="keyword">return</span> &#123;...state, [counterCaption]: state[counterCaption] - <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们的 reducer 只负责「计算状态」，而不用负责「存储状态」，这也是和 Flux 有区别的地方。Redux 本身并没有额外强大的功能，反而像是给 Flux 添加了许多限制，不过正是这种限制才更加有利我们开发。</p>
+<h2 id="Redux-基础例子"><a href="#Redux-基础例子" class="headerlink" title="Redux 基础例子"></a>Redux 基础例子</h2><p>用 Redux 重构下之前的例子，看看 Redux 的特别之处吧！</p>
+<h3 id="action"><a href="#action" class="headerlink" title="action"></a>action</h3><p>和 Flux 类似，把 action 分为类型和构造函数两个文件，前者类似，后者则大不一样。Flux 函数中创建了 action 并立刻 dispatch(<a href="https://lemniscatex.github.io/react-flux-basics/#action">传送门</a>)，Redux 中则只是纯粹地返回了一个 action 对象。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/Actions.js</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> ActionTypes <span class="keyword">from</span> <span class="string">&#x27;./ActionTypes.js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> increment = <span class="function">(<span class="params">counterCaption</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: ActionTypes.INCREMENT,</span><br><span class="line">    <span class="attr">counterCaption</span>: counterCaption</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> decrement = <span class="function">(<span class="params">counterCaption</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: ActionTypes.DECREMENT,</span><br><span class="line">    <span class="attr">counterCaption</span>: counterCaption</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="dispatcher-✕-createStore-√"><a href="#dispatcher-✕-createStore-√" class="headerlink" title="dispatcher ✕ createStore √"></a>dispatcher ✕ createStore √</h3><p>Flux 中需要全局定义一个 Dispatcher(<a href="https://lemniscatex.github.io/react-flux-basics/#dispatcher">传送门</a>)，Redux 中则没有这个东西。Dispatcher 存在的作用就是把一个 action 对象分发给多个注册了的 Store，既然 Redux 让全局只有一个 Store，那么再创造一个 Dispatcher 就意义不大了。所以 Redux 中将分发这一功能，从一个 Dispatcher 对象简化为 Store 对象上的一个函数 dispatch，毕竟只有一个 Store，要分发也是分发给这个 Store，那我就调用 Store 上一个表示分发的函数就行了，非常合理。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/Store.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; createStore &#125; <span class="keyword">from</span> <span class="string">&#x27;Redux&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> reducer <span class="keyword">from</span> <span class="string">&#x27;./Reducer.js&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> initValues = &#123;</span><br><span class="line">  <span class="string">&#x27;First&#x27;</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="string">&#x27;Second&#x27;</span>: <span class="number">10</span>,</span><br><span class="line">  <span class="string">&#x27;Third&#x27;</span>: <span class="number">20</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> store = createStore(reducer, initValues);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> store;</span><br></pre></td></tr></table></figure>
+
+<p>这里的 createStore 接收两个参数，第一个表示更新状态的 reducer，第二个表示初始状态，第三个是个可选的代表 Store Enhancer 的参数(后面讲)。</p>
+<p>这里我们传入的 reducer 就是<a href="https://lemniscatex.github.io/redux-basics/#%E6%95%B0%E6%8D%AE%E6%94%B9%E5%8F%98%E5%8F%AA%E8%83%BD%E9%80%9A%E8%BF%87%E7%BA%AF%E5%87%BD%E6%95%B0%E5%AE%8C%E6%88%90">上面</a>提到过的那个，它和 Flux 中 Store 注册的回调函数类似，都是一个 switch 语句，不同之处在于 Redux 额外传入了 state，把 state 的存储交给 Redux 框架本身，让 reducer 只关心如何更新 state。PS: redux 中一定不要修改这个参数 state，这不好。</p>
+<h3 id="view"><a href="#view" class="headerlink" title="view"></a>view</h3><p>顶层组件 <code>src/views/ControlPanel.js</code> 的代码和 Flux 那边一样(<a href="https://lemniscatex.github.io/react-flux-basics/#view">传送门</a>)，具体的 <code>src/views/Counter.js</code> 则不一样，区别有许多。</p>
+<p>首先是初始化时 state 的来源不同、store 的数量不同。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// src/views/Counter.js</span><br><span class="line"></span><br><span class="line">import store from &#x27;../Store.js&#x27;;</span><br><span class="line"></span><br><span class="line">class Counter extends Component &#123;</span><br><span class="line">  constructor(props) &#123;</span><br><span class="line">    super(props);</span><br><span class="line">    // ...</span><br><span class="line">    this.state = this.getOwnState();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getOwnState() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      value: store.getState()[this.props.caption];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其次是保持状态同步，这里事件监听可以用 store 原生的。（其实这边 mount 的 subscribe 代码可以写到 constructor 中，单独拎到 did mount 中只是为了和 unmount 对称而已）。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">onChange</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">  <span class="built_in">this</span>.setState(<span class="built_in">this</span>.getOwnState());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">componentDidMount</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">  store.subscribe(<span class="built_in">this</span>.onChange);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">componentWillUnmount</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">  store.unsubscribe(<span class="built_in">this</span>.onChange);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再然后是触发状态变动，这里区别在于 action 构造函数，Flux 中构造同时派发，Redux 中仅构造，因此需要先调用构造函数，再调用 store 的 dispatch 方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">onIncrement() &#123;</span><br><span class="line">  store.dispatch(Actions.increment(this.props.caption));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">onDecrement() &#123;</span><br><span class="line">  store.dispatch(Actions.decrement(this.props.caption));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render() &#123;</span><br><span class="line">	return (</span><br><span class="line">		&lt;div&gt;</span><br><span class="line">			&lt;button onClick=&#123;this.onIncrement&#125;&gt; + &lt;/button&gt;</span><br><span class="line">			&lt;button onClick=&#123;this.onDecrement&#125;&gt; - &lt;/button&gt;</span><br><span class="line">			&lt;span&gt;&#123; this.props.caption &#125; count: &#123; this.state.value &#125;&lt;/span&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再看下 Summary 组件，这里要根据唯一的 store 中状态进行计算。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// src/views/Summary.js</span><br><span class="line"></span><br><span class="line">// ...</span><br><span class="line"></span><br><span class="line">getOwnState() &#123;</span><br><span class="line">  const state = store.getState();</span><br><span class="line">  let sum = 0;</span><br><span class="line">  for(const key in state) &#123;</span><br><span class="line">    if(state.hasOwnProperty(key)) &#123;</span><br><span class="line">      sum += state[key];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return &#123; sum &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="改进一：容器组件和傻瓜组件"><a href="#改进一：容器组件和傻瓜组件" class="headerlink" title="改进一：容器组件和傻瓜组件"></a>改进一：容器组件和傻瓜组件</h2><p>上面的每个组件都完成了两件事情，一个是和 redux store 打交道(初始化、监听 store 改变、触发 store 改变)，另一个是根据当前 props 和 state 渲染 UI。为了实践专一性原则，我们可以根据上述功能将组件划分为两个组件。在这种划分维度下，二者是父子组件的关系，其中和 redux 打交道的部分我们称之为外层的「容器组件」(Container Component)，专注渲染的部分我们称之为内层的「傻瓜组件」(Dumb Component)。(不过聪明和笨也是相对的，外层虽要处理各种状态，但也都是有套路、可抽离复用的；内层虽只负责渲染，但其纯函数的性质还蛮有大智若愚之感的)。</p>
+<p>其实还蛮好理解的，把状态相关都丢给外层，把视图相关都丢给内层，二者通过 props 来传递数据即可。(拆分其实和 Redux 无关，Flux 中也有，这里提及只是为了引出后面的 react-redux 库)。</p>
+<p>拿上面的 Counter 组件来举个例子拆分下吧。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// src/views/Counters.js 傻瓜组件</span><br><span class="line">class Counter extends Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    const &#123; caption, onIncrement, onDecrement, value &#125; = this.props;</span><br><span class="line">    return (</span><br><span class="line">      // ...</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>傻瓜组件完全木有 state，所有数据都来自 props，也只有一个 render 函数，被称作「无状态组件」。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// src/views/Container.js</span><br><span class="line">class CounterContainer extends Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return &lt;Counter</span><br><span class="line">      caption=&#123;this.props.caption&#125;</span><br><span class="line">      onIncrement=&#123;this.onIncrement&#125;</span><br><span class="line">      onDecrement=&#123;this.onDecrement&#125;</span><br><span class="line">      value=&#123;this.state.value&#125;</span><br><span class="line">    /&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>容器组件的 render 只需要负责渲染傻瓜组件即可，外层调用者看到的只是容器组件，并不关心傻瓜组件。Summary 组件的拆分也类似。</p>
+<h2 id="改进二：组件-Context"><a href="#改进二：组件-Context" class="headerlink" title="改进二：组件 Context"></a>改进二：组件 Context</h2><p>Redux 中只有一个 Store，我们在许多地方都通过 import 拿到了它，但这种导入方式会有问题。比如当我们定义一个组件时，或者使用 npm 引入第三方组件时，我们不知道组件会在哪里被使用，因此也无法预先知道唯一 Store 的定义位置了，这种直接导入的方式不利于组件复用。</p>
+<p>最好的做法是，只有一个地方直接导入 Store，其余组件避免直接导入 Store。对于前者，很容易想到把最顶层 React 组件作为导入处；对于后者，我们能想到最直接的获取 store 的方法，就是通过 props。通过 props 的方式需要层层传递，很麻烦，这时就不得不说 React 提供的 Context 功能了。</p>
+<p>Context 是上下文环境，它能让一个树状组件上「所有组件」都能「访问一个共同的对象」。它需要上级组件和下级组件配合使用，前者要声明自己支持 context，提供一个返回 context 的函数；后者要宣称自己要使用 context，通过 this.context 访问这个共同环境的对象。</p>
+<h2 id="综合改进-手写版"><a href="#综合改进-手写版" class="headerlink" title="综合改进(手写版)"></a>综合改进(手写版)</h2><p>综合起来，我们的目标是「在顶层容器引入 store、声明 context」供「所有子组件通过 context 直接取用 store」。每个应用的顶层元素都不一样，因此我们把它抽象成一个特殊的 React 组件，作为通用的 context 提供者，我们称之为「Provider」。</p>
+<h3 id="如何实现-Provider-呢？"><a href="#如何实现-Provider-呢？" class="headerlink" title="如何实现 Provider 呢？"></a>如何实现 Provider 呢？</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// src/Provider.js</span><br><span class="line">import &#123; PropTypes, Component &#125; from &#x27;React&#x27;;</span><br><span class="line">class Provider extends Component &#123;</span><br><span class="line"></span><br><span class="line">  // getChildContext 函数返回一个代表 context 的对象</span><br><span class="line">  // 为了让 Provider 足够通用，并不在此处导入 store，而是要求 Provider 的使用者通过 props 传递进来 store</span><br><span class="line">  getChildContext() &#123;</span><br><span class="line">    return &#123; store: this.props.store &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // render 函数就是把 &lt;Provider&gt;&lt;/Provider&gt; 内的组件渲染出来，并不做额外的事情</span><br><span class="line">  render() &#123;</span><br><span class="line">    return this.props.children;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 为了让 Provider 能够被 React 认可为一个 Context 提供者，需要声明一个属性</span><br><span class="line">Provider.childContextTypes = &#123;</span><br><span class="line">  store: PropTypes.object</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="顶层组件如何使用-Provider-呢？"><a href="#顶层组件如何使用-Provider-呢？" class="headerlink" title="顶层组件如何使用 Provider 呢？"></a>顶层组件如何使用 Provider 呢？</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// src/index.js</span><br><span class="line">import store from &#x27;./Store.js&#x27;;</span><br><span class="line">import Provider from &#x27;./Provider.js&#x27;;</span><br><span class="line"></span><br><span class="line">// 先前的顶层组件 ControlPanel 被包在新的顶层组件 Provider 中</span><br><span class="line">// context 这下就可以覆盖住整个应用中的所有组件了</span><br><span class="line">// ControlPanel 组件本身不需要做任何变动，和之前一样，只是渲染三个 Counter</span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">    &lt;ControlPanel/&gt;</span><br><span class="line">  &lt;/Provider&gt;,</span><br><span class="line">  document.getElementById(&#x27;root&#x27;)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="傻瓜组件如何使用-Provider-呢？"><a href="#傻瓜组件如何使用-Provider-呢？" class="headerlink" title="傻瓜组件如何使用 Provider 呢？"></a>傻瓜组件如何使用 Provider 呢？</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// src/views/Counter.js</span><br><span class="line">// Counter 是个无状态组件，不需要和 store 直接打交道，因此本身也不用做任何变动</span><br></pre></td></tr></table></figure>
+
+<h3 id="容器组件如何使用-Provider-呢？"><a href="#容器组件如何使用-Provider-呢？" class="headerlink" title="容器组件如何使用 Provider 呢？"></a>容器组件如何使用 Provider 呢？</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">// src/views/CounterContainer.js，其他代码见上方 #改进一 处</span><br><span class="line">// ...</span><br><span class="line"></span><br><span class="line">// 为了能让 CounterContainer 访问 context，需要声明一个属性并且使其值与 Provider 的对应一个属性值相等</span><br><span class="line">CounterContainer.contextTypes = &#123;</span><br><span class="line">  store: PropTypes.object</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// CounterContainer 中所有对 store 的访问其实是 this.context.store，因此要映射一下</span><br><span class="line">getOwnState() &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    value: this.context.store.getState()[this.props.caption]</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 由于我们自定义了构造函数，因此需要使用第二个参数 context</span><br><span class="line">constructor(props, context) &#123;</span><br><span class="line">  // 调用 super 时一定要带上 context 参数，才能让 React 组件初始化实例中的 context</span><br><span class="line">  // 否则组件的其他地方就用不了 this.context</span><br><span class="line">  super(props, context);</span><br><span class="line">  // ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// // 上方也可以改写为</span><br><span class="line">// constructor() &#123;</span><br><span class="line">//   super(...arguments);</span><br><span class="line">// &#125;</span><br></pre></td></tr></table></figure>
+
+<p>总结一下，React 的 Context 相当于一个全局对象，全局对象容易在不经意的地方被改变，按理说应该避免使用。但由于 Redux 的 Store 封装得很好，没有提供直接修改状态的功能，部分地克服了作为全局对象的缺点；且 Redux 中一个应用只有一个 Store，也防止了滥用的情况，因此，使用 Context 来传递 Store 是一个不错的选择。</p>
+<h2 id="综合改进-调库版"><a href="#综合改进-调库版" class="headerlink" title="综合改进(调库版)"></a>综合改进(调库版)</h2><p>上面通过一个手写的 Provider + 组件拆分实践了两种改进方法(还记得是哪两种吗？)，不难发现这其中是有套路的，把套路抽象出来复用，就成了库，有个很不错的库，叫 react-redux。</p>
+<p>react-redux 对上述两种改进方法的实践，分别如下：</p>
+<ul>
+<li>connect：连接容器组件和傻瓜组件</li>
+<li>Provider：提供包含 store 的 context</li>
+</ul>
+<p>下面分别介绍下 react-redux 提供的这俩功能。</p>
+<h3 id="connect"><a href="#connect" class="headerlink" title="connect"></a>connect</h3><p>我们的手工实践中，自己定义了一层 CounterContainer，这个库则没有定义此组件，而是直接导出了如下语句。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(mapStateToProps, mapDispatchToProps)(Counter);</span><br></pre></td></tr></table></figure>
+
+<p>这里的 connect 函数接收两个参数，返回一个新函数；新函数接收一个参数，返回容器组件。想知道 connect 的参数含义，就要从「理解容器组件做了什么事」来入手，也就是通过目的反推实现起来需要的依赖，那么容器组件做了啥呢？</p>
+<ul>
+<li>把 store 上的状态转化为内层傻瓜组件的 props</li>
+<li>把内层傻瓜组件的用户行为转化为派送给 store 的动作</li>
+</ul>
+<p>其实两边都是映射，前者是傻瓜组件的输入，是 state 到 props 的映射(外层 state 以 props 中变量的形式出现在内层)；后者是傻瓜组件的输出，是 dispatch 到 props 的映射(外层 dispatch 以 props 中函数的形式出现在内层)。知道了这俩，就很好理解 connect 中传递的 mapStateToProps 和 mapDispatchToProps 了，如下。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 外层 state 中的数据，取出 key 为内层 props 的 caption 值的值，作为内层 props 的 value 值</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapStateToProps</span>(<span class="params">state, ownProps</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">value</span>: state[ownProps.caption]</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 内层多了两个 props：OnIncrement、OnDecrement</span></span><br><span class="line"><span class="comment">// 前者调用了外层的 dispatch 去派发一个 Actions.increment 的 action，参数为内层 props 的 caption</span></span><br><span class="line"><span class="comment">// 后者调用了外层的 dispatch 去派发一个 Actions.decrement 的 action，参数为内层 props 的 caption</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapDispatchToProps</span>(<span class="params">dispatch, ownProps</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">onIncrement</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      dispatch(Actions.increment(ownProps.caption));</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">onDecrement</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      dispatch(Actions.decrement(ownProps.caption));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h3><p>react-redux 的 Provider 和我们之前手写的几乎一样，不过更加严谨了些。我们只限制 store 属性是一个 object，react-redux 中则要求 store 不光是一个 object，还必须要包括三个函数：subscribe、dispatch、getState。</p>
+<p>除此之外，react-redux 定义了 Provider 的 componentWillReceiveProps(快回忆下它的作用！<a href="https://lemniscatex.github.io/react-flux-basics/#%E6%9B%B4%E6%96%B0(update)">传送门</a>)，此生命周期函数会在每次重新渲染的时候被调用到，react-redux 在这个生命周期函数中会检查此次渲染时代表 store 的 props 和上一次是否一样，如果不一样则警告，避免多次渲染用了不同的 Redux Store。每个应用只能有一个 Redux Store，整个 Redux 的生命周期中都应该保持 Store 的唯一性。</p>
+<p>以上就是简单的 redux 知识 + react-redux 知识了！后面要温习的还有很多，下次继续吧~</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/mac-config/" rel="prev" title="神奇のmac配置">
+      <i class="fa fa-chevron-left"></i> 神奇のmac配置
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redux-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99"><span class="nav-number">1.</span> <span class="nav-text">Redux 基本原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%BA%90%E5%94%AF%E4%B8%80"><span class="nav-number">1.1.</span> <span class="nav-text">数据源唯一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E5%8F%AA%E8%AF%BB"><span class="nav-number">1.2.</span> <span class="nav-text">状态只读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%94%B9%E5%8F%98%E5%8F%AA%E8%83%BD%E9%80%9A%E8%BF%87%E7%BA%AF%E5%87%BD%E6%95%B0%E5%AE%8C%E6%88%90"><span class="nav-number">1.3.</span> <span class="nav-text">数据改变只能通过纯函数完成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redux-%E5%9F%BA%E7%A1%80%E4%BE%8B%E5%AD%90"><span class="nav-number">2.</span> <span class="nav-text">Redux 基础例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#action"><span class="nav-number">2.1.</span> <span class="nav-text">action</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dispatcher-%E2%9C%95-createStore-%E2%88%9A"><span class="nav-number">2.2.</span> <span class="nav-text">dispatcher ✕ createStore √</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#view"><span class="nav-number">2.3.</span> <span class="nav-text">view</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B%E4%B8%80%EF%BC%9A%E5%AE%B9%E5%99%A8%E7%BB%84%E4%BB%B6%E5%92%8C%E5%82%BB%E7%93%9C%E7%BB%84%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">改进一：容器组件和傻瓜组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B%E4%BA%8C%EF%BC%9A%E7%BB%84%E4%BB%B6-Context"><span class="nav-number">4.</span> <span class="nav-text">改进二：组件 Context</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%BC%E5%90%88%E6%94%B9%E8%BF%9B-%E6%89%8B%E5%86%99%E7%89%88"><span class="nav-number">5.</span> <span class="nav-text">综合改进(手写版)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0-Provider-%E5%91%A2%EF%BC%9F"><span class="nav-number">5.1.</span> <span class="nav-text">如何实现 Provider 呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B6%E5%B1%82%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Provider-%E5%91%A2%EF%BC%9F"><span class="nav-number">5.2.</span> <span class="nav-text">顶层组件如何使用 Provider 呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%82%BB%E7%93%9C%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Provider-%E5%91%A2%EF%BC%9F"><span class="nav-number">5.3.</span> <span class="nav-text">傻瓜组件如何使用 Provider 呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Provider-%E5%91%A2%EF%BC%9F"><span class="nav-number">5.4.</span> <span class="nav-text">容器组件如何使用 Provider 呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%BC%E5%90%88%E6%94%B9%E8%BF%9B-%E8%B0%83%E5%BA%93%E7%89%88"><span class="nav-number">6.</span> <span class="nav-text">综合改进(调库版)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#connect"><span class="nav-number">6.1.</span> <span class="nav-text">connect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Provider"><span class="nav-number">6.2.</span> <span class="nav-text">Provider</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
