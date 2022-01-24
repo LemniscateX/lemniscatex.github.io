@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lemniscatex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="只能说，实现 dark mode 的尽头是手写。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dark mode 实践踩坑记录">
+<meta property="og:url" content="https://lemniscatex.github.io/implement-dark-mode/index.html">
+<meta property="og:site_name" content="咱是小羊">
+<meta property="og:description" content="只能说，实现 dark mode 的尽头是手写。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lemniscatex.github.io/implement-dark-mode/light.png">
+<meta property="og:image" content="https://lemniscatex.github.io/implement-dark-mode/dark-bad.png">
+<meta property="og:image" content="https://lemniscatex.github.io/implement-dark-mode/hue.jpeg">
+<meta property="og:image" content="https://lemniscatex.github.io/implement-dark-mode/dark-good.png">
+<meta property="og:image" content="https://lemniscatex.github.io/implement-dark-mode/dark-filter-error.png">
+<meta property="og:image" content="https://lemniscatex.github.io/implement-dark-mode/light-filter-error.png">
+<meta property="og:image" content="https://lemniscatex.github.io/implement-dark-mode/filter-affect-others.gif">
+<meta property="article:published_time" content="2022-01-24T03:15:21.000Z">
+<meta property="article:modified_time" content="2022-01-24T15:09:10.658Z">
+<meta property="article:tag" content="DarkMode">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lemniscatex.github.io/implement-dark-mode/light.png">
+
+<link rel="canonical" href="https://lemniscatex.github.io/implement-dark-mode/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>dark mode 实践踩坑记录 | 咱是小羊</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">咱是小羊</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-projects">
+
+    <a href="/projects/" rel="section"><i class="fa fa-magic fa-fw"></i>Projects</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://lemniscatex.github.io/implement-dark-mode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar/avatar.jpg">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="咱是小羊">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          dark mode 实践踩坑记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-24 11:15:21 / Modified: 23:09:10" itemprop="dateCreated datePublished" datetime="2022-01-24T11:15:21+08:00">2022-01-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Project/" itemprop="url" rel="index"><span itemprop="name">Project</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>只能说，实现 dark mode 的尽头是手写。</p>
+<span id="more"></span>
+
+<hr>
+<p>手机 QQ 最近火急火燎地整改，暗黑模式的支持就是其中的一个整改项。由于腾讯课堂在手机 QQ 有一个常驻入口，因此我们也要按照它们的要求实现真正意义上的 dark mode 支持(而不是目前手机 QQ 强制给加的一层灰色蒙层)。</p>
+<p>大学时候有个<a href="https://github.com/zcl1115/chat-online-demo">项目</a>也是自己设计和实现的 dark mode 支持，当时是手写的，依稀记得后面从哪些文章里看到说可以一行代码实现暗黑模式云云，于是企图在这次实践过程中应用下这些奇技淫巧，然而经过一天的实践，我发现这些方法有绕不过的坑，最后只得推翻重来手写一把，下面来细说一下。</p>
+<h2 id="常见实践"><a href="#常见实践" class="headerlink" title="常见实践"></a>常见实践</h2><p>在开始写代码前先 Google 了一下，CSS Tricks 的 <a href="https://css-tricks.com/a-complete-guide-to-dark-mode-on-the-web/#aa-using-a-body-class">A Complete Guide to Dark Mode on the Web</a> 比较推荐阅读，里面写的还挺全的。</p>
+<h3 id="开启方式"><a href="#开启方式" class="headerlink" title="开启方式"></a>开启方式</h3><p>一般来说会有两种开启方式，一种会在页面(通常右上角)使用一个 switch 开关控制页面是 light 还是 dark，一种会根据系统或者应用的 Preference 来自动切换。</p>
+<h4 id="manually-toggle"><a href="#manually-toggle" class="headerlink" title="manually toggle"></a>manually toggle</h4><p>对于手动选择的模式，我们要如何让开关和样式关联上呢？肯定要给这个开关加个事件处理函数了，里面可以去改变页面根元素的类名，通过类名控制样式，如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> btn = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.btn-toggle&#x27;</span>);</span><br><span class="line"></span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">document</span>.body.classList.toggle(<span class="string">&#x27;dark-theme&#x27;</span>);  </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 方法 <span class="number">1</span>: 通过改变类，并使用不同的样式</span><br><span class="line">body &#123;</span><br><span class="line">  color: <span class="number">#222</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#fff</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">a</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#0033cc</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">body</span><span class="selector-class">.dark-theme</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#eee</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#121212</span>;</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">a</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#809fff</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 方法 <span class="number">2</span>: 通过改变类，并使用不同的 CSS 变量</span><br><span class="line">body &#123;</span><br><span class="line">  --text-color: <span class="number">#222</span>;</span><br><span class="line">  --bkg-<span class="attribute">color</span>: <span class="number">#fff</span>;</span><br><span class="line">  --anchor-<span class="attribute">color</span>: <span class="number">#0033cc</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">body</span><span class="selector-class">.dark-theme</span> &#123;</span><br><span class="line">  --text-<span class="attribute">color</span>: <span class="number">#eee</span>;</span><br><span class="line">  --bkg-<span class="attribute">color</span>: <span class="number">#121212</span>;</span><br><span class="line">  --anchor-<span class="attribute">color</span>: <span class="number">#809fff</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="built_in">var</span>(--text-color);</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">var</span>(--bkg-color);</span><br><span class="line"></span><br><span class="line">  <span class="selector-tag">a</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="built_in">var</span>(--anchor-color);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也可以去改变加载的样式文件，通过不同的 css 文件来控制样式。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">&quot;light-theme.css&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">id</span>=<span class="string">&quot;theme-link&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> btn = <span class="built_in">document</span>.querySelector(<span class="string">&quot;.btn-toggle&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> theme = <span class="built_in">document</span>.querySelector(<span class="string">&quot;#theme-link&quot;</span>);</span><br><span class="line"></span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (theme.getAttribute(<span class="string">&quot;href&quot;</span>) == <span class="string">&quot;light-theme.css&quot;</span>) &#123;</span><br><span class="line">    theme.href = <span class="string">&quot;dark-theme.css&quot;</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    theme.href = <span class="string">&quot;light-theme.css&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* light-theme.css 文件写一份样式 */</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* dark-theme.css 文件写一份样式 */</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="follow-system"><a href="#follow-system" class="headerlink" title="follow system"></a>follow system</h4><p>对于要自动适配系统的模式，我们要如何判断系统的偏好并编写样式呢？一种方法是用 CSS 所支持的 <code>prefers-color-scheme</code> 这个 media query 来包含样式，另一种类似，也是通过对这个 query 的匹配来判断既而添加类名和样式。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 通过 media query 直接写 */</span></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">prefers-color-scheme</span>: dark) &#123; &#125;</span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">prefers-color-scheme</span>: light) &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.matchMedia &amp;&amp; <span class="built_in">window</span>.matchMedia(<span class="string">&#x27;(prefers-color-scheme: dark)&#x27;</span>).matches) &#123;</span><br><span class="line">  <span class="built_in">document</span>.body.classList.add(<span class="string">&#x27;dark-theme&#x27;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.body.classList.remove(<span class="string">&#x27;dark-theme&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="用户偏好"><a href="#用户偏好" class="headerlink" title="用户偏好"></a>用户偏好</h3><p>这个功能其实是有真实的需求的，比如如果我们不记住用户偏好，那么肯定只能有一种默认值，再在加载的过程中判断是偏好 light 或 dark。这种情况下，我们势必会得罪一方(eg. 默认 light 那么对于 dark 偏好的用户来说，肯定会先闪过白色样式再加载到正确的黑色样式，反之亦然)，这种现象叫做 “flash of incorrect theme” (FOIT)。</p>
+<p>想要记住用户偏好，可以把这个偏好值存储在 localStorage 里，不过这对于「follow system」的用户来说不适用，总不能给 system preference 添加监听函数，它一改我就去改这个偏好值吧，系统偏好不在我的管辖范围内，在页面设置偏好倒是可行。对于前后端不分离的类型，还可以把偏好值放到 cookie 里，让 server 获取到偏好返回对应的 HTML。</p>
+<h2 id="奇技淫巧"><a href="#奇技淫巧" class="headerlink" title="奇技淫巧"></a>奇技淫巧</h2><p>有一个方法可以一行代码搞定 dark mode，而且乍一看效果还可以。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">html</span> &#123;</span><br><span class="line">  <span class="attribute">filter</span>: <span class="built_in">invert</span>(<span class="number">1</span>) <span class="built_in">hue-rotate</span>(<span class="number">180deg</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="./light.png"><br><img src="./dark-bad.png"></p>
+<p>解释一下这里的样式，filter 其实是滤镜，它本身提供了很多处理的接口，<a href="https://css-tricks.com/almanac/properties/f/filter/">参考</a>，比如模糊 <code>blur()</code>、灰度 <code>grayscale()</code>、对比度 <code>contrast()</code> 等。</p>
+<p>其中 invert 的作用是反转颜色通道数值，接收的值在 0~1。可以把 <code>invert(param)</code> 想象成一个函数 <code>f(value, param) = param * (255 - value) + (1 - param) * value</code>，当 param 为 0 时这个公式退化为 <code>f(value) = value</code> 也就是不变色，当 param 为 1 时这个公式退化为 <code>f(value) = 255 - value</code>。比如一个 <code>rgb(0, 0, 255)</code> 在被套用 invert(1) 后会变成 <code>rgba(255, 255, 0)</code>；一个 <code>rgb(255, 0, 0)</code> 在被套用 invert(0.85) 后会变成 <code>rgb(38, 217, 217)</code>(套公式，0.85*(255-255) + (1-0.85)* 255 = 38.25)，<a href="https://stackoverflow.com/questions/55899329/what-is-the-color-transformation-formula-used-by-invert-in-css">参考</a>。</p>
+<p>其中 hue-rotate 的作用是转动色盘，接收的值在 0deg~360deg。这个其实更好理解，如下图是色盘，比如一个纯红色在被套用 <code>hue-rotate(90deg)</code> 后会变成纯绿色，相当于我的取色逆时针转了 90°，具体的计算和矩阵运算相关，<a href="https://stackoverflow.com/questions/65344006/why-does-filter-invert1-hue-rotate180deg-turn-red-into-a-peachy-pink-colo">参考</a>。</p>
+<p><img src="./hue.jpeg"></p>
+<p>在二者叠加的效果下，就会有很神奇的暗色模式了。但我们可以很明显地看到，这里的图片也被反色了，这不是我们预期的效果，一个常见的做法是给 img 标签再使用这个 filter 给反回去，它是生效的，如下图。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">html</span> &#123;</span><br><span class="line">  <span class="attribute">filter</span>: <span class="built_in">invert</span>(<span class="number">1</span>) <span class="built_in">hue-rotate</span>(<span class="number">180deg</span>);</span><br><span class="line">	</span><br><span class="line">  // 图片反转再反转，就和原先一样了  </span><br><span class="line">  <span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">filter</span>: <span class="built_in">invert</span>(<span class="number">1</span>) <span class="built_in">hue-rotate</span>(<span class="number">180deg</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="./dark-good.png"></p>
+<p>PS: 对于 invert 非 1 的，无法通过两次 revert 来反转到初始值，<a href="https://stackoverflow.com/questions/48731131/revert-a-filter-invert-css-rule">参考</a>。</p>
+<h2 id="暗黑模式の坑"><a href="#暗黑模式の坑" class="headerlink" title="暗黑模式の坑"></a>暗黑模式の坑</h2><h3 id="根据目标色反推源头色"><a href="#根据目标色反推源头色" class="headerlink" title="根据目标色反推源头色"></a>根据目标色反推源头色</h3><ul>
+<li><p>问题<br>如果要在实践中使用 filter 来实现暗黑模式，那么我们就不需要给各种 color 设置偏黑色的，而是用原始的偏白色颜色，因为这样套用 filter 自然就会变黑。想要达到目标样式，只需要设置一个特定的偏白色，让这个色通过 filter 后呈现目标样式就行(目标颜色在设计稿里)。那么问题来了，我要怎么根据设计稿里的偏黑颜色，去反推我要设置的偏白初始值呢？</p>
+</li>
+<li><p>解决<br>聪明的我想到了一种方法，就是反其道而行之。先把目标值设为某个元素的 color，给整个页面加个 filter，用取色器应用(无法用 chrome devtools 的取色器噢！)来取当前的颜色，这个颜色是不是就是我们需要的呢？果不其然，的确如此。不过随着实验越多，我发现黑白这一类的可以得到正确的颜色，但是彩色的貌似不是这么容易就能推出来的。<br>这里取色还要注意下，电脑和外接显示屏不一样。</p>
+</li>
+</ul>
+<h3 id="通过-background-url-设置的图片无法反色"><a href="#通过-background-url-设置的图片无法反色" class="headerlink" title="通过 background url 设置的图片无法反色"></a>通过 background url 设置的图片无法反色</h3><ul>
+<li><p>问题<br>像下面的例子，即使加了上面的样式，还是没法反色。<br><img src="./dark-filter-error.png"><br><img src="./light-filter-error.png"></p>
+</li>
+<li><p>原因<br>首先是因为这种方法设置图片的元素，无法通过 img 标签选择到(那是自然！)，且有个规定，对于设置了 background 属性的选择器，在其中写的 filter 属性是<strong>完全不生效</strong>的，<a href="https://stackoverflow.com/questions/31966595/how-can-i-disable-a-css-background-filter">参考</a>。解决办法要么把这些都换成 img，要么用 hack 一些的加伪元素的方法，不过前者不太现实，后者不太方便。单就这一个问题就可以否决掉 filter 的方案了。</p>
+</li>
+</ul>
+<h3 id="filter-影响其他元素"><a href="#filter-影响其他元素" class="headerlink" title="filter 影响其他元素"></a>filter 影响其他元素</h3><ul>
+<li><p>问题<br>给 #react-body 元素添加 filter 后，首页的顶部固定搜索框、底部固定 tab 栏、引导下载 app 的横条，都消失不见了。<br><img src="./filter-affect-others.gif"></p>
+</li>
+<li><p>原因<br>搜了好多问题，终于通过一篇被搬运的文章发现了问题所在(感谢这篇文章！)，原因是 filter 属性会影响 fixed 的组件，因为它会给 absolute 和 fixed 的元素添加一个 containing block，除非这个被添加 filter 的元素是 document 的根元素(也就是 html 元素)，否则 fixed 和 absolute 相对的位置就不对了。fixed 的元素会相对于使用了 filter 的元素来定位，而不是相对于视口 viewport，解决办法有两种，要么把 filter 只设置在 html 元素上来避开，要么针对每个 fixed 元素套一个 container，只给这个 container 使用 filter，<a href="https://stackoverflow.com/questions/52937708/why-does-applying-a-css-filter-on-the-parent-break-the-child-positioning">参考</a>。</p>
+</li>
+</ul>
+<h3 id="直出页面无法设置-dark-mode-类名"><a href="#直出页面无法设置-dark-mode-类名" class="headerlink" title="直出页面无法设置 dark mode 类名"></a>直出页面无法设置 dark mode 类名</h3><ul>
+<li><p>问题<br>在调试的时候，发现某个直出页面大体颜色都正常，但有两个模块颜色不对劲。</p>
+</li>
+<li><p>解决<br>排查到原因在于，这个 Container 中有两个子组件少了 <code>dark-mode</code> 的类名。但是这几个组件都是同样的判断条件和传递 props 方式，为什么会有的带上了正确的类名，令人百思不得其解。<br>后面再思考下，有可能是因为 props 不行，如果我把 props 改成 state 呢？实践后发现可行，也就是在 constructor 中设置一个 isDarkMode 的值为 <code>false</code>，在 componentDidMount 的时候去设置 isDarkMode 的值为 <code>!!this.props.isDarkMode</code>。但如果我在 constructor 中就设置 <code>!!this.props.isDarkMode</code> 就会不生效，为什么呢？<br>原因在于我们对系统偏好的判断，是通过 <code>window.matchMedia</code> 来的，这个在直出的 server 端必然获取不到，这里我们 server 返回的 html 字符串就是错误的。当页面返回到 client 这边，加载的 js 会执行各种生命周期函数，componentDidMount 这里的 setState 值和 constructor 中的初始 state 值是一样的，就不会触发 update，就会直接使用我们错误的 html 字符串对应的页面。因此会显示错误。</p>
+</li>
+</ul>
+<h2 id="其他の坑"><a href="#其他の坑" class="headerlink" title="其他の坑"></a>其他の坑</h2><h3 id="require"><a href="#require" class="headerlink" title="require"></a>require</h3><p>不能传递变量否则会 module not found</p>
+<h3 id="linear-gradient"><a href="#linear-gradient" class="headerlink" title="linear-gradient"></a>linear-gradient</h3><p>原来只能用到 background / background-image 里面，不能用在 background-color 里。</p>
+<h3 id="z-index-和-opacity-相互影响"><a href="#z-index-和-opacity-相互影响" class="headerlink" title="z-index 和 opacity 相互影响"></a>z-index 和 opacity 相互影响</h3><ul>
+<li><p>问题<br>有个按钮元素在一个容器内，这个容器有个 z-index，这是背景。当我给这个按钮设置一个 opacity 时，它在电脑上表现正常，手机连接本地也正常，但在手机的 nohost 情况下，发现这个按钮直接消失了。</p>
+</li>
+<li><p>解决<br>仔细看才发现，原来还是隐约能看到按钮的，但是它貌似在更底部。怀疑是 opacity 和 z-index 相互影响？不过具体问题还没排查出来(关键词：z-index with opacity become bottom)，可以参考<a href="https://stackoverflow.com/questions/2837057/what-has-bigger-priority-opacity-or-z-index-in-browsers">这个</a>看看。解决办法是不用 opacity，用 rgba 的 background-color。<br>可以再学习下 z-index：<a href="https://www.freecodecamp.org/news/4-reasons-your-z-index-isnt-working-and-how-to-fix-it-coder-coder-6bc05f103e6c/%E3%80%82">https://www.freecodecamp.org/news/4-reasons-your-z-index-isnt-working-and-how-to-fix-it-coder-coder-6bc05f103e6c/。</a></p>
+</li>
+</ul>
+<h3 id="flex-元素下空子元素导致间距不对"><a href="#flex-元素下空子元素导致间距不对" class="headerlink" title="flex 元素下空子元素导致间距不对"></a>flex 元素下空子元素导致间距不对</h3><ul>
+<li><p>问题<br>有些组件用到了 flex，justify-content 设置了 space-between，但我发现里面的元素间距在视觉上貌似不一样，才发现是因为有个空的 div，它在视觉上没有内容，但却在 flex 元素内，导致它周围元素看上去有更大的间距。</p>
+</li>
+<li><p>解决<br>原来有个 empty 伪类，可以把 empty 的 div 给隐藏，好东西！<a href="https://stackoverflow.com/questions/26779005/make-div-invisble-if-there-no-content">参考</a>。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span><span class="selector-pseudo">:empty</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="调用-extended-组件的生命周期函数"><a href="#调用-extended-组件的生命周期函数" class="headerlink" title="调用 extended 组件的生命周期函数"></a>调用 extended 组件的生命周期函数</h3><ul>
+<li><p>问题<br>某个组件需要通过 props 设置 state，默认值在 constructor 中设置，正确值在 componentDidMount 里设置。这个组件我们使用的话是用 lib，它的 lib 里有一个已有的 componentDidMount 方法，它的 isomorph 里有一个 render 方法。现在我要设置 state 来改 render，必然是改 isomorph 了。那问题来了， isomorph 里有我想要的 componentDidMount，lib 里也有它本来自己写的 componentDidMount，我们使用的话是 lib，怎么在 lib 的 componentDidMount 里也调用 isomorph 的 componentDidMount 呢？</p>
+</li>
+<li><p>解决<br><a href="https://stackoverflow.com/questions/44782141/componentdidmount-of-parent-is-not-called">参考</a>。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params">props</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(props);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">componentDidMount</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;Parent mounted.&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.props.animalType&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">componentDidMount</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.componentDidMount();</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;Child mounted.&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="根据-props-设置-state"><a href="#根据-props-设置-state" class="headerlink" title="根据 props 设置 state"></a>根据 props 设置 state</h3><ul>
+<li><p>问题<br>想要把外部传递的 props 给作为当前组件的 state。</p>
+</li>
+<li><p>解决</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// class 类组件</span></span><br><span class="line"><span class="comment">// 参考：https://stackoverflow.com/questions/40063468/react-component-initialize-state-from-props</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleComponent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params">props</span>)</span> &#123;</span><br><span class="line">  <span class="built_in">super</span>(props);</span><br><span class="line">    <span class="built_in">this</span>.state = &#123;</span><br><span class="line">      <span class="attr">exampleState</span>: <span class="built_in">this</span>.props.exampleProps</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// function 类组件</span></span><br><span class="line"><span class="comment">// 参考：https://stackoverflow.com/questions/54865764/react-usestate-does-not-reload-state-from-props</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span> = (<span class="params">props</span>) =&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [example, setExample] = React.useState(&#123;...props.example&#125;);</span><br><span class="line">  React.useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    setExample(props.example);</span><br><span class="line">  &#125;, [props.example])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>​</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/DarkMode/" rel="tag"># DarkMode</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/write-a-todo-app-using-redux/" rel="prev" title="从 TODO App 开始">
+      <i class="fa fa-chevron-left"></i> 从 TODO App 开始
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.</span> <span class="nav-text">常见实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E6%96%B9%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">开启方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#manually-toggle"><span class="nav-number">1.1.1.</span> <span class="nav-text">manually toggle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#follow-system"><span class="nav-number">1.1.2.</span> <span class="nav-text">follow system</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%81%8F%E5%A5%BD"><span class="nav-number">1.2.</span> <span class="nav-text">用户偏好</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7"><span class="nav-number">2.</span> <span class="nav-text">奇技淫巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9A%97%E9%BB%91%E6%A8%A1%E5%BC%8F%E3%81%AE%E5%9D%91"><span class="nav-number">3.</span> <span class="nav-text">暗黑模式の坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E7%9B%AE%E6%A0%87%E8%89%B2%E5%8F%8D%E6%8E%A8%E6%BA%90%E5%A4%B4%E8%89%B2"><span class="nav-number">3.1.</span> <span class="nav-text">根据目标色反推源头色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87-background-url-%E8%AE%BE%E7%BD%AE%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E5%8F%8D%E8%89%B2"><span class="nav-number">3.2.</span> <span class="nav-text">通过 background url 设置的图片无法反色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#filter-%E5%BD%B1%E5%93%8D%E5%85%B6%E4%BB%96%E5%85%83%E7%B4%A0"><span class="nav-number">3.3.</span> <span class="nav-text">filter 影响其他元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B4%E5%87%BA%E9%A1%B5%E9%9D%A2%E6%97%A0%E6%B3%95%E8%AE%BE%E7%BD%AE-dark-mode-%E7%B1%BB%E5%90%8D"><span class="nav-number">3.4.</span> <span class="nav-text">直出页面无法设置 dark mode 类名</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E3%81%AE%E5%9D%91"><span class="nav-number">4.</span> <span class="nav-text">其他の坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#require"><span class="nav-number">4.1.</span> <span class="nav-text">require</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linear-gradient"><span class="nav-number">4.2.</span> <span class="nav-text">linear-gradient</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#z-index-%E5%92%8C-opacity-%E7%9B%B8%E4%BA%92%E5%BD%B1%E5%93%8D"><span class="nav-number">4.3.</span> <span class="nav-text">z-index 和 opacity 相互影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flex-%E5%85%83%E7%B4%A0%E4%B8%8B%E7%A9%BA%E5%AD%90%E5%85%83%E7%B4%A0%E5%AF%BC%E8%87%B4%E9%97%B4%E8%B7%9D%E4%B8%8D%E5%AF%B9"><span class="nav-number">4.4.</span> <span class="nav-text">flex 元素下空子元素导致间距不对</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8-extended-%E7%BB%84%E4%BB%B6%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0"><span class="nav-number">4.5.</span> <span class="nav-text">调用 extended 组件的生命周期函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE-props-%E8%AE%BE%E7%BD%AE-state"><span class="nav-number">4.6.</span> <span class="nav-text">根据 props 设置 state</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar/avatar.jpg">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-rocket"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LemniscateX</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
