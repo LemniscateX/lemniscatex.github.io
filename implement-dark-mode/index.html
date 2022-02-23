@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://lemniscatex.github.io/implement-dark-mode/light-filter-error.png">
 <meta property="og:image" content="https://lemniscatex.github.io/implement-dark-mode/filter-affect-others.gif">
 <meta property="article:published_time" content="2022-01-24T03:15:21.000Z">
-<meta property="article:modified_time" content="2022-02-23T03:31:42.893Z">
+<meta property="article:modified_time" content="2022-02-23T04:48:43.131Z">
 <meta property="article:tag" content="DarkMode">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://lemniscatex.github.io/implement-dark-mode/light.png">
@@ -203,7 +203,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-02-23 11:31:42" itemprop="dateModified" datetime="2022-02-23T11:31:42+08:00">2022-02-23</time>
+                <time title="Modified: 2022-02-23 12:48:43" itemprop="dateModified" datetime="2022-02-23T12:48:43+08:00">2022-02-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -267,7 +267,7 @@
 
 <p>解释一下这里的样式，filter 其实是滤镜，它本身提供了很多处理的接口，<a href="https://css-tricks.com/almanac/properties/f/filter/">参考</a>，比如模糊 <code>blur()</code>、灰度 <code>grayscale()</code>、对比度 <code>contrast()</code> 等。</p>
 <p>其中 invert 的作用是反转颜色通道数值，接收的值在 0~1。可以把 <code>invert(param)</code> 想象成一个函数 <code>f(value, param) = param * (255 - value) + (1 - param) * value</code>，当 param 为 0 时这个公式退化为 <code>f(value) = value</code> 也就是不变色，当 param 为 1 时这个公式退化为 <code>f(value) = 255 - value</code>。比如一个 <code>rgb(0, 0, 255)</code> 在被套用 invert(1) 后会变成 <code>rgba(255, 255, 0)</code>；一个 <code>rgb(255, 0, 0)</code> 在被套用 invert(0.85) 后会变成 <code>rgb(38, 217, 217)</code>(套公式，0.85*(255-255) + (1-0.85)* 255 = 38.25)，<a href="https://stackoverflow.com/questions/55899329/what-is-the-color-transformation-formula-used-by-invert-in-css">参考</a>。</p>
-<p>其中 hue-rotate 的作用是转动色盘，接收的值在 0deg~360deg。这个其实更好理解，如下图是色盘，比如一个纯红色在被套用 <code>hue-rotate(90deg)</code> 后会变成绿色，相当于我的取色点针顺时针转了 90°，具体的计算和矩阵运算相关，<a href="https://stackoverflow.com/questions/65344006/why-does-filter-invert1-hue-rotate180deg-turn-red-into-a-peachy-pink-colo">参考</a>。感觉这个转换还蛮复杂的，参考<a href="https://stackoverflow.com/questions/42966641/how-to-transform-black-into-any-given-color-using-only-css-filters">stackoverflow 的讨论</a>，还有一个 black 要如何通过 filter 转换成想要的颜色的<a href="https://codepen.io/sosuke/pen/Pjoqqp">工具</a>。</p>
+<p>其中 hue-rotate 的作用是转动色盘，接收的值在 0deg~360deg。这个其实更好理解，如下图是色盘，比如一个纯红色在被套用 <code>hue-rotate(90deg)</code> 后会变成绿色，相当于我的取色点针顺时针转了 90°，具体的计算和矩阵运算相关，<a href="https://stackoverflow.com/questions/65344006/why-does-filter-invert1-hue-rotate180deg-turn-red-into-a-peachy-pink-colo">参考</a>。感觉这个转换还蛮复杂的，参考<a href="https://stackoverflow.com/questions/42966641/how-to-transform-black-into-any-given-color-using-only-css-filters">stackoverflow 的讨论</a>，还有个将 black 通过 filter 转换成想要颜色的<a href="https://codepen.io/sosuke/pen/Pjoqqp">工具</a>。</p>
 <p><img src="./hue.png"></p>
 <p>在二者叠加的效果下，就会有很神奇的暗色模式了。但我们可以很明显地看到，这里的图片也被反色了，这不是我们预期的效果，一个常见的做法是给 img 标签再使用这个 filter 给反回去，它是生效的，如下图。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">html</span> &#123;</span><br><span class="line">  <span class="attribute">filter</span>: <span class="built_in">invert</span>(<span class="number">1</span>) <span class="built_in">hue-rotate</span>(<span class="number">180deg</span>);</span><br><span class="line">	</span><br><span class="line">  // 图片反转再反转，就和原先一样了  </span><br><span class="line">  <span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">filter</span>: <span class="built_in">invert</span>(<span class="number">1</span>) <span class="built_in">hue-rotate</span>(<span class="number">180deg</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
